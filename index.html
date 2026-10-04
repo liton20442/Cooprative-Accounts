@@ -192,7 +192,6 @@ td button{
 
 <main>
 
-<!-- DASHBOARD -->
 <section id="dashboard" class="page active">
   <div class="card">
     <h2>Dashboard</h2>
@@ -207,7 +206,6 @@ td button{
   </div>
 </section>
 
-<!-- MEMBERS -->
 <section id="members" class="page">
   <div class="card">
     <h2>Members</h2>
@@ -259,7 +257,6 @@ td button{
   </div>
 </section>
 
-<!-- COLLECTORS -->
 <section id="collectors" class="page">
   <div class="card">
     <h2>Collectors</h2>
@@ -300,7 +297,6 @@ td button{
   </div>
 </section>
 
-<!-- COLLECTION -->
 <section id="collection" class="page">
   <div class="card">
     <h2>Collection</h2>
@@ -405,7 +401,6 @@ td button{
   </div>
 </section>
 
-<!-- LOAN -->
 <section id="loan" class="page">
   <div class="card">
     <h2>Loan</h2>
@@ -498,7 +493,6 @@ td button{
   </div>
 </section>
 
-<!-- MEMBER ACCOUNTS -->
 <section id="accounts" class="page">
   <div class="card">
     <h2>Member Accounts</h2>
@@ -510,7 +504,6 @@ td button{
   </div>
 </section>
 
-<!-- LEDGER -->
 <section id="ledger" class="page">
   <div class="card">
     <h2>General Ledger</h2>
@@ -542,7 +535,6 @@ td button{
   </div>
 </section>
 
-<!-- CASH BOOK -->
 <section id="cashbook" class="page">
   <div class="card">
     <h2>Cash Book</h2>
@@ -573,7 +565,6 @@ td button{
   </div>
 </section>
 
-<!-- EXPENSE -->
 <section id="expense" class="page">
   <div class="card">
     <h2>Expense</h2>
@@ -628,7 +619,6 @@ td button{
   </div>
 </section>
 
-<!-- REPORTS -->
 <section id="reports" class="page">
   <div class="card">
     <h2>Reports</h2>
@@ -683,7 +673,6 @@ td button{
   </div>
 </section>
 
-<!-- BACKUP -->
 <section id="backup" class="page">
   <div class="card">
     <h2>Backup & Restore</h2>
@@ -817,7 +806,6 @@ function refreshPage(page){
     populateMemberSelects();
     renderReports();
   }
-  if(page==="backup"){}
 }
 
 function fillSelect(id,items,placeholder){
@@ -1599,8 +1587,6 @@ function renderMemberAccount(){
   );
 
   const servicePaid=loans.reduce((s,l)=>{
-    const totalLoan=Number(l.total||0);
-    const principal=Number(l.principal||0);
     const paid=installment;
     const service=Number(l.service||0);
 
@@ -1989,6 +1975,34 @@ function addExpenseHead(){
   populateExpenseHeads();
 
   document.getElementById("expenseHead").value=h;
+}
+
+function renderExpenses(){
+  const body=document.getElementById("expenseTableBody");
+  if(!body)return;
+
+  body.innerHTML="";
+
+  data.expenses.slice().reverse().forEach(e=>{
+    const tr=document.createElement("tr");
+
+    tr.innerHTML=`
+      <td>${isoToDisplay(e.date)}</td>
+      <td>${esc(e.head)}</td>
+      <td>${money(e.amount)}</td>
+      <td>${esc(e.note||"")}</td>
+      <td>
+        <button class="btn-orange"
+          onclick="editExpense('${e.id}')">Edit</button>
+      </td>
+      <td>
+        <button class="btn-red"
+          onclick="deleteExpense('${e.id}')">Delete</button>
+      </td>
+    `;
+
+    body.appendChild(tr);
+  });
 }
 
 /* ---------------- REPORTS ---------------- */
