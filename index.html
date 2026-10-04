@@ -212,6 +212,10 @@ button{
   margin:2px;
 }
 
+/* =========================
+   COLORFUL DASHBOARD
+========================= */
+
 .stat-grid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
@@ -219,21 +223,55 @@ button{
 }
 
 .stat{
-  background:white;
   border-radius:12px;
   padding:16px;
-  box-shadow:0 1px 5px rgba(0,0,0,.08);
+  box-shadow:0 2px 6px rgba(0,0,0,.10);
+  color:white;
+  min-height:95px;
 }
 
 .stat-title{
-  color:var(--muted);
   font-size:14px;
+  font-weight:600;
+  opacity:.95;
 }
 
 .stat-value{
   font-size:25px;
   font-weight:700;
   margin-top:5px;
+}
+
+#dashboard .stat:nth-child(1){
+  background:#2563eb;
+}
+
+#dashboard .stat:nth-child(2){
+  background:#16a34a;
+}
+
+#dashboard .stat:nth-child(3){
+  background:#7c3aed;
+}
+
+#dashboard .stat:nth-child(4){
+  background:#dc2626;
+}
+
+#dashboard .stat:nth-child(5){
+  background:#ea580c;
+}
+
+#dashboard .stat:nth-child(6){
+  background:#0891b2;
+}
+
+#dashboard .stat:nth-child(7){
+  background:#be123c;
+}
+
+#dashboard .stat:nth-child(8){
+  background:#0f766e;
 }
 
 .table-wrap{
@@ -309,6 +347,7 @@ footer{
 }
 
 @media(max-width:650px){
+
   .grid{
     grid-template-columns:1fr;
   }
@@ -328,6 +367,7 @@ footer{
   nav{
     top:72px;
   }
+
 }
 </style>
 </head>
@@ -356,10 +396,13 @@ footer{
 
 <!-- DASHBOARD -->
 <section class="page" id="dashboard">
+
   <div class="card">
+
     <h2>Dashboard</h2>
 
     <div class="stat-grid">
+
       <div class="stat">
         <div class="stat-title">Total Members</div>
         <div class="stat-value" id="dashMembers">0</div>
@@ -399,14 +442,19 @@ footer{
         <div class="stat-title">Cash Balance</div>
         <div class="stat-value" id="dashCash">0.00</div>
       </div>
+
     </div>
+
   </div>
+
 </section>
+
 
 <!-- MEMBERS -->
 <section class="page" id="members">
 
   <div class="card">
+
     <h2>Member Registration</h2>
 
     <div class="grid">
@@ -435,6 +483,7 @@ footer{
     </div>
 
     <div class="actions">
+
       <button id="memberSaveButton"
               class="btn btn-green"
               onclick="saveMember()">
@@ -445,22 +494,31 @@ footer{
               onclick="clearMemberForm()">
         Clear
       </button>
+
     </div>
+
   </div>
 
+
   <div class="card">
+
     <h2>Members</h2>
 
     <div class="field">
+
       <label>Search Member</label>
+
       <input id="memberSearch"
              type="search"
              placeholder="Search by code or name"
              oninput="renderMembers()">
+
     </div>
 
     <div class="table-wrap">
+
       <table>
+
         <thead>
           <tr>
             <th>Code</th>
@@ -471,16 +529,21 @@ footer{
         </thead>
 
         <tbody id="memberTable"></tbody>
+
       </table>
+
     </div>
+
   </div>
 
 </section>
+
 
 <!-- COLLECTION -->
 <section class="page" id="collection">
 
   <div class="card">
+
     <h2>Collection</h2>
 
     <div class="grid">
@@ -579,6 +642,7 @@ footer{
     </div>
 
     <div class="actions">
+
       <button class="btn btn-green"
               onclick="saveCollection()">
         Save Collection
@@ -588,14 +652,20 @@ footer{
               onclick="clearCollectionForm()">
         Clear
       </button>
+
     </div>
+
   </div>
 
+
   <div class="card">
+
     <h2>Collection Records</h2>
 
     <div class="table-wrap">
+
       <table>
+
         <thead>
           <tr>
             <th>Date</th>
@@ -607,17 +677,23 @@ footer{
             <th>Total</th>
           </tr>
         </thead>
+
         <tbody id="collectionTableBody"></tbody>
+
       </table>
+
     </div>
+
   </div>
 
 </section>
+
 
 <!-- LOAN -->
 <section class="page" id="loan">
 
   <div class="card">
+
     <h2>Loan</h2>
 
     <div class="grid">
@@ -703,6 +779,7 @@ footer{
     </div>
 
     <div class="actions">
+
       <button class="btn btn-green"
               onclick="saveLoan()">
         Save Loan
@@ -712,14 +789,20 @@ footer{
               onclick="clearLoanForm()">
         Clear
       </button>
+
     </div>
+
   </div>
 
+
   <div class="card">
+
     <h2>Loan Records</h2>
 
     <div class="table-wrap">
+
       <table>
+
         <thead>
           <tr>
             <th>Date</th>
@@ -733,67 +816,84 @@ footer{
             <th>Outstanding</th>
           </tr>
         </thead>
+
         <tbody id="loanTableBody"></tbody>
+
       </table>
+
     </div>
+
   </div>
 
 </section>
+
 
 <!-- MEMBER ACCOUNTS -->
 <section class="page" id="accounts">
 
   <div class="card">
+
     <h2>Member Account</h2>
 
     <div class="field">
+
       <label>Select Member</label>
+
       <select id="accountMember"
               onchange="renderAccount()"></select>
+
     </div>
+
   </div>
 
+
   <div class="card">
+
     <div class="stat-grid">
 
-      <div class="stat">
+      <div class="stat" style="background:#7c3aed;color:white;">
         <div class="stat-title">Share</div>
         <div class="stat-value" id="accountShare">0.00</div>
       </div>
 
-      <div class="stat">
+      <div class="stat" style="background:#16a34a;color:white;">
         <div class="stat-title">Savings</div>
         <div class="stat-value" id="accountSavings">0.00</div>
       </div>
 
-      <div class="stat">
+      <div class="stat" style="background:#dc2626;color:white;">
         <div class="stat-title">Loan Received</div>
         <div class="stat-value" id="accountLoan">0.00</div>
       </div>
 
-      <div class="stat">
+      <div class="stat" style="background:#ea580c;color:white;">
         <div class="stat-title">Installments</div>
         <div class="stat-value" id="accountInstallment">0.00</div>
       </div>
 
-      <div class="stat">
+      <div class="stat" style="background:#0891b2;color:white;">
         <div class="stat-title">Service Charge</div>
         <div class="stat-value" id="accountService">0.00</div>
       </div>
 
-      <div class="stat">
+      <div class="stat" style="background:#0f766e;color:white;">
         <div class="stat-title">Loan Outstanding</div>
         <div class="stat-value" id="accountOutstanding">0.00</div>
       </div>
 
     </div>
+
   </div>
 
+
   <div class="card">
+
     <h3>Account Transactions</h3>
 
     <div class="table-wrap">
+
       <table>
+
         <thead>
           <tr>
             <th>Date</th>
@@ -803,24 +903,32 @@ footer{
             <th>Balance</th>
           </tr>
         </thead>
+
         <tbody id="accountTableBody"></tbody>
+
       </table>
+
     </div>
+
   </div>
 
 </section>
+
 
 <!-- GENERAL LEDGER -->
 <section class="page" id="ledger">
 
   <div class="card">
+
     <h2>General Ledger</h2>
 
     <div class="field">
+
       <label>Select Ledger Head</label>
 
       <select id="ledgerHead"
               onchange="renderLedger()">
+
         <option value="">All Heads</option>
         <option value="Share">Share</option>
         <option value="Savings">Savings</option>
@@ -833,13 +941,20 @@ footer{
         <option value="Loan Disbursement">Loan Disbursement</option>
         <option value="Service Charge">Service Charge</option>
         <option value="Expense">Expense</option>
+
       </select>
+
     </div>
+
   </div>
 
+
   <div class="card">
+
     <div class="table-wrap">
+
       <table>
+
         <thead>
           <tr>
             <th>Date</th>
@@ -851,20 +966,27 @@ footer{
         </thead>
 
         <tbody id="ledgerTable"></tbody>
+
       </table>
+
     </div>
+
   </div>
 
 </section>
+
 
 <!-- CASH BOOK -->
 <section class="page" id="cashbook">
 
   <div class="card">
+
     <h2>Cash Book</h2>
 
     <div class="table-wrap">
+
       <table>
+
         <thead>
           <tr>
             <th>Date</th>
@@ -876,16 +998,21 @@ footer{
         </thead>
 
         <tbody id="cashBookTable"></tbody>
+
       </table>
+
     </div>
+
   </div>
 
 </section>
+
 
 <!-- EXPENSE -->
 <section class="page" id="expense">
 
   <div class="card">
+
     <h2>Expense</h2>
 
     <div class="grid">
@@ -922,6 +1049,7 @@ footer{
     </div>
 
     <div class="actions">
+
       <button class="btn btn-green"
               onclick="saveExpense()">
         Save Expense
@@ -936,14 +1064,20 @@ footer{
               onclick="addExpenseHead()">
         Add Expense Head
       </button>
+
     </div>
+
   </div>
 
+
   <div class="card">
+
     <h2>Expense Records</h2>
 
     <div class="table-wrap">
+
       <table>
+
         <thead>
           <tr>
             <th>Date</th>
@@ -955,16 +1089,21 @@ footer{
         </thead>
 
         <tbody id="expenseTableBody"></tbody>
+
       </table>
+
     </div>
+
   </div>
 
 </section>
+
 
 <!-- REPORTS -->
 <section class="page" id="reports">
 
   <div class="card">
+
     <h2>Reports</h2>
 
     <div class="grid">
@@ -996,16 +1135,19 @@ footer{
         <label>Report Type</label>
         <select id="reportType"
                 onchange="renderReports()">
+
           <option value="">All</option>
           <option value="collection">Collection</option>
           <option value="loan">Loan</option>
           <option value="expense">Expense</option>
+
         </select>
       </div>
 
     </div>
 
     <div class="actions">
+
       <button class="btn btn-blue"
               onclick="renderReports()">
         Search Report
@@ -1015,19 +1157,22 @@ footer{
               onclick="clearReportFilters()">
         Clear
       </button>
+
     </div>
+
   </div>
+
 
   <div class="card">
 
     <div class="stat-grid">
 
-      <div class="stat">
+      <div class="stat" style="background:#2563eb;color:white;">
         <div class="stat-title">Total Quantity / Records</div>
         <div class="stat-value" id="reportQuantity">0</div>
       </div>
 
-      <div class="stat">
+      <div class="stat" style="background:#16a34a;color:white;">
         <div class="stat-title">Grand Total</div>
         <div class="stat-value" id="reportGrandTotal">0.00</div>
       </div>
@@ -1036,9 +1181,13 @@ footer{
 
   </div>
 
+
   <div class="card">
+
     <div class="table-wrap">
+
       <table>
+
         <thead>
           <tr>
             <th>Date</th>
@@ -1050,16 +1199,21 @@ footer{
         </thead>
 
         <tbody id="reportTableBody"></tbody>
+
       </table>
+
     </div>
+
   </div>
 
 </section>
+
 
 <!-- BACKUP -->
 <section class="page" id="backup">
 
   <div class="card">
+
     <h2>Backup & Restore</h2>
 
     <div class="info-box">
@@ -1075,12 +1229,15 @@ footer{
 
       <label class="btn btn-green"
              style="display:inline-block;">
+
         Restore
+
         <input id="restoreFile"
                type="file"
                accept=".json,application/json"
                style="display:none"
                onchange="restoreData(event)">
+
       </label>
 
       <button class="btn btn-red"
@@ -1089,6 +1246,7 @@ footer{
       </button>
 
     </div>
+
   </div>
 
 </section>
@@ -1098,6 +1256,7 @@ footer{
 <footer>
   Cooperative Accounts &copy; 2026
 </footer>
+
 
 <script>
 
@@ -1118,8 +1277,8 @@ const defaultExpenseHeads = [
 
 let data = loadData();
 
-/* Member edit mode */
 let editingMemberId = null;
+let editingExpenseId = null;
 
 
 /* =========================
@@ -1127,6 +1286,7 @@ let editingMemberId = null;
 ========================= */
 
 function blankData(){
+
   return {
     members:[],
     collections:[],
@@ -1136,32 +1296,56 @@ function blankData(){
     bankBalance:0,
     openingCash:0
   };
+
 }
 
 function loadData(){
 
   try{
 
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw =
+      localStorage.getItem(STORAGE_KEY);
 
     if(!raw){
       return blankData();
     }
 
-    const parsed = JSON.parse(raw);
+    const parsed =
+      JSON.parse(raw);
 
-    const base = blankData();
+    const base =
+      blankData();
 
     return {
+
       ...base,
       ...parsed,
-      members:Array.isArray(parsed.members) ? parsed.members : [],
-      collections:Array.isArray(parsed.collections) ? parsed.collections : [],
-      loans:Array.isArray(parsed.loans) ? parsed.loans : [],
-      expenses:Array.isArray(parsed.expenses) ? parsed.expenses : [],
-      customExpenseHeads:Array.isArray(parsed.customExpenseHeads)
-        ? parsed.customExpenseHeads
-        : []
+
+      members:
+        Array.isArray(parsed.members)
+          ? parsed.members
+          : [],
+
+      collections:
+        Array.isArray(parsed.collections)
+          ? parsed.collections
+          : [],
+
+      loans:
+        Array.isArray(parsed.loans)
+          ? parsed.loans
+          : [],
+
+      expenses:
+        Array.isArray(parsed.expenses)
+          ? parsed.expenses
+          : [],
+
+      customExpenseHeads:
+        Array.isArray(parsed.customExpenseHeads)
+          ? parsed.customExpenseHeads
+          : []
+
     };
 
   }catch(e){
@@ -1171,6 +1355,7 @@ function loadData(){
     return blankData();
 
   }
+
 }
 
 function saveData(){
@@ -1197,9 +1382,7 @@ function uid(prefix){
 
 function money(value){
 
-  const n = Number(value) || 0;
-
-  return n.toFixed(2);
+  return (Number(value)||0).toFixed(2);
 
 }
 
@@ -1216,9 +1399,10 @@ function escapeHtml(value){
 
 function memberName(id){
 
-  const m = data.members.find(
-    x => x.id === id
-  );
+  const m =
+    data.members.find(
+      x=>x.id===id
+    );
 
   return m
     ? (m.name || m.code || "")
@@ -1230,15 +1414,16 @@ function today(){
 
   const d = new Date();
 
-  const y = d.getFullYear();
+  const y =
+    d.getFullYear();
 
-  const m = String(
-    d.getMonth()+1
-  ).padStart(2,"0");
+  const m =
+    String(d.getMonth()+1)
+      .padStart(2,"0");
 
-  const day = String(
-    d.getDate()
-  ).padStart(2,"0");
+  const day =
+    String(d.getDate())
+      .padStart(2,"0");
 
   return `${y}-${m}-${day}`;
 
@@ -1253,21 +1438,22 @@ function formatDateDisplay(date){
 
   if(!date) return "";
 
-  const d = new Date(date);
+  const d =
+    new Date(date);
 
   if(isNaN(d)) return "";
 
-  const day = String(
-    d.getDate()
-  ).padStart(2,"0");
+  const day =
+    String(d.getDate())
+      .padStart(2,"0");
 
-  const month = String(
-    d.getMonth()+1
-  ).padStart(2,"0");
+  const month =
+    String(d.getMonth()+1)
+      .padStart(2,"0");
 
-  const year = String(
-    d.getFullYear()
-  ).slice(-2);
+  const year =
+    String(d.getFullYear())
+      .slice(-2);
 
   return `${day}/${month}/${year}`;
 
@@ -1277,9 +1463,11 @@ function parseDateInput(value){
 
   if(!value) return null;
 
-  const v = String(value).trim();
+  const v =
+    String(value).trim();
 
-  const parts = v.split("/");
+  const parts =
+    v.split("/");
 
   if(parts.length !== 3){
 
@@ -1290,9 +1478,14 @@ function parseDateInput(value){
     return null;
   }
 
-  let day = Number(parts[0]);
-  let month = Number(parts[1]);
-  let year = Number(parts[2]);
+  let day =
+    Number(parts[0]);
+
+  let month =
+    Number(parts[1]);
+
+  let year =
+    Number(parts[2]);
 
   if(!day || !month || !year){
     return null;
@@ -1302,11 +1495,12 @@ function parseDateInput(value){
     year += 2000;
   }
 
-  const d = new Date(
-    year,
-    month-1,
-    day
-  );
+  const d =
+    new Date(
+      year,
+      month-1,
+      day
+    );
 
   if(
     d.getFullYear() !== year ||
@@ -1326,9 +1520,10 @@ function dateInputValue(value){
 
   if(/^\d{4}-\d{2}-\d{2}$/.test(value)){
 
-    const parts = value.split("-");
+    const p =
+      value.split("-");
 
-    return `${parts[2]}/${parts[1]}/${parts[0].slice(-2)}`;
+    return `${p[2]}/${p[1]}/${p[0].slice(-2)}`;
 
   }
 
@@ -1344,7 +1539,8 @@ function validDateOrToday(value){
 
 function formatDateWhileTyping(input){
 
-  let value = input.value.replace(/\D/g,"");
+  let value =
+    input.value.replace(/\D/g,"");
 
   if(value.length > 6){
     value = value.slice(0,6);
@@ -1374,17 +1570,17 @@ function formatDateWhileTyping(input){
 
 function setToday(){
 
-  document.getElementById(
-    "collectionDate"
-  ).value = formatDateDisplay(today());
+  document.getElementById("collectionDate")
+    .value =
+    formatDateDisplay(today());
 
-  document.getElementById(
-    "loanDate"
-  ).value = formatDateDisplay(today());
+  document.getElementById("loanDate")
+    .value =
+    formatDateDisplay(today());
 
-  document.getElementById(
-    "expenseDate"
-  ).value = formatDateDisplay(today());
+  document.getElementById("expenseDate")
+    .value =
+    formatDateDisplay(today());
 
 }
 
@@ -1405,15 +1601,17 @@ function showPage(id){
       button.classList.remove("active");
     });
 
-  const page = document.getElementById(id);
+  const page =
+    document.getElementById(id);
 
   if(page){
     page.classList.add("active");
   }
 
-  const nav = document.getElementById(
-    "nav-" + id
-  );
+  const nav =
+    document.getElementById(
+      "nav-" + id
+    );
 
   if(nav){
     nav.classList.add("active");
@@ -1433,39 +1631,39 @@ function refreshPage(id){
   populateMemberSelects();
   populateExpenseHeads();
 
-  if(id === "dashboard"){
+  if(id==="dashboard"){
     renderDashboard();
   }
 
-  if(id === "members"){
+  if(id==="members"){
     renderMembers();
   }
 
-  if(id === "collection"){
+  if(id==="collection"){
     renderCollections();
   }
 
-  if(id === "loan"){
+  if(id==="loan"){
     renderLoans();
   }
 
-  if(id === "accounts"){
+  if(id==="accounts"){
     renderAccount();
   }
 
-  if(id === "ledger"){
+  if(id==="ledger"){
     renderLedger();
   }
 
-  if(id === "cashbook"){
+  if(id==="cashbook"){
     renderCashBook();
   }
 
-  if(id === "expense"){
+  if(id==="expense"){
     renderExpenses();
   }
 
-  if(id === "reports"){
+  if(id==="reports"){
     renderReports();
   }
 
@@ -1487,7 +1685,8 @@ function fillSelect(
 
   if(!select) return;
 
-  const current = select.value;
+  const current =
+    select.value;
 
   select.innerHTML =
     `<option value="">${escapeHtml(placeholder)}</option>` +
@@ -1497,7 +1696,11 @@ function fillSelect(
       </option>
     `).join("");
 
-  if(options.some(x=>x.id === current)){
+  if(
+    options.some(
+      x=>x.id===current
+    )
+  ){
     select.value = current;
   }
 
@@ -1505,14 +1708,15 @@ function fillSelect(
 
 function populateMemberSelects(){
 
-  const options = data.members.map(m=>({
+  const options =
+    data.members.map(m=>({
 
-    id:m.id,
+      id:m.id,
 
-    label:
-      `${m.code || ""} - ${m.name || ""}`
+      label:
+        `${m.code || ""} - ${m.name || ""}`
 
-  }));
+    }));
 
   fillSelect(
     "collectionMember",
@@ -1543,7 +1747,9 @@ function populateMemberSelects(){
 function populateExpenseHeads(){
 
   const select =
-    document.getElementById("expenseHead");
+    document.getElementById(
+      "expenseHead"
+    );
 
   if(!select) return;
 
@@ -1552,11 +1758,11 @@ function populateExpenseHeads(){
     ...data.customExpenseHeads
   ];
 
-  const unique = [
-    ...new Set(heads)
-  ];
+  const unique =
+    [...new Set(heads)];
 
-  const current = select.value;
+  const current =
+    select.value;
 
   select.innerHTML =
     `<option value="">Select Expense Head</option>` +
@@ -1604,15 +1810,12 @@ function saveMember(){
   }
 
   const duplicate =
-    data.members.some(m =>
-
+    data.members.some(m=>
       m.id !== editingMemberId &&
-
-      String(m.code || "")
+      String(m.code||"")
         .trim()
-        .toLowerCase()
-        === code.toLowerCase()
-
+        .toLowerCase() ===
+      code.toLowerCase()
     );
 
   if(duplicate){
@@ -1630,7 +1833,7 @@ function saveMember(){
 
     const m =
       data.members.find(
-        x => x.id === editingMemberId
+        x=>x.id===editingMemberId
       );
 
     if(!m) return;
@@ -1649,9 +1852,7 @@ function saveMember(){
       id:uid("M"),
 
       code,
-
       name,
-
       mobile,
 
       createdAt:
@@ -1696,7 +1897,8 @@ function clearMemberForm(){
     );
 
   if(btn){
-    btn.textContent = "Save Member";
+    btn.textContent =
+      "Save Member";
   }
 
   document.getElementById(
@@ -1709,22 +1911,25 @@ function editMember(id){
 
   const m =
     data.members.find(
-      x => x.id === id
+      x=>x.id===id
     );
 
   if(!m) return;
 
   document.getElementById(
     "memberCode"
-  ).value = m.code || "";
+  ).value =
+    m.code || "";
 
   document.getElementById(
     "memberName"
-  ).value = m.name || "";
+  ).value =
+    m.name || "";
 
   document.getElementById(
     "memberMobile"
-  ).value = m.mobile || "";
+  ).value =
+    m.mobile || "";
 
   editingMemberId = id;
 
@@ -1734,7 +1939,8 @@ function editMember(id){
     );
 
   if(btn){
-    btn.textContent = "Update Member";
+    btn.textContent =
+      "Update Member";
   }
 
   window.scrollTo({
@@ -1752,19 +1958,19 @@ function deleteMember(id){
 
   const m =
     data.members.find(
-      x => x.id === id
+      x=>x.id===id
     );
 
   if(!m) return;
 
   const hasCollection =
     data.collections.some(
-      c => c.memberId === id
+      c=>c.memberId===id
     );
 
   const hasLoan =
     data.loans.some(
-      l => l.memberId === id
+      l=>l.memberId===id
     );
 
   if(hasCollection || hasLoan){
@@ -1789,10 +1995,10 @@ function deleteMember(id){
 
   data.members =
     data.members.filter(
-      x => x.id !== id
+      x=>x.id!==id
     );
 
-  if(editingMemberId === id){
+  if(editingMemberId===id){
     clearMemberForm();
   }
 
@@ -1818,11 +2024,11 @@ function renderMembers(){
     data.members.filter(m=>{
 
       const code =
-        String(m.code || "")
+        String(m.code||"")
           .toLowerCase();
 
       const name =
-        String(m.name || "")
+        String(m.name||"")
           .toLowerCase();
 
       return !search ||
@@ -1856,17 +2062,11 @@ function renderMembers(){
 
       <tr>
 
-        <td>
-          ${escapeHtml(m.code)}
-        </td>
+        <td>${escapeHtml(m.code)}</td>
 
-        <td>
-          ${escapeHtml(m.name)}
-        </td>
+        <td>${escapeHtml(m.name)}</td>
 
-        <td>
-          ${escapeHtml(m.mobile || "")}
-        </td>
+        <td>${escapeHtml(m.mobile||"")}</td>
 
         <td>
 
@@ -1936,16 +2136,16 @@ function calculateCollectionTotal(){
   let total = 0;
 
   ids.forEach(id=>{
-
-    total += Number(
-      document.getElementById(id).value
-    ) || 0;
-
+    total +=
+      Number(
+        document.getElementById(id).value
+      ) || 0;
   });
 
   document.getElementById(
     "collectionTotal"
-  ).textContent = money(total);
+  ).textContent =
+    money(total);
 
 }
 
@@ -1963,12 +2163,12 @@ function clearCollectionForm(){
   ];
 
   ids.forEach(id=>{
-    document.getElementById(id).value = "";
+    document.getElementById(id).value="";
   });
 
   document.getElementById(
     "collectionTotal"
-  ).textContent = "0.00";
+  ).textContent="0.00";
 
 }
 
@@ -1981,7 +2181,9 @@ function saveCollection(){
 
   if(!memberId){
 
-    alert("Please select a member.");
+    alert(
+      "Please select a member."
+    );
 
     return;
   }
@@ -2059,7 +2261,7 @@ function saveCollection(){
     loanForm +
     other;
 
-  if(total <= 0){
+  if(total<=0){
 
     alert(
       "Please enter at least one collection amount."
@@ -2068,44 +2270,44 @@ function saveCollection(){
     return;
   }
 
-  /*
-    If installment is entered,
-    allocate payment to outstanding loan.
-  */
+  if(installment>0){
 
-  if(installment > 0){
-
-    let remaining = installment;
+    let remaining =
+      installment;
 
     const loans =
       data.loans
-        .filter(l => l.memberId === memberId)
+        .filter(
+          l=>l.memberId===memberId
+        )
         .sort(
           (a,b)=>
             String(a.date)
-              .localeCompare(String(b.date))
+              .localeCompare(
+                String(b.date)
+              )
         );
 
     for(const loan of loans){
 
       if(!Array.isArray(loan.payments)){
-        loan.payments = [];
+        loan.payments=[];
       }
 
       const paid =
         loan.payments.reduce(
           (sum,p)=>
-            sum + (Number(p.amount) || 0),
+            sum+(Number(p.amount)||0),
           0
         );
 
       const outstanding =
         Math.max(
           0,
-          Number(loan.total) - paid
+          Number(loan.total)-paid
         );
 
-      if(outstanding <= 0){
+      if(outstanding<=0){
         continue;
       }
 
@@ -2116,15 +2318,15 @@ function saveCollection(){
         );
 
       const serviceRate =
-        Number(loan.rate) || 0;
+        Number(loan.rate)||0;
 
       const principalPart =
-        serviceRate > 0
-          ? pay / (1 + serviceRate / 100)
+        serviceRate>0
+          ? pay/(1+serviceRate/100)
           : pay;
 
       const servicePart =
-        pay - principalPart;
+        pay-principalPart;
 
       loan.payments.push({
 
@@ -2140,15 +2342,15 @@ function saveCollection(){
 
       });
 
-      remaining -= pay;
+      remaining-=pay;
 
-      if(remaining <= 0){
+      if(remaining<=0){
         break;
       }
 
     }
 
-    if(remaining > 0){
+    if(remaining>0){
 
       alert(
         "Warning: the entered installment is greater than the member's outstanding loan."
@@ -2167,21 +2369,13 @@ function saveCollection(){
     date,
 
     share,
-
     savings,
-
     installment,
-
     admission,
-
     passbook,
-
     insurance,
-
     loanForm,
-
     other,
-
     total,
 
     createdAt:
@@ -2194,7 +2388,7 @@ function saveCollection(){
   refreshAll();
 
   /*
-    Keep selected date after saving.
+    Keep selected date.
   */
 
   document.getElementById(
@@ -2203,6 +2397,16 @@ function saveCollection(){
     dateInputValue(date);
 
   clearCollectionForm();
+
+  /*
+    clearCollectionForm clears only amounts,
+    not the selected date.
+  */
+
+  document.getElementById(
+    "collectionDate"
+  ).value =
+    dateInputValue(date);
 
   alert(
     "Collection saved successfully."
@@ -2221,7 +2425,7 @@ function renderCollections(){
 
   if(!data.collections.length){
 
-    body.innerHTML = `
+    body.innerHTML=`
       <tr>
         <td colspan="7" class="empty">
           No collection records.
@@ -2237,7 +2441,9 @@ function renderCollections(){
       .sort(
         (a,b)=>
           String(b.date)
-            .localeCompare(String(a.date))
+            .localeCompare(
+              String(a.date)
+            )
       );
 
   body.innerHTML =
@@ -2265,10 +2471,10 @@ function renderCollections(){
 
         <td>
           ${money(
-            Number(c.admission||0) +
-            Number(c.passbook||0) +
-            Number(c.insurance||0) +
-            Number(c.loanForm||0) +
+            Number(c.admission||0)+
+            Number(c.passbook||0)+
+            Number(c.insurance||0)+
+            Number(c.loanForm||0)+
             Number(c.other||0)
           )}
         </td>
@@ -2310,23 +2516,25 @@ function calculateLoan(){
     ) || 0;
 
   const service =
-    principal * rate / 100;
+    principal*rate/100;
 
   const total =
-    principal + service;
+    principal+service;
 
   const installmentAmount =
-    installments > 0
-      ? total / installments
+    installments>0
+      ? total/installments
       : 0;
 
   document.getElementById(
     "loanService"
-  ).value = service.toFixed(2);
+  ).value =
+    service.toFixed(2);
 
   document.getElementById(
     "loanTotal"
-  ).value = total.toFixed(2);
+  ).value =
+    total.toFixed(2);
 
   document.getElementById(
     "loanInstallmentAmount"
@@ -2347,9 +2555,7 @@ function clearLoanForm(){
     "loanFirstDate",
     "loanNote"
   ].forEach(id=>{
-
-    document.getElementById(id).value = "";
-
+    document.getElementById(id).value="";
   });
 
 }
@@ -2398,7 +2604,7 @@ function saveLoan(){
       ).value
     ) || 0;
 
-  if(principal <= 0){
+  if(principal<=0){
 
     alert(
       "Please enter the loan principal."
@@ -2407,7 +2613,7 @@ function saveLoan(){
     return;
   }
 
-  if(installments <= 0){
+  if(installments<=0){
 
     alert(
       "Please enter number of installments."
@@ -2417,21 +2623,20 @@ function saveLoan(){
   }
 
   const service =
-    principal * rate / 100;
+    principal*rate/100;
 
   const total =
-    principal + service;
+    principal+service;
 
   const installmentAmount =
-    total / installments;
-
-  const firstDateInput =
-    document.getElementById(
-      "loanFirstDate"
-    ).value;
+    total/installments;
 
   const firstDate =
-    validDateOrToday(firstDateInput);
+    validDateOrToday(
+      document.getElementById(
+        "loanFirstDate"
+      ).value
+    );
 
   data.loans.push({
 
@@ -2442,17 +2647,11 @@ function saveLoan(){
     date,
 
     principal,
-
     rate,
-
     service,
-
     total,
-
     installments,
-
     installmentAmount,
-
     firstDate,
 
     note:
@@ -2487,7 +2686,7 @@ function loanPaid(loan){
 
   return loan.payments.reduce(
     (sum,p)=>
-      sum + (Number(p.amount)||0),
+      sum+(Number(p.amount)||0),
     0
   );
 
@@ -2504,7 +2703,7 @@ function renderLoans(){
 
   if(!data.loans.length){
 
-    body.innerHTML = `
+    body.innerHTML=`
       <tr>
         <td colspan="9" class="empty">
           No loan records.
@@ -2520,7 +2719,9 @@ function renderLoans(){
       .sort(
         (a,b)=>
           String(b.date)
-            .localeCompare(String(a.date))
+            .localeCompare(
+              String(a.date)
+            )
       );
 
   body.innerHTML =
@@ -2532,7 +2733,7 @@ function renderLoans(){
       const outstanding =
         Math.max(
           0,
-          Number(l.total||0) - paid
+          Number(l.total||0)-paid
         );
 
       return `
@@ -2557,11 +2758,9 @@ function renderLoans(){
 
           <td>${money(l.total)}</td>
 
-          <td>${l.installments || 0}</td>
+          <td>${l.installments||0}</td>
 
-          <td>
-            ${money(l.installmentAmount)}
-          </td>
+          <td>${money(l.installmentAmount)}</td>
 
           <td>${money(paid)}</td>
 
@@ -2598,7 +2797,7 @@ function renderAccount(){
       "accountOutstanding"
     ].forEach(id=>{
       document.getElementById(id)
-        .textContent = "0.00";
+        .textContent="0.00";
     });
 
     const body =
@@ -2607,29 +2806,33 @@ function renderAccount(){
       );
 
     if(body){
-      body.innerHTML = `
+
+      body.innerHTML=`
         <tr>
           <td colspan="5" class="empty">
             Select a member.
           </td>
         </tr>
       `;
+
     }
 
     return;
   }
 
-  let share = 0;
-  let savings = 0;
-  let installment = 0;
+  let share=0;
+  let savings=0;
+  let installment=0;
 
   data.collections
     .filter(c=>c.memberId===memberId)
     .forEach(c=>{
 
-      share += Number(c.share)||0;
+      share +=
+        Number(c.share)||0;
 
-      savings += Number(c.savings)||0;
+      savings +=
+        Number(c.savings)||0;
 
       installment +=
         Number(c.installment)||0;
@@ -2644,63 +2847,63 @@ function renderAccount(){
   const loanReceived =
     loans.reduce(
       (sum,l)=>
-        sum + (Number(l.principal)||0),
+        sum+(Number(l.principal)||0),
       0
     );
 
   const service =
     loans.reduce(
       (sum,l)=>
-        sum + (Number(l.service)||0),
+        sum+(Number(l.service)||0),
       0
     );
 
   const paid =
     loans.reduce(
       (sum,l)=>
-        sum + loanPaid(l),
+        sum+loanPaid(l),
       0
     );
 
   const totalLoan =
     loans.reduce(
       (sum,l)=>
-        sum + (Number(l.total)||0),
+        sum+(Number(l.total)||0),
       0
     );
 
   const outstanding =
     Math.max(
       0,
-      totalLoan - paid
+      totalLoan-paid
     );
 
   document.getElementById(
     "accountShare"
-  ).textContent = money(share);
+  ).textContent=money(share);
 
   document.getElementById(
     "accountSavings"
-  ).textContent = money(savings);
+  ).textContent=money(savings);
 
   document.getElementById(
     "accountLoan"
-  ).textContent = money(loanReceived);
+  ).textContent=money(loanReceived);
 
   document.getElementById(
     "accountInstallment"
-  ).textContent = money(installment);
+  ).textContent=money(installment);
 
   document.getElementById(
     "accountService"
-  ).textContent = money(service);
+  ).textContent=money(service);
 
   document.getElementById(
     "accountOutstanding"
-  ).textContent = money(outstanding);
+  ).textContent=money(outstanding);
 
 
-  const rows = [];
+  const rows=[];
 
   data.collections
     .filter(c=>c.memberId===memberId)
@@ -2746,11 +2949,8 @@ function renderAccount(){
     rows.push({
 
       date:l.date,
-
       type:"Loan Received",
-
       in:0,
-
       out:Number(l.principal)||0
 
     });
@@ -2762,11 +2962,8 @@ function renderAccount(){
         rows.push({
 
           date:p.date,
-
           type:"Loan Payment",
-
           in:Number(p.amount)||0,
-
           out:0
 
         });
@@ -2780,10 +2977,12 @@ function renderAccount(){
   rows.sort(
     (a,b)=>
       String(a.date)
-        .localeCompare(String(b.date))
+        .localeCompare(
+          String(b.date)
+        )
   );
 
-  let balance = 0;
+  let balance=0;
 
   const body =
     document.getElementById(
@@ -2792,7 +2991,7 @@ function renderAccount(){
 
   if(!rows.length){
 
-    body.innerHTML = `
+    body.innerHTML=`
       <tr>
         <td colspan="5" class="empty">
           No account transactions.
@@ -2845,29 +3044,22 @@ function renderAccount(){
 
 function ledgerRows(){
 
-  const rows = [];
+  const rows=[];
 
   data.collections.forEach(c=>{
 
     const name =
       memberName(c.memberId);
 
-    const heads = [
+    const heads=[
 
       ["Share",c.share],
-
       ["Savings",c.savings],
-
       ["Loan Installment",c.installment],
-
       ["Admission Fee",c.admission],
-
       ["Pass Book",c.passbook],
-
       ["Insurance",c.insurance],
-
       ["Loan Form Sales",c.loanForm],
-
       ["Other Income",c.other]
 
     ];
@@ -2880,13 +3072,9 @@ function ledgerRows(){
           rows.push({
 
             date:c.date,
-
             head,
-
             member:name,
-
             in:Number(amount),
-
             out:0
 
           });
@@ -2904,13 +3092,9 @@ function ledgerRows(){
     rows.push({
 
       date:l.date,
-
       head:"Loan Disbursement",
-
       member:memberName(l.memberId),
-
       in:0,
-
       out:Number(l.principal)||0
 
     });
@@ -2924,13 +3108,9 @@ function ledgerRows(){
           rows.push({
 
             date:p.date,
-
             head:"Service Charge",
-
             member:memberName(l.memberId),
-
             in:Number(p.service),
-
             out:0
 
           });
@@ -2949,19 +3129,14 @@ function ledgerRows(){
     rows.push({
 
       date:e.date,
-
       head:"Expense",
-
       member:e.head,
-
       in:0,
-
       out:Number(e.amount)||0
 
     });
 
   });
-
 
   return rows;
 
@@ -2976,10 +3151,13 @@ function renderLedger(){
 
   if(!body) return;
 
-  const selected =
+  const select =
     document.getElementById(
       "ledgerHead"
-    ).value;
+    );
+
+  const selected =
+    select ? select.value : "";
 
   let rows =
     ledgerRows();
@@ -2988,7 +3166,7 @@ function renderLedger(){
 
     rows =
       rows.filter(
-        r=>r.head === selected
+        r=>r.head===selected
       );
 
   }
@@ -2996,12 +3174,14 @@ function renderLedger(){
   rows.sort(
     (a,b)=>
       String(a.date)
-        .localeCompare(String(b.date))
+        .localeCompare(
+          String(b.date)
+        )
   );
 
   if(!rows.length){
 
-    body.innerHTML = `
+    body.innerHTML=`
       <tr>
         <td colspan="5" class="empty">
           No ledger records.
@@ -3055,7 +3235,7 @@ function renderCashBook(){
 
   if(!body) return;
 
-  const rows = [];
+  const rows=[];
 
   data.collections.forEach(c=>{
 
@@ -3068,7 +3248,6 @@ function renderCashBook(){
         memberName(c.memberId),
 
       in:Number(c.total)||0,
-
       out:0
 
     });
@@ -3114,12 +3293,14 @@ function renderCashBook(){
   rows.sort(
     (a,b)=>
       String(a.date)
-        .localeCompare(String(b.date))
+        .localeCompare(
+          String(b.date)
+        )
   );
 
   if(!rows.length){
 
-    body.innerHTML = `
+    body.innerHTML=`
       <tr>
         <td colspan="5" class="empty">
           No cash book records.
@@ -3173,27 +3354,26 @@ function renderCashBook(){
    EXPENSE
 ========================= */
 
-let editingExpenseId = null;
-
 function clearExpenseForm(){
 
   document.getElementById(
     "expenseDate"
-  ).value = formatDateDisplay(today());
+  ).value =
+    formatDateDisplay(today());
 
   document.getElementById(
     "expenseHead"
-  ).value = "";
+  ).value="";
 
   document.getElementById(
     "expenseAmount"
-  ).value = "";
+  ).value="";
 
   document.getElementById(
     "expenseNote"
-  ).value = "";
+  ).value="";
 
-  editingExpenseId = null;
+  editingExpenseId=null;
 
 }
 
@@ -3206,7 +3386,8 @@ function addExpenseHead(){
 
   if(!head) return;
 
-  const value = head.trim();
+  const value =
+    head.trim();
 
   if(!value) return;
 
@@ -3215,9 +3396,9 @@ function addExpenseHead(){
       ...defaultExpenseHeads,
       ...data.customExpenseHeads
     ].some(
-      x =>
-        x.toLowerCase()
-        === value.toLowerCase()
+      x=>
+        x.toLowerCase()===
+        value.toLowerCase()
     );
 
   if(exists){
@@ -3237,7 +3418,7 @@ function addExpenseHead(){
 
   document.getElementById(
     "expenseHead"
-  ).value = value;
+  ).value=value;
 
 }
 
@@ -3276,7 +3457,7 @@ function saveExpense(){
     return;
   }
 
-  if(amount <= 0){
+  if(amount<=0){
 
     alert(
       "Please enter expense amount."
@@ -3289,15 +3470,15 @@ function saveExpense(){
 
     const e =
       data.expenses.find(
-        x => x.id === editingExpenseId
+        x=>x.id===editingExpenseId
       );
 
     if(e){
 
-      e.date = date;
-      e.head = head;
-      e.amount = amount;
-      e.note = note;
+      e.date=date;
+      e.head=head;
+      e.amount=amount;
+      e.note=note;
 
     }
 
@@ -3308,11 +3489,8 @@ function saveExpense(){
       id:uid("E"),
 
       date,
-
       head,
-
       amount,
-
       note,
 
       payment:"Cash",
@@ -3340,7 +3518,7 @@ function editExpense(id){
 
   const e =
     data.expenses.find(
-      x => x.id === id
+      x=>x.id===id
     );
 
   if(!e) return;
@@ -3352,17 +3530,20 @@ function editExpense(id){
 
   document.getElementById(
     "expenseHead"
-  ).value = e.head;
+  ).value =
+    e.head;
 
   document.getElementById(
     "expenseAmount"
-  ).value = e.amount;
+  ).value =
+    e.amount;
 
   document.getElementById(
     "expenseNote"
-  ).value = e.note || "";
+  ).value =
+    e.note||"";
 
-  editingExpenseId = id;
+  editingExpenseId=id;
 
   showPage("expense");
 
@@ -3372,7 +3553,7 @@ function deleteExpense(id){
 
   const e =
     data.expenses.find(
-      x => x.id === id
+      x=>x.id===id
     );
 
   if(!e) return;
@@ -3387,7 +3568,7 @@ function deleteExpense(id){
 
   data.expenses =
     data.expenses.filter(
-      x => x.id !== id
+      x=>x.id!==id
     );
 
   saveData();
@@ -3407,7 +3588,7 @@ function renderExpenses(){
 
   if(!data.expenses.length){
 
-    body.innerHTML = `
+    body.innerHTML=`
       <tr>
         <td colspan="5" class="empty">
           No expense records.
@@ -3423,7 +3604,9 @@ function renderExpenses(){
       .sort(
         (a,b)=>
           String(b.date)
-            .localeCompare(String(a.date))
+            .localeCompare(
+              String(a.date)
+            )
       );
 
   body.innerHTML =
@@ -3446,7 +3629,7 @@ function renderExpenses(){
         </td>
 
         <td>
-          ${escapeHtml(e.note || "")}
+          ${escapeHtml(e.note||"")}
         </td>
 
         <td>
@@ -3480,19 +3663,19 @@ function clearReportFilters(){
 
   document.getElementById(
     "reportFrom"
-  ).value = "";
+  ).value="";
 
   document.getElementById(
     "reportTo"
-  ).value = "";
+  ).value="";
 
   document.getElementById(
     "reportMember"
-  ).value = "";
+  ).value="";
 
   document.getElementById(
     "reportType"
-  ).value = "";
+  ).value="";
 
   renderReports();
 
@@ -3531,9 +3714,9 @@ function renderReports(){
       "reportType"
     ).value;
 
-  const rows = [];
+  const rows=[];
 
-  if(!type || type === "collection"){
+  if(!type || type==="collection"){
 
     data.collections.forEach(c=>{
 
@@ -3543,13 +3726,15 @@ function renderReports(){
 
         type:"Collection",
 
-        member:memberName(c.memberId),
+        member:
+          memberName(c.memberId),
 
         memberId:c.memberId,
 
         details:"Total Collection",
 
-        amount:Number(c.total)||0
+        amount:
+          Number(c.total)||0
 
       });
 
@@ -3557,7 +3742,7 @@ function renderReports(){
 
   }
 
-  if(!type || type === "loan"){
+  if(!type || type==="loan"){
 
     data.loans.forEach(l=>{
 
@@ -3567,13 +3752,15 @@ function renderReports(){
 
         type:"Loan",
 
-        member:memberName(l.memberId),
+        member:
+          memberName(l.memberId),
 
         memberId:l.memberId,
 
         details:"Loan Disbursement",
 
-        amount:Number(l.principal)||0
+        amount:
+          Number(l.principal)||0
 
       });
 
@@ -3581,7 +3768,7 @@ function renderReports(){
 
   }
 
-  if(!type || type === "expense"){
+  if(!type || type==="expense"){
 
     data.expenses.forEach(e=>{
 
@@ -3597,7 +3784,8 @@ function renderReports(){
 
         details:e.head,
 
-        amount:Number(e.amount)||0
+        amount:
+          Number(e.amount)||0
 
       });
 
@@ -3608,17 +3796,17 @@ function renderReports(){
   const filtered =
     rows.filter(r=>{
 
-      if(from && r.date < from){
+      if(from && r.date<from){
         return false;
       }
 
-      if(to && r.date > to){
+      if(to && r.date>to){
         return false;
       }
 
       if(
         memberId &&
-        r.memberId !== memberId
+        r.memberId!==memberId
       ){
         return false;
       }
@@ -3628,17 +3816,17 @@ function renderReports(){
     }).sort(
       (a,b)=>
         String(a.date)
-          .localeCompare(String(b.date))
+          .localeCompare(
+            String(b.date)
+          )
     );
 
-  let total = 0;
+  let total=0;
 
-  filtered.forEach(
-    r=>{
-      total +=
-        Number(r.amount)||0;
-    }
-  );
+  filtered.forEach(r=>{
+    total +=
+      Number(r.amount)||0;
+  });
 
   document.getElementById(
     "reportQuantity"
@@ -3652,7 +3840,7 @@ function renderReports(){
 
   if(!filtered.length){
 
-    body.innerHTML = `
+    body.innerHTML=`
       <tr>
         <td colspan="5" class="empty">
           No records found.
@@ -3679,7 +3867,9 @@ function renderReports(){
         </td>
 
         <td>
-          ${escapeHtml(r.member || "-")}
+          ${escapeHtml(
+            r.member||"-"
+          )}
         </td>
 
         <td>
@@ -3706,33 +3896,37 @@ function renderDashboard(){
   const totalMembers =
     data.members.length;
 
-  let share = 0;
-  let savings = 0;
-  let installment = 0;
+  let share=0;
+  let savings=0;
+  let installment=0;
 
   data.collections.forEach(c=>{
 
-    share += Number(c.share)||0;
+    share +=
+      Number(c.share)||0;
 
-    savings += Number(c.savings)||0;
+    savings +=
+      Number(c.savings)||0;
 
     installment +=
       Number(c.installment)||0;
 
   });
 
-  let loan = 0;
-  let service = 0;
+  let loan=0;
+  let service=0;
 
   data.loans.forEach(l=>{
 
-    loan += Number(l.principal)||0;
+    loan +=
+      Number(l.principal)||0;
 
     service +=
       Array.isArray(l.payments)
         ? l.payments.reduce(
             (sum,p)=>
-              sum + (Number(p.service)||0),
+              sum+
+              (Number(p.service)||0),
             0
           )
         : 0;
@@ -3742,14 +3936,14 @@ function renderDashboard(){
   const expense =
     data.expenses.reduce(
       (sum,e)=>
-        sum + (Number(e.amount)||0),
+        sum+(Number(e.amount)||0),
       0
     );
 
   const collectionTotal =
     data.collections.reduce(
       (sum,c)=>
-        sum + (Number(c.total)||0),
+        sum+(Number(c.total)||0),
       0
     );
 
@@ -3761,35 +3955,43 @@ function renderDashboard(){
 
   document.getElementById(
     "dashMembers"
-  ).textContent = totalMembers;
+  ).textContent =
+    totalMembers;
 
   document.getElementById(
     "dashSavings"
-  ).textContent = money(savings);
+  ).textContent =
+    money(savings);
 
   document.getElementById(
     "dashShare"
-  ).textContent = money(share);
+  ).textContent =
+    money(share);
 
   document.getElementById(
     "dashLoan"
-  ).textContent = money(loan);
+  ).textContent =
+    money(loan);
 
   document.getElementById(
     "dashInstallment"
-  ).textContent = money(installment);
+  ).textContent =
+    money(installment);
 
   document.getElementById(
     "dashService"
-  ).textContent = money(service);
+  ).textContent =
+    money(service);
 
   document.getElementById(
     "dashExpense"
-  ).textContent = money(expense);
+  ).textContent =
+    money(expense);
 
   document.getElementById(
     "dashCash"
-  ).textContent = money(cash);
+  ).textContent =
+    money(cash);
 
 }
 
@@ -3800,7 +4002,7 @@ function renderDashboard(){
 
 function backupData(){
 
-  const backup = {
+  const backup={
 
     app:"Cooperative Accounts",
 
@@ -3815,11 +4017,13 @@ function backupData(){
 
   const blob =
     new Blob(
-      [JSON.stringify(
-        backup,
-        null,
-        2
-      )],
+      [
+        JSON.stringify(
+          backup,
+          null,
+          2
+        )
+      ],
       {
         type:"application/json"
       }
@@ -3831,7 +4035,7 @@ function backupData(){
   const a =
     document.createElement("a");
 
-  a.href = url;
+  a.href=url;
 
   a.download =
     "cooperative-accounts-backup-" +
@@ -3860,7 +4064,7 @@ function restoreData(event){
   const reader =
     new FileReader();
 
-  reader.onload = function(){
+  reader.onload=function(){
 
     try{
 
@@ -3874,7 +4078,9 @@ function restoreData(event){
 
       if(
         !restored ||
-        !Array.isArray(restored.members)
+        !Array.isArray(
+          restored.members
+        )
       ){
 
         alert(
@@ -3890,12 +4096,12 @@ function restoreData(event){
         )
       ){
 
-        event.target.value = "";
+        event.target.value="";
 
         return;
       }
 
-      data = {
+      data={
 
         ...blankData(),
 
@@ -3948,7 +4154,7 @@ function restoreData(event){
 
     }
 
-    event.target.value = "";
+    event.target.value="";
 
   };
 
@@ -3974,12 +4180,13 @@ function clearAllData(){
     return;
   }
 
-  data = blankData();
+  data =
+    blankData();
 
   saveData();
 
-  editingMemberId = null;
-  editingExpenseId = null;
+  editingMemberId=null;
+  editingExpenseId=null;
 
   refreshAll();
 
@@ -4030,7 +4237,7 @@ function refreshAll(){
    ENTER KEY NAVIGATION
 ========================= */
 
-const focusOrder = {
+const focusOrder={
 
   members:[
     "memberCode",
@@ -4074,7 +4281,7 @@ document.addEventListener(
   "keydown",
   function(event){
 
-    if(event.key !== "Enter"){
+    if(event.key!=="Enter"){
       return;
     }
 
@@ -4102,14 +4309,14 @@ document.addEventListener(
     const index =
       order.indexOf(active.id);
 
-    if(index === -1){
+    if(index===-1){
       return;
     }
 
     event.preventDefault();
 
     const nextId =
-      order[index + 1];
+      order[index+1];
 
     if(nextId){
 
@@ -4123,12 +4330,14 @@ document.addEventListener(
         next.focus();
 
         if(
-          next.tagName === "INPUT" &&
-          next.type !== "date"
+          next.tagName==="INPUT" &&
+          next.type!=="date"
         ){
+
           try{
             next.select();
           }catch(e){}
+
         }
 
       }
