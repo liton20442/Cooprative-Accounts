@@ -471,7 +471,6 @@ footer{
 
 <main>
 
-<!-- DASHBOARD -->
 <section id="dashboard" class="page active">
 
 <h1>Dashboard</h1>
@@ -602,14 +601,14 @@ footer{
 <input id="memberCode" autocomplete="off">
 </div>
 
-<div class="field">
-<label>Mobile Number</label>
-<input id="memberMobile" inputmode="tel" autocomplete="off">
-</div>
-
 <div class="field full">
 <label>Member Name</label>
 <input id="memberName" autocomplete="off">
+</div>
+
+<div class="field full">
+<label>Mobile Number</label>
+<input id="memberMobile" autocomplete="off">
 </div>
 
 </div>
@@ -668,47 +667,47 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 
 <div class="field">
 <label>Date</label>
-<input type="date" id="collectionDate">
+<input type="text" id="collectionDate" placeholder="dd/mm/yy" autocomplete="off">
 </div>
 
 <div class="field">
 <label>Share</label>
-<input type="text" id="colShare" inputmode="decimal" value="">
+<input type="text" id="colShare" value="">
 </div>
 
 <div class="field">
 <label>Savings</label>
-<input type="text" id="colSavings" inputmode="decimal" value="">
+<input type="text" id="colSavings" value="">
 </div>
 
 <div class="field">
 <label>Loan Installment</label>
-<input type="text" id="colInstallment" inputmode="decimal" value="">
+<input type="text" id="colInstallment" value="">
 </div>
 
 <div class="field">
 <label>Admission Fee</label>
-<input type="text" id="colAdmission" inputmode="decimal" value="">
+<input type="text" id="colAdmission" value="">
 </div>
 
 <div class="field">
 <label>Pass Book</label>
-<input type="text" id="colPassbook" inputmode="decimal" value="">
+<input type="text" id="colPassbook" value="">
 </div>
 
 <div class="field">
 <label>Insurance</label>
-<input type="text" id="colInsurance" inputmode="decimal" value="">
+<input type="text" id="colInsurance" value="">
 </div>
 
 <div class="field">
 <label>Loan Form Sales</label>
-<input type="text" id="colLoanForm" inputmode="decimal" value="">
+<input type="text" id="colLoanForm" value="">
 </div>
 
 <div class="field">
 <label>Other</label>
-<input type="text" id="colOther" inputmode="decimal" value="">
+<input type="text" id="colOther" value="">
 </div>
 
 </div>
@@ -746,17 +745,17 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 
 <div class="field">
 <label>Loan Date</label>
-<input type="date" id="loanDate">
+<input type="text" id="loanDate" placeholder="dd/mm/yy" autocomplete="off">
 </div>
 
 <div class="field">
 <label>Loan Principal</label>
-<input type="text" id="loanPrincipal" inputmode="decimal">
+<input type="text" id="loanPrincipal">
 </div>
 
 <div class="field">
 <label>Service Charge %</label>
-<input type="text" id="loanRate" inputmode="decimal" value="10">
+<input type="text" id="loanRate" value="10">
 </div>
 
 <div class="field">
@@ -771,7 +770,7 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 
 <div class="field">
 <label>Number of Installments</label>
-<input type="number" id="loanInstallments" min="1" step="1">
+<input type="text" id="loanInstallments">
 </div>
 
 <div class="field">
@@ -781,7 +780,7 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 
 <div class="field">
 <label>First Installment Date</label>
-<input type="date" id="loanFirstDate">
+<input type="text" id="loanFirstDate" placeholder="dd/mm/yy" autocomplete="off">
 </div>
 
 <div class="field full">
@@ -997,12 +996,12 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 
 <div class="field">
 <label>From Date</label>
-<input type="date" id="reportFrom">
+<input type="text" id="reportFrom" placeholder="dd/mm/yy" autocomplete="off">
 </div>
 
 <div class="field">
 <label>To Date</label>
-<input type="date" id="reportTo">
+<input type="text" id="reportTo" placeholder="dd/mm/yy" autocomplete="off">
 </div>
 
 <div class="field">
@@ -1189,16 +1188,116 @@ function num(id){
   return Number(value) || 0;
 }
 
-function today(){
-  return new Date().toISOString().slice(0,10);
+
+/* ---------------- DATE FUNCTIONS ---------------- */
+
+/*
+  All dates are stored internally as YYYY-MM-DD.
+  User sees and enters dates as DD/MM/YY.
+*/
+
+function pad2(n){
+  return String(n).padStart(2,"0");
 }
 
+function today(){
+  const d=new Date();
+  return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
+}
+
+function displayDate(iso){
+
+  if(!iso) return "";
+
+  const parts=String(iso).split("-");
+
+  if(parts.length!==3) return iso;
+
+  return parts[2]+"/"+parts[1]+"/"+parts[0].slice(-2);
+}
+
+function dateInputValue(iso){
+
+  if(!iso) return "";
+
+  const parts=String(iso).split("-");
+
+  if(parts.length!==3) return "";
+
+  return parts[2]+"/"+parts[1]+"/"+parts[0].slice(-2);
+}
+
+function parseDateInput(value){
+
+  let v=String(value||"").trim();
+
+  if(!v) return "";
+
+  v=v.replace(/[^\d/.-]/g,"");
+
+  const parts=v.split(/[\/.-]/);
+
+  if(parts.length!==3) return "";
+
+  let day=parts[0];
+  let month=parts[1];
+  let year=parts[2];
+
+  if(day.length===1) day="0"+day;
+  if(month.length===1) month="0"+month;
+
+  if(year.length===2){
+    year="20"+year;
+  }
+
+  const d=Number(day);
+  const m=Number(month);
+  const y=Number(year);
+
+  if(!d || !m || !y) return "";
+
+  if(m<1 || m>12 || d<1 || d>31) return "";
+
+  return y+"-"+pad2(m)+"-"+pad2(d);
+}
+
+function setToday(id){
+  const el=document.getElementById(id);
+  if(el) el.value=dateInputValue(today());
+}
+
+function validDateOrToday(id){
+
+  const el=document.getElementById(id);
+  const parsed=parseDateInput(el ? el.value : "");
+
+  return parsed || today();
+}
+
+function formatDateWhileTyping(el){
+
+  let value=el.value.replace(/[^\d]/g,"").slice(0,6);
+
+  if(value.length>4){
+    value=value.slice(0,2)+"/"+value.slice(2,4)+"/"+value.slice(4);
+  }else if(value.length>2){
+    value=value.slice(0,2)+"/"+value.slice(2);
+  }
+
+  el.value=value;
+}
+
+
+/* ---------------- PAGE ---------------- */
+
 function showPage(id){
+
   document.querySelectorAll(".page").forEach(p=>{
     p.classList.remove("active");
   });
 
-  const page = document.getElementById(id);
+  const page=document.getElementById(id);
+
   if(page) page.classList.add("active");
 
   window.scrollTo({top:0,behavior:"smooth"});
@@ -1207,15 +1306,18 @@ function showPage(id){
 }
 
 function refreshPage(id){
+
   populateMemberSelects();
   populateExpenseHeads();
 
   if(id==="dashboard") renderDashboard();
   if(id==="members") renderMembers();
+
   if(id==="loan"){
     calculateLoan();
     renderLoans();
   }
+
   if(id==="accounts") renderAccount();
   if(id==="ledger") renderLedger();
   if(id==="cashbook") renderCashBook();
@@ -1223,12 +1325,12 @@ function refreshPage(id){
 }
 
 function memberName(id){
-  const m = data.members.find(x=>x.id===id);
+  const m=data.members.find(x=>x.id===id);
   return m ? m.name : "";
 }
 
 function memberCode(id){
-  const m = data.members.find(x=>x.id===id);
+  const m=data.members.find(x=>x.id===id);
   return m ? m.code : "";
 }
 
@@ -1237,17 +1339,17 @@ function memberCode(id){
 
 function saveMember(){
 
-  const code = document.getElementById("memberCode").value.trim();
-  const name = document.getElementById("memberName").value.trim();
-  const mobile = document.getElementById("memberMobile").value.trim();
+  const code=document.getElementById("memberCode").value.trim();
+  const name=document.getElementById("memberName").value.trim();
+  const mobile=document.getElementById("memberMobile").value.trim();
 
   if(!code || !name){
     alert("Member Code and Member Name are required.");
     return;
   }
 
-  const duplicate = data.members.some(
-    m => m.code.toLowerCase() === code.toLowerCase()
+  const duplicate=data.members.some(
+    m=>m.code.toLowerCase()===code.toLowerCase()
   );
 
   if(duplicate){
@@ -1267,31 +1369,36 @@ function saveMember(){
 
   clearMemberForm();
   refreshAll();
+
   alert("Member saved successfully.");
 }
 
 function clearMemberForm(){
+
   document.getElementById("memberCode").value="";
   document.getElementById("memberName").value="";
   document.getElementById("memberMobile").value="";
+
+  document.getElementById("memberCode").focus();
 }
 
 function renderMembers(){
 
-  const search = document.getElementById("memberSearch").value
+  const search=document.getElementById("memberSearch").value
     .trim()
     .toLowerCase();
 
-  const list = data.members.filter(m=>{
+  const list=data.members.filter(m=>{
     return !search ||
       m.code.toLowerCase().includes(search) ||
       m.name.toLowerCase().includes(search);
   });
 
-  const body = document.getElementById("memberTable");
+  const body=document.getElementById("memberTable");
 
   if(!list.length){
-    body.innerHTML=`<tr><td colspan="4" class="empty">No members found.</td></tr>`;
+    body.innerHTML=
+      `<tr><td colspan="4" class="empty">No members found.</td></tr>`;
     return;
   }
 
@@ -1299,7 +1406,7 @@ function renderMembers(){
     <tr>
       <td>${escapeHtml(m.code)}</td>
       <td>${escapeHtml(m.name)}</td>
-      <td>${escapeHtml(m.mobile || "")}</td>
+      <td>${escapeHtml(m.mobile||"")}</td>
       <td>
         <button class="btn-small btn-blue"
           onclick="openMemberAccount('${m.id}')">
@@ -1311,24 +1418,30 @@ function renderMembers(){
 }
 
 function openMemberAccount(id){
+
   populateMemberSelects();
+
   document.getElementById("accountMember").value=id;
+
   showPage("accounts");
 }
 
 
 /* ---------------- SELECTS ---------------- */
 
-function fillSelect(id, options, placeholder){
+function fillSelect(id,options,placeholder){
 
   const select=document.getElementById(id);
+
   if(!select) return;
 
   const current=select.value;
 
-  select.innerHTML =
-    `<option value="">${placeholder}</option>` +
-    options.map(x=>`<option value="${x.id}">${escapeHtml(x.label)}</option>`).join("");
+  select.innerHTML=
+    `<option value="">${placeholder}</option>`+
+    options.map(x=>
+      `<option value="${x.id}">${escapeHtml(x.label)}</option>`
+    ).join("");
 
   if(options.some(x=>x.id===current)){
     select.value=current;
@@ -1351,11 +1464,12 @@ function populateMemberSelects(){
 function populateExpenseHeads(){
 
   const select=document.getElementById("expenseHead");
+
   if(!select) return;
 
   const heads=[...defaultExpenseHeads,...data.customExpenseHeads];
 
-  select.innerHTML =
+  select.innerHTML=
     `<option value="">Select Expense Head</option>`+
     heads.map(h=>`<option>${escapeHtml(h)}</option>`).join("");
 }
@@ -1364,6 +1478,7 @@ function populateExpenseHeads(){
 /* ---------------- COLLECTION ---------------- */
 
 function collectionFields(){
+
   return [
     ["Share","colShare"],
     ["Savings","colSavings"],
@@ -1385,7 +1500,7 @@ function collectionTotal(){
 
 function updateCollectionTotal(){
 
-  document.getElementById("collectionTotal").textContent =
+  document.getElementById("collectionTotal").textContent=
     money(collectionTotal());
 }
 
@@ -1406,14 +1521,16 @@ function clearCollectionForm(){
     document.getElementById(id).value="";
   });
 
-  document.getElementById("collectionDate").value=today();
+  setToday("collectionDate");
+
   updateCollectionTotal();
 }
 
 function saveCollection(){
 
   const memberId=document.getElementById("collectionMember").value;
-  const date=document.getElementById("collectionDate").value || today();
+
+  const date=validDateOrToday("collectionDate");
 
   if(!memberId){
     alert("Please select a member.");
@@ -1455,6 +1572,15 @@ function saveCollection(){
       return;
     }
 
+    const totalOutstanding=activeLoans.reduce(
+      (s,l)=>s+loanOutstanding(l),0
+    );
+
+    if(item.installment>totalOutstanding+0.01){
+      alert("The installment amount is greater than the member's loan outstanding.");
+      return;
+    }
+
     let remaining=item.installment;
 
     for(const loan of activeLoans){
@@ -1464,13 +1590,9 @@ function saveCollection(){
       const outstanding=loanOutstanding(loan);
       const pay=Math.min(remaining,outstanding);
 
-      allocateInstallment(loan,pay);
-      remaining-=pay;
-    }
+      allocateInstallment(loan,pay,date);
 
-    if(remaining>0.5){
-      alert("The installment amount is greater than the member's loan outstanding.");
-      return;
+      remaining-=pay;
     }
   }
 
@@ -1481,8 +1603,13 @@ function saveCollection(){
 
   alert("Collection saved successfully.");
 
-  /* Keep selected member and date for quick repeated entry */
-  document.getElementById("collectionDate").value=date;
+  /*
+    Keep selected member and selected date.
+    Only collection amounts are cleared.
+  */
+
+  document.getElementById("collectionDate").value=
+    dateInputValue(date);
 
   [
     "colShare",
@@ -1500,7 +1627,7 @@ function saveCollection(){
   updateCollectionTotal();
 }
 
-function allocateInstallment(loan,payment){
+function allocateInstallment(loan,payment,paymentDate){
 
   if(!loan.payments) loan.payments=[];
 
@@ -1515,15 +1642,22 @@ function allocateInstallment(loan,payment){
     (s,p)=>s+Number(p.principal||0),0
   );
 
-  let remainingService=Math.max(0,serviceTotal-servicePaid);
-  let remainingPrincipal=Math.max(0,loan.principal-principalPaid);
+  let remainingService=Math.max(
+    0,
+    serviceTotal-servicePaid
+  );
+
+  let remainingPrincipal=Math.max(
+    0,
+    loan.principal-principalPaid
+  );
 
   let servicePart=Math.min(
     remainingService,
     Math.round((serviceTotal/totalInstallments)*100)/100
   );
 
-  if(payment >= remainingService){
+  if(payment>=remainingService){
     servicePart=remainingService;
   }
 
@@ -1539,7 +1673,7 @@ function allocateInstallment(loan,payment){
     amount:payment,
     principal:principalPart,
     service:servicePart,
-    date:today()
+    date:paymentDate
   });
 }
 
@@ -1561,7 +1695,8 @@ function calculateLoan(){
 
   const service=principal*rate/100;
   const total=principal+service;
-  const installment=installments>0 ? total/installments : 0;
+  const installment=
+    installments>0 ? total/installments : 0;
 
   document.getElementById("loanService").value=
     service ? money(service) : "";
@@ -1588,17 +1723,23 @@ function calculateLoan(){
 function saveLoan(){
 
   const memberId=document.getElementById("loanMember").value;
-  const date=document.getElementById("loanDate").value || today();
+
+  const date=validDateOrToday("loanDate");
+
   const principal=num("loanPrincipal");
+
   const rate=Number(
     document.getElementById("loanRate").value
       .toString()
       .replace(/,/g,"")
   )||0;
+
   const installments=
     Number(document.getElementById("loanInstallments").value)||0;
+
   const firstDate=
-    document.getElementById("loanFirstDate").value || date;
+    validDateOrToday("loanFirstDate");
+
   const note=
     document.getElementById("loanNote").value.trim();
 
@@ -1645,23 +1786,30 @@ function clearLoanForm(){
   document.getElementById("loanTotal").value="";
   document.getElementById("loanInstallmentAmount").value="";
   document.getElementById("loanNote").value="";
-  document.getElementById("loanDate").value=today();
-  document.getElementById("loanFirstDate").value=today();
+
+  setToday("loanDate");
+  setToday("loanFirstDate");
 
   calculateLoan();
 }
 
 function loanPaid(loan){
+
   return (loan.payments||[]).reduce(
     (s,p)=>s+Number(p.amount||0),0
   );
 }
 
 function loanOutstanding(loan){
-  return Math.max(0,Number(loan.total||0)-loanPaid(loan));
+
+  return Math.max(
+    0,
+    Number(loan.total||0)-loanPaid(loan)
+  );
 }
 
 function loanServicePaid(loan){
+
   return (loan.payments||[]).reduce(
     (s,p)=>s+Number(p.service||0),0
   );
@@ -1681,7 +1829,7 @@ function renderLoans(){
     <tr>
       <td>${escapeHtml(l.id)}</td>
       <td>${escapeHtml(memberName(l.memberId))}</td>
-      <td>${escapeHtml(l.date)}</td>
+      <td>${escapeHtml(displayDate(l.date))}</td>
       <td>${money(l.principal)}</td>
       <td>${money(l.service)}</td>
       <td>${money(l.total)}</td>
@@ -1702,13 +1850,23 @@ function renderAccount(){
   const body=document.getElementById("accountTransactions");
 
   if(!memberId){
+
     summary.innerHTML=
       `<div class="empty">Select a member to view account.</div>`;
+
     body.innerHTML="";
+
     return;
   }
 
   const member=data.members.find(m=>m.id===memberId);
+
+  if(!member){
+    summary.innerHTML=
+      `<div class="empty">Member not found.</div>`;
+    body.innerHTML="";
+    return;
+  }
 
   const share=data.collections
     .filter(c=>c.memberId===memberId)
@@ -1735,38 +1893,47 @@ function renderAccount(){
 
   summary.innerHTML=`
     <div class="summary-box">
+
       <div class="summary-line">
         <span>Member Code</span>
         <strong>${escapeHtml(member.code)}</strong>
       </div>
+
       <div class="summary-line">
         <span>Member Name</span>
         <strong>${escapeHtml(member.name)}</strong>
       </div>
+
       <div class="summary-line">
         <span>Mobile</span>
         <strong>${escapeHtml(member.mobile||"")}</strong>
       </div>
+
       <div class="summary-line">
         <span>Share</span>
         <strong>${money(share)}</strong>
       </div>
+
       <div class="summary-line">
         <span>Savings</span>
         <strong>${money(savings)}</strong>
       </div>
+
       <div class="summary-line">
         <span>Loan Installment Paid</span>
         <strong>${money(installments)}</strong>
       </div>
+
       <div class="summary-line">
         <span>Service Charge Paid</span>
         <strong>${money(service)}</strong>
       </div>
+
       <div class="summary-line">
         <span>Loan Outstanding</span>
         <strong>${money(loanOutstandingTotal)}</strong>
       </div>
+
     </div>
   `;
 
@@ -1775,6 +1942,7 @@ function renderAccount(){
   data.collections
     .filter(c=>c.memberId===memberId)
     .forEach(c=>{
+
       transactions.push({
         date:c.date,
         description:"Collection",
@@ -1790,39 +1958,51 @@ function renderAccount(){
           c.other?`Other ${money(c.other)}`:""
         ].filter(Boolean).join(" • ")
       });
+
     });
 
   data.loans
     .filter(l=>l.memberId===memberId)
     .forEach(l=>{
+
       transactions.push({
         date:l.date,
         description:"Loan Disbursement",
         amount:l.principal,
-        details:`Principal ${money(l.principal)} • Service ${money(l.service)} • Total ${money(l.total)}`
+        details:
+          `Principal ${money(l.principal)} • `+
+          `Service ${money(l.service)} • `+
+          `Total ${money(l.total)}`
       });
 
       (l.payments||[]).forEach(p=>{
+
         transactions.push({
           date:p.date,
           description:"Loan Installment",
           amount:p.amount,
-          details:`Principal ${money(p.principal)} • Service ${money(p.service)}`
+          details:
+            `Principal ${money(p.principal)} • `+
+            `Service ${money(p.service)}`
         });
+
       });
+
     });
 
   transactions.sort((a,b)=>a.date.localeCompare(b.date));
 
   if(!transactions.length){
+
     body.innerHTML=
       `<tr><td colspan="4" class="empty">No transactions found.</td></tr>`;
+
     return;
   }
 
   body.innerHTML=transactions.map(t=>`
     <tr>
-      <td>${escapeHtml(t.date)}</td>
+      <td>${escapeHtml(displayDate(t.date))}</td>
       <td>${escapeHtml(t.description)}</td>
       <td>${money(t.amount)}</td>
       <td>${escapeHtml(t.details)}</td>
@@ -1853,7 +2033,9 @@ function ledgerRows(){
     ];
 
     heads.forEach(([head,amount])=>{
+
       if(Number(amount)>0){
+
         rows.push({
           date:c.date,
           head,
@@ -1861,18 +2043,11 @@ function ledgerRows(){
           in:Number(amount),
           out:0
         });
+
       }
+
     });
 
-    if(Number(c.installment)>0){
-
-      const loan=data.loans
-        .filter(l=>l.memberId===c.memberId)
-        .find(l=>loanPaid(l)>0);
-
-      /* Loan installment total remains a separate ledger head.
-         Service Charge is additionally shown through loan payments. */
-    }
   });
 
   data.loans.forEach(l=>{
@@ -1886,7 +2061,9 @@ function ledgerRows(){
     });
 
     (l.payments||[]).forEach(p=>{
+
       if(Number(p.service)>0){
+
         rows.push({
           date:p.date,
           head:"Service Charge",
@@ -1894,11 +2071,15 @@ function ledgerRows(){
           in:p.service,
           out:0
         });
+
       }
+
     });
+
   });
 
   data.expenses.forEach(e=>{
+
     rows.push({
       date:e.date,
       head:e.head,
@@ -1906,9 +2087,12 @@ function ledgerRows(){
       in:0,
       out:e.amount
     });
+
   });
 
-  return rows.sort((a,b)=>a.date.localeCompare(b.date));
+  return rows.sort(
+    (a,b)=>a.date.localeCompare(b.date)
+  );
 }
 
 function renderLedger(){
@@ -1922,14 +2106,16 @@ function renderLedger(){
   const body=document.getElementById("ledgerTable");
 
   if(!rows.length){
+
     body.innerHTML=
       `<tr><td colspan="5" class="empty">No ledger entries found.</td></tr>`;
+
     return;
   }
 
   body.innerHTML=rows.map(r=>`
     <tr>
-      <td>${escapeHtml(r.date)}</td>
+      <td>${escapeHtml(displayDate(r.date))}</td>
       <td>${escapeHtml(r.head)}</td>
       <td>${escapeHtml(r.member)}</td>
       <td>${r.in?money(r.in):""}</td>
@@ -1946,35 +2132,47 @@ function cashRows(){
   const rows=[];
 
   data.collections.forEach(c=>{
+
     rows.push({
       date:c.date,
-      description:`Collection - ${memberName(c.memberId)}`,
+      description:
+        `Collection - ${memberName(c.memberId)}`,
       in:c.total,
       out:0
     });
+
   });
 
   data.loans.forEach(l=>{
+
     rows.push({
       date:l.date,
-      description:`Loan Disbursement - ${memberName(l.memberId)}`,
+      description:
+        `Loan Disbursement - ${memberName(l.memberId)}`,
       in:0,
       out:l.principal
     });
+
   });
 
   data.expenses.forEach(e=>{
+
     if(e.payment==="Cash"){
+
       rows.push({
         date:e.date,
         description:`Expense - ${e.head}`,
         in:0,
         out:e.amount
       });
+
     }
+
   });
 
-  return rows.sort((a,b)=>a.date.localeCompare(b.date));
+  return rows.sort(
+    (a,b)=>a.date.localeCompare(b.date)
+  );
 }
 
 function cashBalance(){
@@ -1982,8 +2180,10 @@ function cashBalance(){
   let balance=Number(data.openingCash)||0;
 
   cashRows().forEach(r=>{
+
     balance+=Number(r.in||0);
     balance-=Number(r.out||0);
+
   });
 
   return balance;
@@ -1998,18 +2198,30 @@ function renderCashBook(){
   document.getElementById("cashOpening").textContent=
     money(data.openingCash);
 
-  const totalIn=rows.reduce((s,r)=>s+Number(r.in||0),0);
-  const totalOut=rows.reduce((s,r)=>s+Number(r.out||0),0);
+  const totalIn=rows.reduce(
+    (s,r)=>s+Number(r.in||0),0
+  );
 
-  document.getElementById("cashIn").textContent=money(totalIn);
-  document.getElementById("cashOut").textContent=money(totalOut);
-  document.getElementById("cashBalance").textContent=money(cashBalance());
+  const totalOut=rows.reduce(
+    (s,r)=>s+Number(r.out||0),0
+  );
+
+  document.getElementById("cashIn").textContent=
+    money(totalIn);
+
+  document.getElementById("cashOut").textContent=
+    money(totalOut);
+
+  document.getElementById("cashBalance").textContent=
+    money(cashBalance());
 
   const body=document.getElementById("cashTable");
 
   if(!rows.length){
+
     body.innerHTML=
       `<tr><td colspan="5" class="empty">No cash transactions found.</td></tr>`;
+
     return;
   }
 
@@ -2020,13 +2232,14 @@ function renderCashBook(){
 
     return `
       <tr>
-        <td>${escapeHtml(r.date)}</td>
+        <td>${escapeHtml(displayDate(r.date))}</td>
         <td>${escapeHtml(r.description)}</td>
         <td>${r.in?money(r.in):""}</td>
         <td>${r.out?money(r.out):""}</td>
         <td>${money(balance)}</td>
       </tr>
     `;
+
   }).join("");
 }
 
@@ -2038,6 +2251,7 @@ function allReportRows(){
   const rows=[];
 
   data.collections.forEach(c=>{
+
     rows.push({
       date:c.date,
       member:memberName(c.memberId),
@@ -2046,9 +2260,11 @@ function allReportRows(){
       description:"Collection",
       amount:c.total
     });
+
   });
 
   data.loans.forEach(l=>{
+
     rows.push({
       date:l.date,
       member:memberName(l.memberId),
@@ -2059,6 +2275,7 @@ function allReportRows(){
     });
 
     (l.payments||[]).forEach(p=>{
+
       rows.push({
         date:p.date,
         member:memberName(l.memberId),
@@ -2067,10 +2284,13 @@ function allReportRows(){
         description:"Loan Installment",
         amount:p.amount
       });
+
     });
+
   });
 
   data.expenses.forEach(e=>{
+
     rows.push({
       date:e.date,
       member:"",
@@ -2079,24 +2299,35 @@ function allReportRows(){
       description:e.head,
       amount:e.amount
     });
+
   });
 
-  return rows.sort((a,b)=>a.date.localeCompare(b.date));
+  return rows.sort(
+    (a,b)=>a.date.localeCompare(b.date)
+  );
 }
 
 function renderReports(){
 
-  const from=document.getElementById("reportFrom").value;
-  const to=document.getElementById("reportTo").value;
+  const fromInput=document.getElementById("reportFrom").value;
+  const toInput=document.getElementById("reportTo").value;
+
+  const from=parseDateInput(fromInput);
+  const to=parseDateInput(toInput);
+
   const member=document.getElementById("reportMember").value;
   const type=document.getElementById("reportType").value;
 
   const rows=allReportRows().filter(r=>{
 
     if(from && r.date<from) return false;
+
     if(to && r.date>to) return false;
+
     if(member && r.memberId!==member) return false;
-    if(type!=="all" && r.type.toLowerCase()!==type) return false;
+
+    if(type!=="all" &&
+       r.type.toLowerCase()!==type) return false;
 
     return true;
   });
@@ -2111,14 +2342,16 @@ function renderReports(){
     money(total);
 
   if(!rows.length){
+
     body.innerHTML=
       `<tr><td colspan="5" class="empty">No report data found.</td></tr>`;
+
     return;
   }
 
   body.innerHTML=rows.map(r=>`
     <tr>
-      <td>${escapeHtml(r.date)}</td>
+      <td>${escapeHtml(displayDate(r.date))}</td>
       <td>${escapeHtml(r.member)}</td>
       <td>${escapeHtml(r.type)}</td>
       <td>${escapeHtml(r.description)}</td>
@@ -2154,13 +2387,16 @@ function addExpenseForm(){
   ].some(h=>h.toLowerCase()===clean.toLowerCase());
 
   if(exists){
+
     alert("This expense head already exists.");
+
     return;
   }
 
   data.customExpenseHeads.push(clean);
 
   saveData();
+
   populateExpenseHeads();
 }
 
@@ -2257,12 +2493,16 @@ function backupData(){
   const url=URL.createObjectURL(blob);
 
   const a=document.createElement("a");
+
   a.href=url;
+
   a.download=
     "Cooperative-Backup-"+today()+".json";
 
   document.body.appendChild(a);
+
   a.click();
+
   a.remove();
 
   URL.revokeObjectURL(url);
@@ -2273,7 +2513,9 @@ function restoreData(){
   const input=document.getElementById("restoreFile");
 
   if(!input.files.length){
+
     alert("Please select a backup file.");
+
     return;
   }
 
@@ -2303,6 +2545,7 @@ function restoreData(){
       };
 
       saveData();
+
       refreshAll();
 
       alert("Backup restored successfully.");
@@ -2312,6 +2555,7 @@ function restoreData(){
       alert("Invalid backup file.");
 
     }
+
   };
 
   reader.readAsText(file);
@@ -2332,6 +2576,7 @@ function clearAllData(){
   }
 
   data=blankData();
+
   saveData();
 
   refreshAll();
@@ -2370,6 +2615,12 @@ function escapeHtml(value){
 /* ---------------- ENTER NAVIGATION ---------------- */
 
 const focusOrder={
+
+  /*
+    IMPORTANT:
+    Member sequence is now:
+    Member Code -> Member Name -> Mobile Number -> Save
+  */
 
   members:[
     "memberCode",
@@ -2424,13 +2675,17 @@ function setupEnterNavigation(){
           const next=document.getElementById(nextId);
 
           if(next){
+
             next.focus();
 
             if(next.select){
+
               try{
                 next.select();
               }catch(_){}
+
             }
+
           }
 
         }else{
@@ -2444,12 +2699,18 @@ function setupEnterNavigation(){
           if(saveButton){
             saveButton.focus();
           }
+
         }
+
       });
+
     });
+
   });
 
+
   /* Collection amount calculation */
+
   [
     "colShare",
     "colSavings",
@@ -2460,17 +2721,69 @@ function setupEnterNavigation(){
     "colLoanForm",
     "colOther"
   ].forEach(id=>{
-    document.getElementById(id)
-      .addEventListener("input",updateCollectionTotal);
+
+    const el=document.getElementById(id);
+
+    if(el){
+      el.addEventListener(
+        "input",
+        updateCollectionTotal
+      );
+    }
+
   });
+
+
+  /* Loan calculation */
 
   [
     "loanPrincipal",
     "loanRate",
     "loanInstallments"
   ].forEach(id=>{
-    document.getElementById(id)
-      .addEventListener("input",calculateLoan);
+
+    const el=document.getElementById(id);
+
+    if(el){
+      el.addEventListener(
+        "input",
+        calculateLoan
+      );
+    }
+
+  });
+
+
+  /* Date formatting */
+
+  [
+    "collectionDate",
+    "loanDate",
+    "loanFirstDate",
+    "reportFrom",
+    "reportTo"
+  ].forEach(id=>{
+
+    const el=document.getElementById(id);
+
+    if(!el) return;
+
+    el.addEventListener("input",function(){
+
+      formatDateWhileTyping(this);
+
+    });
+
+    el.addEventListener("blur",function(){
+
+      const parsed=parseDateInput(this.value);
+
+      if(parsed){
+        this.value=dateInputValue(parsed);
+      }
+
+    });
+
   });
 }
 
@@ -2479,14 +2792,15 @@ function setupEnterNavigation(){
 
 document.addEventListener("DOMContentLoaded",()=>{
 
-  document.getElementById("collectionDate").value=today();
-  document.getElementById("loanDate").value=today();
-  document.getElementById("loanFirstDate").value=today();
+  setToday("collectionDate");
+  setToday("loanDate");
+  setToday("loanFirstDate");
 
   populateMemberSelects();
   populateExpenseHeads();
 
   setupEnterNavigation();
+
   refreshAll();
 });
 </script>
