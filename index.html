@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f766e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -11,703 +11,1397 @@
 <title>Cooperative Accounts</title>
 
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  background:#f0fdfa;
-  color:#123;
+:root{
+  --primary:#0f766e;
+  --primary-dark:#115e59;
+  --secondary:#2563eb;
+  --success:#16a34a;
+  --warning:#d97706;
+  --danger:#dc2626;
+  --purple:#7c3aed;
+  --bg:#f1f5f9;
+  --card:#ffffff;
+  --text:#172033;
+  --muted:#64748b;
+  --border:#dbe3ea;
+  --radius:16px;
 }
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-size:17px;
+}
+
+body{
+  min-height:100vh;
+}
+
+button,input,select,textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.app{
+  max-width:900px;
+  margin:auto;
+  min-height:100vh;
+}
+
 header{
-  background:#0f766e;
+  background:linear-gradient(135deg,#0f766e,#0e7490);
   color:white;
-  padding:16px 14px;
-  text-align:center;
+  padding:18px 16px 20px;
   position:sticky;
   top:0;
   z-index:20;
+  box-shadow:0 3px 12px rgba(0,0,0,.15);
 }
-header h1{margin:0;font-size:22px}
-header p{margin:4px 0 0;font-size:13px;opacity:.9}
 
-nav{
+.header-row{
   display:flex;
-  overflow-x:auto;
-  background:white;
-  border-bottom:1px solid #ddd;
-  position:sticky;
-  top:67px;
-  z-index:19;
-}
-nav button{
-  flex:0 0 auto;
-  border:0;
-  background:white;
-  padding:12px 13px;
-  font-size:13px;
-  color:#345;
-}
-nav button.active{
-  color:#0f766e;
-  font-weight:700;
-  border-bottom:3px solid #0f766e;
-}
-
-main{padding:12px;max-width:1000px;margin:auto}
-.page{display:none}
-.page.active{display:block}
-
-.card{
-  background:white;
-  border-radius:12px;
-  padding:14px;
-  margin-bottom:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,.07);
-}
-.card h2,.card h3{margin:0 0 12px;color:#0f766e}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:center;
+  justify-content:space-between;
   gap:10px;
 }
-.field{margin-bottom:10px}
-.field label{
-  display:block;
-  font-size:13px;
-  font-weight:600;
-  margin-bottom:5px;
-  color:#345;
+
+.app-title{
+  font-size:25px;
+  font-weight:800;
+  line-height:1.2;
 }
+
+.app-subtitle{
+  font-size:14px;
+  opacity:.9;
+  margin-top:4px;
+}
+
+.home-btn{
+  background:rgba(255,255,255,.18);
+  color:white;
+  border:1px solid rgba(255,255,255,.35);
+  border-radius:12px;
+  padding:10px 13px;
+  font-weight:700;
+}
+
+main{
+  padding:16px;
+  padding-bottom:35px;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+h1{
+  font-size:25px;
+  margin:4px 0 16px;
+}
+
+h2{
+  font-size:21px;
+  margin:20px 0 12px;
+}
+
+h3{
+  font-size:18px;
+  margin:14px 0 8px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px;
+  margin-bottom:15px;
+  box-shadow:0 4px 12px rgba(15,23,42,.06);
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:13px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.field.full{
+  grid-column:1/-1;
+}
+
+label{
+  font-size:16px;
+  font-weight:700;
+  color:#334155;
+}
+
 input,select,textarea{
   width:100%;
-  padding:11px 10px;
-  border:1px solid #b8c9c7;
-  border-radius:8px;
-  font-size:15px;
-  background:white;
+  min-height:50px;
+  padding:11px 13px;
+  border:1.5px solid #cbd5e1;
+  border-radius:12px;
+  background:#fff;
+  color:var(--text);
+  outline:none;
 }
-textarea{min-height:75px;resize:vertical}
+
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+input:focus,select:focus,textarea:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(15,118,110,.12);
+}
 
 button{
+  min-height:48px;
   border:0;
-  border-radius:8px;
-  padding:10px 13px;
-  font-size:14px;
-  cursor:pointer;
+  border-radius:12px;
+  padding:10px 15px;
+  font-weight:750;
 }
-.btn-green{background:#0f766e;color:white}
-.btn-blue{background:#2563eb;color:white}
-.btn-orange{background:#ea580c;color:white}
-.btn-red{background:#dc2626;color:white}
-.btn-gray{background:#64748b;color:white}
-.btn-light{background:#e2e8f0;color:#123}
+
+.btn{
+  background:var(--primary);
+  color:white;
+}
+
+.btn-secondary{
+  background:#e2e8f0;
+  color:#1e293b;
+}
+
+.btn-blue{
+  background:var(--secondary);
+  color:white;
+}
+
+.btn-green{
+  background:var(--success);
+  color:white;
+}
+
+.btn-orange{
+  background:var(--warning);
+  color:white;
+}
+
+.btn-red{
+  background:var(--danger);
+  color:white;
+}
+
+.btn-purple{
+  background:var(--purple);
+  color:white;
+}
+
+.btn-small{
+  min-height:40px;
+  padding:7px 11px;
+  font-size:14px;
+}
 
 .actions{
   display:flex;
+  gap:9px;
   flex-wrap:wrap;
-  gap:7px;
+  margin-top:16px;
+}
+
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.stat-card{
+  border-radius:17px;
+  padding:15px;
+  color:white;
+  min-height:108px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:0 5px 13px rgba(15,23,42,.12);
+}
+
+.stat-card .label{
+  font-size:14px;
+  font-weight:700;
+  opacity:.95;
+}
+
+.stat-card .value{
+  font-size:23px;
+  font-weight:850;
   margin-top:8px;
 }
 
-.summary{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:9px;
-}
-.stat{
-  background:#ecfeff;
-  border:1px solid #bae6fd;
-  border-radius:10px;
-  padding:12px;
-}
-.stat small{display:block;color:#64748b}
-.stat strong{display:block;font-size:20px;color:#0f766e;margin-top:3px}
+.c1{background:linear-gradient(135deg,#0f766e,#0e7490)}
+.c2{background:linear-gradient(135deg,#2563eb,#1d4ed8)}
+.c3{background:linear-gradient(135deg,#16a34a,#15803d)}
+.c4{background:linear-gradient(135deg,#7c3aed,#6d28d9)}
+.c5{background:linear-gradient(135deg,#d97706,#b45309)}
+.c6{background:linear-gradient(135deg,#0891b2,#0e7490)}
+.c7{background:linear-gradient(135deg,#dc2626,#b91c1c)}
+.c8{background:linear-gradient(135deg,#9333ea,#7e22ce)}
 
-.table-wrap{overflow-x:auto}
+.quick-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.quick-btn{
+  min-height:82px;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:5px;
+  font-size:16px;
+  box-shadow:0 4px 10px rgba(15,23,42,.1);
+}
+
+.quick-icon{
+  font-size:25px;
+}
+
+.q1{background:#0f766e}
+.q2{background:#16a34a}
+.q3{background:#2563eb}
+.q4{background:#7c3aed}
+.q5{background:#0891b2}
+.q6{background:#d97706}
+.q7{background:#475569}
+.q8{background:#9333ea}
+.q9{background:#dc2626}
+
 table{
   width:100%;
   border-collapse:collapse;
-  min-width:700px;
-}
-th,td{
-  border:1px solid #ddd;
-  padding:7px;
-  font-size:12px;
-  text-align:left;
-}
-th{
-  background:#e6fffb;
-  color:#0f766e;
-}
-td button{
-  padding:5px 8px;
-  font-size:11px;
-  margin:2px;
+  min-width:650px;
 }
 
-.search{
-  margin-bottom:10px;
+.table-wrap{
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+
+th,td{
+  border-bottom:1px solid var(--border);
+  padding:12px 10px;
+  text-align:left;
+  vertical-align:middle;
+  white-space:nowrap;
+}
+
+th{
+  background:#f8fafc;
+  font-size:15px;
+  font-weight:800;
+}
+
+td{
+  font-size:15px;
+}
+
+.total-row{
+  font-weight:850;
+  background:#f8fafc;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  background:#e0f2fe;
+  color:#075985;
+  font-size:13px;
+  font-weight:750;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:22px;
+}
+
+.search-row{
+  display:flex;
+  gap:9px;
+  margin-bottom:12px;
+}
+
+.search-row input{
+  flex:1;
 }
 
 .notice{
-  background:#fffbeb;
-  border:1px solid #fde68a;
-  padding:10px;
-  border-radius:8px;
-  font-size:13px;
-  margin-bottom:10px;
+  padding:12px 14px;
+  background:#ecfeff;
+  border-left:4px solid #0891b2;
+  border-radius:10px;
+  margin-bottom:15px;
+  font-size:15px;
 }
 
-@media(max-width:600px){
-  .grid{grid-template-columns:1fr}
-  main{padding:9px}
-  .card{padding:11px}
-  input,select,textarea{font-size:16px}
-  .summary{grid-template-columns:repeat(2,1fr)}
+.summary-box{
+  background:#f8fafc;
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:13px;
+  margin-top:13px;
+}
+
+.summary-line{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  padding:7px 0;
+  border-bottom:1px dashed #cbd5e1;
+}
+
+.summary-line:last-child{
+  border-bottom:0;
+}
+
+.summary-line strong{
+  font-weight:800;
+}
+
+.hidden{
+  display:none!important;
+}
+
+footer{
+  text-align:center;
+  color:#64748b;
+  font-size:13px;
+  padding:20px;
+}
+
+@media(max-width:620px){
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .field.full{
+    grid-column:auto;
+  }
+
+  .dashboard-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  main{
+    padding:12px;
+  }
+
+  h1{
+    font-size:24px;
+  }
+}
+
+@media(max-width:390px){
+
+  html,body{
+    font-size:16px;
+  }
+
+  .dashboard-grid,
+  .quick-grid{
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+  }
+
+  .stat-card{
+    min-height:100px;
+    padding:12px;
+  }
+
+  .stat-card .value{
+    font-size:20px;
+  }
+
+  .quick-btn{
+    min-height:76px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>Cooperative Accounts</h1>
-  <p>Mobile Collection & Accounts</p>
-</header>
+<div class="app">
 
-<nav id="mainNav">
-  <button data-page="dashboard" onclick="showPage('dashboard')">Dashboard</button>
-  <button data-page="members" onclick="showPage('members')">Members</button>
-  <button data-page="collectors" onclick="showPage('collectors')">Collectors</button>
-  <button data-page="collection" onclick="showPage('collection')">Collection</button>
-  <button data-page="loan" onclick="showPage('loan')">Loan</button>
-  <button data-page="accounts" onclick="showPage('accounts')">Member Accounts</button>
-  <button data-page="ledger" onclick="showPage('ledger')">General Ledger</button>
-  <button data-page="cashbook" onclick="showPage('cashbook')">Cash Book</button>
-  <button data-page="expense" onclick="showPage('expense')">Expense</button>
-  <button data-page="reports" onclick="showPage('reports')">Reports</button>
-  <button data-page="backup" onclick="showPage('backup')">Backup & Restore</button>
-</nav>
+<header>
+
+  <div class="header-row">
+
+    <div>
+      <div class="app-title">Cooperative Accounts</div>
+      <div class="app-subtitle">Mobile Collection & Accounts</div>
+    </div>
+
+    <button class="home-btn" onclick="showPage('dashboard')">
+      Home
+    </button>
+
+  </div>
+
+</header>
 
 <main>
 
+<!-- ================= DASHBOARD ================= -->
+
 <section id="dashboard" class="page active">
-  <div class="card">
-    <h2>Dashboard</h2>
-    <div class="summary">
-      <div class="stat"><small>Total Members</small><strong id="dashMembers">0</strong></div>
-      <div class="stat"><small>Total Collectors</small><strong id="dashCollectors">0</strong></div>
-      <div class="stat"><small>Total Savings</small><strong id="dashSavings">0.00</strong></div>
-      <div class="stat"><small>Share</small><strong id="dashShare">0.00</strong></div>
-      <div class="stat"><small>Loan Outstanding</small><strong id="dashOutstanding">0.00</strong></div>
-      <div class="stat"><small>Cash In Hand</small><strong id="dashCash">0.00</strong></div>
-    </div>
+
+<h1>Dashboard</h1>
+
+<div class="dashboard-grid">
+
+  <div class="stat-card c1">
+    <div class="label">Total Members</div>
+    <div class="value" id="dMembers">0</div>
   </div>
+
+  <div class="stat-card c2">
+    <div class="label">Total Share</div>
+    <div class="value" id="dShare">0</div>
+  </div>
+
+  <div class="stat-card c3">
+    <div class="label">Total Savings</div>
+    <div class="value" id="dSavings">0</div>
+  </div>
+
+  <div class="stat-card c4">
+    <div class="label">Loan Disbursed</div>
+    <div class="value" id="dLoan">0</div>
+  </div>
+
+  <div class="stat-card c5">
+    <div class="label">Loan Installment Collected</div>
+    <div class="value" id="dInstallment">0</div>
+  </div>
+
+  <div class="stat-card c6">
+    <div class="label">Service Charge Collected</div>
+    <div class="value" id="dService">0</div>
+  </div>
+
+  <div class="stat-card c7" onclick="showPage('reports')">
+    <div class="label">Loan Outstanding</div>
+    <div class="value" id="dOutstanding">0</div>
+  </div>
+
+  <div class="stat-card c8">
+    <div class="label">Cash in Hand</div>
+    <div class="value" id="dCash">0</div>
+  </div>
+
+</div>
+
+<h2>Today's Summary</h2>
+
+<div class="card">
+
+  <div class="summary-line">
+    <span>Today's Collection</span>
+    <strong id="dTodayCollection">0</strong>
+  </div>
+
+  <div class="summary-line">
+    <span>Today's Expense</span>
+    <strong id="dTodayExpense">0</strong>
+  </div>
+
+  <div class="summary-line">
+    <span>Bank Balance</span>
+    <strong id="dBank">0</strong>
+  </div>
+
+</div>
+
+<h2>Quick Actions</h2>
+
+<div class="quick-grid">
+
+<button class="quick-btn q1" onclick="showPage('members')">
+  <span class="quick-icon">👥</span>
+  Members
+</button>
+
+<button class="quick-btn q2" onclick="showPage('collection')">
+  <span class="quick-icon">💰</span>
+  Collection
+</button>
+
+<button class="quick-btn q3" onclick="showPage('loan')">
+  <span class="quick-icon">🏦</span>
+  Loan
+</button>
+
+<button class="quick-btn q4" onclick="showPage('accounts')">
+  <span class="quick-icon">📒</span>
+  Accounts
+</button>
+
+<button class="quick-btn q5" onclick="showPage('ledger')">
+  <span class="quick-icon">📑</span>
+  General Ledger
+</button>
+
+<button class="quick-btn q6" onclick="showPage('cashbook')">
+  <span class="quick-icon">💵</span>
+  Cash Book
+</button>
+
+<button class="quick-btn q7" onclick="showPage('reports')">
+  <span class="quick-icon">📊</span>
+  Reports
+</button>
+
+<button class="quick-btn q9" onclick="showPage('expense')">
+  <span class="quick-icon">💸</span>
+  Expense
+</button>
+
+<button class="quick-btn q8" onclick="showPage('backup')">
+  <span class="quick-icon">💾</span>
+  Backup
+</button>
+
+</div>
+
 </section>
+
+
+<!-- ================= MEMBERS ================= -->
 
 <section id="members" class="page">
-  <div class="card">
-    <h2>Members</h2>
 
-    <input class="search" id="memberSearch"
-           placeholder="Search Member Code or Name"
-           oninput="renderMembers()">
+<h1>Members</h1>
 
-    <div class="grid">
-      <div class="field">
-        <label>Member Code / Number</label>
-        <input id="memberCode" autocomplete="off">
-      </div>
+<div class="card">
 
-      <div class="field">
-        <label>Mobile Number</label>
-        <input id="memberMobile" inputmode="tel" autocomplete="off">
-      </div>
+<div class="form-grid">
 
-      <div class="field">
-        <label>Member Name</label>
-        <input id="memberName" autocomplete="off">
-      </div>
-    </div>
+<div class="field">
+<label>Member Code / Number</label>
+<input id="memberCode" autocomplete="off">
+</div>
 
-    <div class="actions">
-      <button class="btn-green" id="memberSaveBtn" onclick="saveMember()">Save Member</button>
-      <button class="btn-gray" onclick="clearMemberForm()">Clear</button>
-    </div>
-  </div>
+<div class="field full">
+<label>Member Name</label>
+<input id="memberName" autocomplete="off">
+</div>
 
-  <div class="card">
-    <h3>Member List</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Mobile</th>
-            <th>Account</th>
-            <th>Edit</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody id="membersTableBody"></tbody>
-      </table>
-    </div>
-  </div>
+<div class="field full">
+<label>Mobile Number</label>
+<input id="memberMobile" autocomplete="off">
+</div>
+
+</div>
+
+<div class="actions">
+
+<button class="btn-green" onclick="saveMember()">
+Save Member
+</button>
+
+<button class="btn-secondary" onclick="clearMemberForm()">
+Clear
+</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Member Search</h2>
+
+<div class="search-row">
+<input id="memberSearch"
+       placeholder="Search by code or name"
+       oninput="renderMembers()">
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Code</th>
+<th>Name</th>
+<th>Mobile</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="memberTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
 </section>
 
-<section id="collectors" class="page">
-  <div class="card">
-    <h2>Collectors</h2>
 
-    <div class="grid">
-      <div class="field">
-        <label>Collector Name</label>
-        <input id="collectorName" autocomplete="off">
-      </div>
-
-      <div class="field">
-        <label>Mobile Number</label>
-        <input id="collectorMobile" inputmode="tel" autocomplete="off">
-      </div>
-    </div>
-
-    <div class="actions">
-      <button class="btn-green" id="collectorSaveBtn" onclick="saveCollector()">Save Collector</button>
-      <button class="btn-gray" onclick="clearCollectorForm()">Clear</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3>Collector List</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Mobile</th>
-            <th>Edit</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody id="collectorsTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
+<!-- ================= COLLECTION ================= -->
 
 <section id="collection" class="page">
-  <div class="card">
-    <h2>Collection</h2>
 
-    <div class="grid">
+<h1>Collection</h1>
 
-      <div class="field">
-        <label>Member</label>
-        <select id="collectionMember"></select>
-      </div>
+<div class="notice">
+Select a member and enter all applicable collection amounts in one form. Loan Installment automatically includes Principal and Service Charge according to the loan schedule.
+</div>
 
-      <div class="field">
-        <label>Date (dd/mm/yy)</label>
-        <input id="collectionDate" inputmode="numeric" maxlength="8"
-               oninput="formatDateWhileTyping(this)">
-      </div>
+<div class="card">
 
-      <div class="field">
-        <label>Collector</label>
-        <select id="collectionCollector"></select>
-      </div>
+<div class="form-grid">
 
-      <div class="field">
-        <label>Share</label>
-        <input id="colShare" type="number" step="0.01">
-      </div>
+<div class="field full">
+<label>Member</label>
+<select id="collectionMember"></select>
+</div>
 
-      <div class="field">
-        <label>Savings</label>
-        <input id="colSavings" type="number" step="0.01">
-      </div>
+<div class="field">
+<label>Date</label>
+<input type="text"
+       id="collectionDate"
+       placeholder="dd/mm/yy"
+       autocomplete="off">
+</div>
 
-      <div class="field">
-        <label>Loan Installment</label>
-        <input id="colInstallment" type="number" step="0.01">
-      </div>
+<div class="field">
+<label>Share</label>
+<input type="text" id="colShare" value="">
+</div>
 
-      <div class="field">
-        <label>Admission Fee</label>
-        <input id="colAdmission" type="number" step="0.01">
-      </div>
+<div class="field">
+<label>Savings</label>
+<input type="text" id="colSavings" value="">
+</div>
 
-      <div class="field">
-        <label>Pass Book</label>
-        <input id="colPassbook" type="number" step="0.01">
-      </div>
+<div class="field">
+<label>Loan Installment</label>
+<input type="text" id="colInstallment" value="">
+</div>
 
-      <div class="field">
-        <label>Insurance</label>
-        <input id="colInsurance" type="number" step="0.01">
-      </div>
+<div class="field">
+<label>Admission Fee</label>
+<input type="text" id="colAdmission" value="">
+</div>
 
-      <div class="field">
-        <label>Loan Form Sales</label>
-        <input id="colLoanForm" type="number" step="0.01">
-      </div>
+<div class="field">
+<label>Pass Book</label>
+<input type="text" id="colPassbook" value="">
+</div>
 
-      <div class="field">
-        <label>Other</label>
-        <input id="colOther" type="number" step="0.01">
-      </div>
+<div class="field">
+<label>Insurance</label>
+<input type="text" id="colInsurance" value="">
+</div>
 
-      <div class="field">
-        <label>Total Collection</label>
-        <input id="collectionTotal" readonly>
-      </div>
+<div class="field">
+<label>Loan Form Sales</label>
+<input type="text" id="colLoanForm" value="">
+</div>
 
-    </div>
+<div class="field">
+<label>Other</label>
+<input type="text" id="colOther" value="">
+</div>
 
-    <div class="actions">
-      <button class="btn-green" id="collectionSaveBtn" onclick="saveCollection()">Save Collection</button>
-      <button class="btn-gray" onclick="clearCollectionForm()">Clear</button>
-    </div>
-  </div>
+</div>
 
-  <div class="card">
-    <h3>Collection Records</h3>
+<div class="summary-box">
 
-    <input class="search" id="collectionSearch"
-           placeholder="Search member / collector"
-           oninput="renderCollections()">
+<div class="summary-line">
+<span>Total Collection</span>
+<strong id="collectionTotal">0</strong>
+</div>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Member</th>
-            <th>Collector</th>
-            <th>Share</th>
-            <th>Savings</th>
-            <th>Installment</th>
-            <th>Other Fees</th>
-            <th>Total</th>
-            <th>Edit</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody id="collectionTableBody"></tbody>
-      </table>
-    </div>
-  </div>
+</div>
+
+<div class="actions">
+
+<button class="btn-green" onclick="saveCollection()">
+Save Collection
+</button>
+
+<button class="btn-secondary" onclick="clearCollectionForm()">
+Clear
+</button>
+
+</div>
+
+</div>
+
 </section>
+
+
+<!-- ================= LOAN ================= -->
 
 <section id="loan" class="page">
-  <div class="card">
-    <h2>Loan</h2>
 
-    <div class="grid">
+<h1>Loan</h1>
 
-      <div class="field">
-        <label>Member</label>
-        <select id="loanMember"></select>
-      </div>
+<div class="card">
 
-      <div class="field">
-        <label>Loan Date</label>
-        <input id="loanDate" inputmode="numeric" maxlength="8"
-               oninput="formatDateWhileTyping(this)">
-      </div>
+<div class="form-grid">
 
-      <div class="field">
-        <label>Loan Principal</label>
-        <input id="loanPrincipal" type="number" step="0.01"
-               oninput="calculateLoan()">
-      </div>
+<div class="field full">
+<label>Member</label>
+<select id="loanMember"></select>
+</div>
 
-      <div class="field">
-        <label>Service Charge %</label>
-        <input id="loanRate" type="number" step="0.01"
-               oninput="calculateLoan()">
-      </div>
+<div class="field">
+<label>Loan Date</label>
+<input type="text"
+       id="loanDate"
+       placeholder="dd/mm/yy"
+       autocomplete="off">
+</div>
 
-      <div class="field">
-        <label>Service Charge Amount</label>
-        <input id="loanService" readonly>
-      </div>
+<div class="field">
+<label>Loan Principal</label>
+<input type="text" id="loanPrincipal">
+</div>
 
-      <div class="field">
-        <label>Total Payable</label>
-        <input id="loanTotal" readonly>
-      </div>
+<div class="field">
+<label>Service Charge %</label>
+<input type="text" id="loanRate" value="10">
+</div>
 
-      <div class="field">
-        <label>Number of Installments</label>
-        <input id="loanInstallments" type="number"
-               oninput="calculateLoan()">
-      </div>
+<div class="field">
+<label>Service Charge Amount</label>
+<input type="text" id="loanService" readonly>
+</div>
 
-      <div class="field">
-        <label>Installment Amount</label>
-        <input id="loanInstallmentAmount" readonly>
-      </div>
+<div class="field">
+<label>Total Payable</label>
+<input type="text" id="loanTotal" readonly>
+</div>
 
-      <div class="field">
-        <label>First Installment Date</label>
-        <input id="loanFirstDate" inputmode="numeric" maxlength="8"
-               oninput="formatDateWhileTyping(this)">
-      </div>
+<div class="field">
+<label>Number of Installments</label>
+<input type="text" id="loanInstallments">
+</div>
 
-      <div class="field">
-        <label>Note</label>
-        <textarea id="loanNote"></textarea>
-      </div>
+<div class="field">
+<label>Installment Amount</label>
+<input type="text" id="loanInstallmentAmount" readonly>
+</div>
 
-    </div>
+<div class="field">
+<label>First Installment Date</label>
+<input type="text"
+       id="loanFirstDate"
+       placeholder="dd/mm/yy"
+       autocomplete="off">
+</div>
 
-    <div class="actions">
-      <button class="btn-green" onclick="saveLoan()">Save Loan</button>
-      <button class="btn-gray" onclick="clearLoanForm()">Clear</button>
-    </div>
-  </div>
+<div class="field full">
+<label>Note</label>
+<textarea id="loanNote"></textarea>
+</div>
 
-  <div class="card">
-    <h3>Loan Schedule</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Loan ID</th>
-            <th>Member</th>
-            <th>Date</th>
-            <th>Principal</th>
-            <th>Service</th>
-            <th>Total</th>
-            <th>Paid</th>
-            <th>Outstanding</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody id="loanTableBody"></tbody>
-      </table>
-    </div>
-  </div>
+</div>
+
+<div class="summary-box">
+
+<div class="summary-line">
+<span>Principal</span>
+<strong id="loanPreviewPrincipal">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Service Charge</span>
+<strong id="loanPreviewService">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Total Payable</span>
+<strong id="loanPreviewTotal">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Installment</span>
+<strong id="loanPreviewInstallment">0</strong>
+</div>
+
+</div>
+
+<div class="actions">
+
+<button class="btn-blue" onclick="saveLoan()">
+Save Loan
+</button>
+
+<button class="btn-secondary" onclick="clearLoanForm()">
+Clear
+</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Loan Schedule</h2>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Loan</th>
+<th>Member</th>
+<th>Date</th>
+<th>Principal</th>
+<th>Service</th>
+<th>Total</th>
+<th>Paid</th>
+<th>Outstanding</th>
+</tr>
+</thead>
+
+<tbody id="loanTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
 </section>
+
+
+<!-- ================= ACCOUNTS ================= -->
 
 <section id="accounts" class="page">
-  <div class="card">
-    <h2>Member Accounts</h2>
 
-    <select id="accountMember" onchange="renderMemberAccount()"></select>
+<h1>Member Accounts</h1>
 
-    <div id="accountSummary" style="margin-top:12px"></div>
-    <div id="accountTransactions" style="margin-top:12px"></div>
-  </div>
+<div class="card">
+
+<div class="field">
+
+<label>Member</label>
+
+<select id="accountMember"
+        onchange="renderAccount()">
+</select>
+
+</div>
+
+<div id="accountSummary"></div>
+
+</div>
+
+<div class="card">
+
+<h2>Transaction History</h2>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Date</th>
+<th>Description</th>
+<th>Amount</th>
+<th>Details</th>
+</tr>
+</thead>
+
+<tbody id="accountTransactions"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
 </section>
+
+
+<!-- ================= LEDGER ================= -->
 
 <section id="ledger" class="page">
-  <div class="card">
-    <h2>General Ledger</h2>
 
-    <select id="ledgerHead" onchange="renderLedger()">
-      <option value="Share">Share</option>
-      <option value="Savings">Savings</option>
-      <option value="Loan Disbursement">Loan Disbursement</option>
-      <option value="Loan Installment">Loan Installment</option>
-      <option value="Service Charge">Service Charge</option>
-      <option value="Admission Fee">Admission Fee</option>
-      <option value="Pass Book">Pass Book</option>
-      <option value="Insurance">Insurance</option>
-      <option value="Loan Form Sales">Loan Form Sales</option>
-      <option value="Other Income">Other Income</option>
-      <option value="Office Expense">Office Expense</option>
-      <option value="Stationery">Stationery</option>
-      <option value="Transport">Transport</option>
-      <option value="Salary/Honorarium">Salary/Honorarium</option>
-      <option value="Electricity/Water/Internet">Electricity/Water/Internet</option>
-      <option value="Office Rent">Office Rent</option>
-      <option value="Repair & Maintenance">Repair & Maintenance</option>
-      <option value="Bank Charges">Bank Charges</option>
-      <option value="Meeting/Training">Meeting/Training</option>
-      <option value="Other Expense">Other Expense</option>
-    </select>
+<h1>General Ledger</h1>
 
-    <div id="ledgerContent" style="margin-top:12px"></div>
-  </div>
+<div class="card">
+
+<div class="field">
+
+<label>Ledger Head</label>
+
+<select id="ledgerHead"
+        onchange="renderLedger">
+
+<option value="">All Heads</option>
+
+<option>Share</option>
+<option>Savings</option>
+<option>Loan Disbursement</option>
+<option>Loan Installment</option>
+<option>Service Charge</option>
+<option>Admission Fee</option>
+<option>Pass Book</option>
+<option>Insurance</option>
+<option>Loan Form Sales</option>
+<option>Other Income</option>
+
+<option>Office Expense</option>
+<option>Stationery</option>
+<option>Transport</option>
+<option>Salary/Honorarium</option>
+<option>Electricity/Water/Internet</option>
+<option>Office Rent</option>
+<option>Repair & Maintenance</option>
+<option>Bank Charges</option>
+<option>Meeting/Training</option>
+<option>Other Expense</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Date</th>
+<th>Head</th>
+<th>Member</th>
+<th>In</th>
+<th>Out</th>
+</tr>
+</thead>
+
+<tbody id="ledgerTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
 </section>
+
+
+<!-- ================= CASH BOOK ================= -->
 
 <section id="cashbook" class="page">
-  <div class="card">
-    <h2>Cash Book</h2>
 
-    <div class="field">
-      <label>Opening Cash Balance</label>
-      <input id="openingCash" type="number" step="0.01">
-    </div>
+<h1>Cash Book</h1>
 
-    <button class="btn-green" onclick="saveOpeningCash()">Save Opening Balance</button>
+<div class="card">
 
-    <div class="summary" style="margin-top:12px">
-      <div class="stat">
-        <small>Total Cash In</small>
-        <strong id="cashIn">0.00</strong>
-      </div>
-      <div class="stat">
-        <small>Total Cash Out</small>
-        <strong id="cashOut">0.00</strong>
-      </div>
-      <div class="stat">
-        <small>Cash In Hand</small>
-        <strong id="cashBalance">0.00</strong>
-      </div>
-    </div>
+<div class="summary-line">
+<span>Opening Balance</span>
+<strong id="cashOpening">0</strong>
+</div>
 
-    <div id="cashBookContent" style="margin-top:12px"></div>
-  </div>
+<div class="summary-line">
+<span>Total Cash In</span>
+<strong id="cashIn">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Total Cash Out</span>
+<strong id="cashOut">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Cash in Hand</span>
+<strong id="cashBalance">0</strong>
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Date</th>
+<th>Description</th>
+<th>Cash In</th>
+<th>Cash Out</th>
+<th>Balance</th>
+</tr>
+</thead>
+
+<tbody id="cashTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
 </section>
+
+
+<!-- ================= EXPENSE ================= -->
 
 <section id="expense" class="page">
-  <div class="card">
-    <h2>Expense</h2>
 
-    <div class="grid">
-      <div class="field">
-        <label>Date</label>
-        <input id="expenseDate" inputmode="numeric" maxlength="8"
-               oninput="formatDateWhileTyping(this)">
-      </div>
+<h1>Expense</h1>
 
-      <div class="field">
-        <label>Expense Head</label>
-        <select id="expenseHead"></select>
-      </div>
+<div class="notice">
+Record office and operational expenses here. Saved expenses are automatically included in the General Ledger, Cash Book, Dashboard and Expense Reports.
+</div>
 
-      <div class="field">
-        <label>Amount</label>
-        <input id="expenseAmount" type="number" step="0.01">
-      </div>
+<div class="card">
 
-      <div class="field">
-        <label>Note</label>
-        <input id="expenseNote">
-      </div>
-    </div>
+<div class="form-grid">
 
-    <div class="actions">
-      <button class="btn-green" id="expenseSaveBtn" onclick="saveExpense()">Save Expense</button>
-      <button class="btn-blue" onclick="addExpenseHead()">+ Add Expense Head</button>
-      <button class="btn-gray" onclick="clearExpenseForm()">Clear</button>
-    </div>
-  </div>
+<div class="field">
+<label>Date</label>
+<input type="text"
+       id="expenseDate"
+       placeholder="dd/mm/yy"
+       autocomplete="off">
+</div>
 
-  <div class="card">
-    <h3>Expense Records</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Head</th>
-            <th>Amount</th>
-            <th>Note</th>
-            <th>Edit</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody id="expenseTableBody"></tbody>
-      </table>
-    </div>
-  </div>
+<div class="field">
+<label>Expense Head</label>
+
+<select id="expenseHead"></select>
+
+</div>
+
+<div class="field">
+<label>Amount</label>
+<input type="text"
+       id="expenseAmount"
+       autocomplete="off">
+</div>
+
+<div class="field">
+<label>Note</label>
+<input type="text"
+       id="expenseNote"
+       autocomplete="off">
+</div>
+
+</div>
+
+<div class="actions">
+
+<button class="btn-orange"
+        onclick="saveExpense()">
+Save Expense
+</button>
+
+<button class="btn-secondary"
+        onclick="clearExpenseForm()">
+Clear
+</button>
+
+<button class="btn-purple"
+        onclick="addExpenseForm()">
++ Add Expense Head
+</button>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Expense Records</h2>
+
+<div class="search-row">
+
+<input type="text"
+       id="expenseSearch"
+       placeholder="Search expense head or note"
+       oninput="renderExpenses()">
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Date</th>
+<th>Expense Head</th>
+<th>Amount</th>
+<th>Note</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="expenseTable"></tbody>
+
+</table>
+
+</div>
+
+<div class="summary-box">
+
+<div class="summary-line">
+<span>Total Expense</span>
+<strong id="expenseGrandTotal">0</strong>
+</div>
+
+</div>
+
+</div>
+
 </section>
+
+
+<!-- ================= REPORTS ================= -->
 
 <section id="reports" class="page">
-  <div class="card">
-    <h2>Reports</h2>
 
-    <div class="grid">
-      <div class="field">
-        <label>From Date</label>
-        <input id="reportFrom" inputmode="numeric" maxlength="8"
-               oninput="formatDateWhileTyping(this)">
-      </div>
+<h1>Reports</h1>
 
-      <div class="field">
-        <label>To Date</label>
-        <input id="reportTo" inputmode="numeric" maxlength="8"
-               oninput="formatDateWhileTyping(this)">
-      </div>
+<div class="card">
 
-      <div class="field">
-        <label>Member</label>
-        <select id="reportMember"></select>
-      </div>
+<div class="form-grid">
 
-      <div class="field">
-        <label>Report Type</label>
-        <select id="reportType">
-          <option value="all">All</option>
-          <option value="collection">Collection</option>
-          <option value="loan">Loan</option>
-          <option value="expense">Expense</option>
-        </select>
-      </div>
-    </div>
+<div class="field">
+<label>From Date</label>
 
-    <button class="btn-green" onclick="renderReports()">Show Report</button>
+<input type="text"
+       id="reportFrom"
+       placeholder="dd/mm/yy"
+       autocomplete="off">
 
-    <div id="reportSummary" style="margin-top:12px"></div>
+</div>
 
-    <div class="table-wrap" style="margin-top:12px">
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Type</th>
-            <th>Member / Head</th>
-            <th>Collector</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody id="reportTableBody"></tbody>
-      </table>
-    </div>
-  </div>
+<div class="field">
+<label>To Date</label>
+
+<input type="text"
+       id="reportTo"
+       placeholder="dd/mm/yy"
+       autocomplete="off">
+
+</div>
+
+<div class="field">
+<label>Member</label>
+
+<select id="reportMember"></select>
+
+</div>
+
+<div class="field">
+<label>Report Type</label>
+
+<select id="reportType">
+
+<option value="all">
+All Transactions
+</option>
+
+<option value="collection">
+Collection
+</option>
+
+<option value="loan">
+Loan
+</option>
+
+<option value="expense">
+Expense
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button class="btn"
+        onclick="renderReports()">
+Generate Report
+</button>
+
+<button class="btn-secondary"
+        onclick="clearReport()">
+Clear
+</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Date</th>
+<th>Member</th>
+<th>Type</th>
+<th>Description</th>
+<th>Amount</th>
+</tr>
+</thead>
+
+<tbody id="reportTable"></tbody>
+
+</table>
+
+</div>
+
+<div class="summary-box">
+
+<div class="summary-line">
+<span>Grand Total</span>
+<strong id="reportTotal">0</strong>
+</div>
+
+</div>
+
+</div>
+
 </section>
+
+
+<!-- ================= BACKUP ================= -->
 
 <section id="backup" class="page">
-  <div class="card">
-    <h2>Backup & Restore</h2>
 
-    <div class="notice">
-      Backup your data regularly. Restoring a file replaces the current data.
-    </div>
+<h1>Backup & Restore</h1>
 
-    <div class="actions">
-      <button class="btn-green" onclick="backupData()">Download Backup</button>
+<div class="card">
 
-      <label class="btn-blue" style="display:inline-block">
-        Restore Backup
-        <input type="file" id="restoreFile" accept=".json"
-               onchange="restoreData(event)" hidden>
-      </label>
+<h2>Backup</h2>
 
-      <button class="btn-red" onclick="clearAllData()">Clear All Data</button>
-    </div>
-  </div>
+<p>
+Create a complete backup file containing members, collections, loans, schedules, expenses and accounting data.
+</p>
+
+<button class="btn-green"
+        onclick="backupData()">
+Download Backup
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>Restore</h2>
+
+<p>
+Restoring a backup replaces the current application data with the selected backup.
+</p>
+
+<input type="file"
+       id="restoreFile"
+       accept=".json,application/json">
+
+<div class="actions">
+
+<button class="btn-orange"
+        onclick="restoreData()">
+Restore Backup
+</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Data Safety</h2>
+
+<p>
+Always keep a recent backup before clearing or replacing important accounting data.
+</p>
+
+<button class="btn-red"
+        onclick="clearAllData()">
+Clear All Data
+</button>
+
+</div>
+
 </section>
+
+
+<footer>
+Cooperative Accounts • Mobile Collection & Accounts
+</footer>
 
 </main>
 
+</div>
+
+
 <script>
-const STORAGE_KEY = "cooperativeAccountsDataV1";
 
-let data = loadData();
+const STORAGE_KEY =
+"cooperativeAccountsDataV1";
 
-let editingMemberId = null;
-let editingCollectorId = null;
-let editingCollectionId = null;
-let editingExpenseId = null;
 
 const defaultExpenseHeads = [
+
   "Office Expense",
   "Stationery",
   "Transport",
@@ -718,613 +1412,745 @@ const defaultExpenseHeads = [
   "Bank Charges",
   "Meeting/Training",
   "Other Expense"
+
 ];
 
-function loadData(){
-  try{
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if(saved){
-      const d = JSON.parse(saved);
-      return {
-        members:d.members || [],
-        collectors:d.collectors || [],
-        collections:d.collections || [],
-        loans:d.loans || [],
-        expenses:d.expenses || [],
-        customExpenseHeads:d.customExpenseHeads || [],
-        bankBalance:Number(d.bankBalance)||0,
-        openingCash:Number(d.openingCash)||0
-      };
-    }
-  }catch(e){}
+
+let data=loadData();
+
+
+function blankData(){
+
   return {
+
     members:[],
-    collectors:[],
     collections:[],
     loans:[],
     expenses:[],
+
     customExpenseHeads:[],
+
     bankBalance:0,
     openingCash:0
+
   };
+
 }
+
+
+function loadData(){
+
+  try{
+
+    const raw=
+      localStorage.getItem(STORAGE_KEY);
+
+    if(!raw){
+      return blankData();
+    }
+
+    const parsed=JSON.parse(raw);
+
+    return {
+
+      ...blankData(),
+
+      ...parsed,
+
+      members:parsed.members||[],
+      collections:parsed.collections||[],
+      loans:parsed.loans||[],
+      expenses:parsed.expenses||[],
+      customExpenseHeads:
+        parsed.customExpenseHeads||[]
+
+    };
+
+  }catch(e){
+
+    return blankData();
+
+  }
+
+}
+
 
 function saveData(){
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(data)
+  );
+
 }
 
-function money(v){
-  return Number(v||0).toFixed(2);
-}
 
 function uid(prefix){
-  return prefix + Date.now().toString(36) +
-         Math.random().toString(36).slice(2,7);
+
+  return prefix+
+    Date.now()+
+    Math.random()
+      .toString(36)
+      .slice(2,7);
+
 }
 
-function esc(v){
-  return String(v ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+
+function money(value){
+
+  const n=Number(value)||0;
+
+  return Math.round(n)
+    .toLocaleString("en-IN");
+
 }
 
-function showPage(page){
-  document.querySelectorAll(".page").forEach(p=>{
-    p.classList.remove("active");
-  });
 
-  const target=document.getElementById(page);
-  if(target) target.classList.add("active");
+function num(id){
 
-  document.querySelectorAll("#mainNav button").forEach(b=>{
-    b.classList.toggle("active",b.dataset.page===page);
-  });
-
-  refreshPage(page);
-}
-
-function refreshPage(page){
-  if(page==="dashboard") renderDashboard();
-  if(page==="members") renderMembers();
-  if(page==="collectors") renderCollectors();
-  if(page==="collection") renderCollections();
-  if(page==="loan") renderLoans();
-  if(page==="accounts"){
-    populateMemberSelects();
-    renderMemberAccount();
-  }
-  if(page==="ledger") renderLedger();
-  if(page==="cashbook") renderCashBook();
-  if(page==="expense"){
-    populateExpenseHeads();
-    renderExpenses();
-  }
-  if(page==="reports"){
-    populateMemberSelects();
-    renderReports();
-  }
-}
-
-function fillSelect(id,items,placeholder){
   const el=document.getElementById(id);
-  if(!el)return;
 
-  const old=el.value;
+  if(!el) return 0;
 
-  el.innerHTML="";
-  const op=document.createElement("option");
-  op.value="";
-  op.textContent=placeholder;
-  el.appendChild(op);
+  let value=el.value
+    .toString()
+    .replace(/,/g,"")
+    .replace(/[^\d.-]/g,"");
 
-  items.forEach(item=>{
-    const o=document.createElement("option");
-    o.value=item.value;
-    o.textContent=item.text;
-    el.appendChild(o);
-  });
+  return Number(value)||0;
 
-  if(items.some(x=>x.value===old)) el.value=old;
 }
 
-function populateMemberSelects(){
-  const members=data.members.map(m=>({
-    value:m.id,
-    text:m.code+" - "+m.name
-  }));
 
-  fillSelect("collectionMember",members,"Select Member");
-  fillSelect("loanMember",members,"Select Member");
-  fillSelect("accountMember",members,"Select Member");
-  fillSelect("reportMember",members,"All Members");
+/* ================= DATE ================= */
+
+function pad2(n){
+
+  return String(n).padStart(2,"0");
+
 }
 
-function populateCollectorSelect(){
-  const collectors=data.collectors.map(c=>({
-    value:c.id,
-    text:c.name+(c.mobile ? " - "+c.mobile : "")
-  }));
 
-  fillSelect("collectionCollector",collectors,"Select Collector");
-}
+function today(){
 
-function populateExpenseHeads(){
-  const heads=[...defaultExpenseHeads,...data.customExpenseHeads];
-
-  const el=document.getElementById("expenseHead");
-  if(!el)return;
-
-  const old=el.value;
-
-  el.innerHTML='<option value="">Select Expense Head</option>';
-
-  [...new Set(heads)].forEach(h=>{
-    const o=document.createElement("option");
-    o.value=h;
-    o.textContent=h;
-    el.appendChild(o);
-  });
-
-  if(heads.includes(old))el.value=old;
-}
-
-function refreshAll(){
-  populateMemberSelects();
-  populateCollectorSelect();
-  populateExpenseHeads();
-
-  renderDashboard();
-  renderMembers();
-  renderCollectors();
-  renderCollections();
-  renderLoans();
-  renderExpenses();
-  renderLedger();
-  renderCashBook();
-
-  const d=document.getElementById("openingCash");
-  if(d)d.value=data.openingCash;
-}
-
-/* ---------------- MEMBERS ---------------- */
-
-function saveMember(){
-  const code=document.getElementById("memberCode").value.trim();
-  const name=document.getElementById("memberName").value.trim();
-  const mobile=document.getElementById("memberMobile").value.trim();
-
-  if(!code || !name){
-    alert("Member Code and Member Name are required.");
-    return;
-  }
-
-  const duplicate=data.members.find(m=>
-    m.code.toLowerCase()===code.toLowerCase() &&
-    m.id!==editingMemberId
-  );
-
-  if(duplicate){
-    alert("This Member Code already exists.");
-    return;
-  }
-
-  if(editingMemberId){
-    const m=data.members.find(x=>x.id===editingMemberId);
-    if(m){
-      m.code=code;
-      m.name=name;
-      m.mobile=mobile;
-    }
-    editingMemberId=null;
-    document.getElementById("memberSaveBtn").textContent="Save Member";
-  }else{
-    data.members.push({
-      id:uid("M"),
-      code,
-      name,
-      mobile
-    });
-  }
-
-  saveData();
-  clearMemberForm();
-  refreshAll();
-  alert("Member saved successfully.");
-}
-
-function editMember(id){
-  const m=data.members.find(x=>x.id===id);
-  if(!m)return;
-
-  editingMemberId=id;
-
-  document.getElementById("memberCode").value=m.code;
-  document.getElementById("memberName").value=m.name;
-  document.getElementById("memberMobile").value=m.mobile||"";
-
-  document.getElementById("memberSaveBtn").textContent="Update Member";
-
-  showPage("members");
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-function deleteMember(id){
-  const m=data.members.find(x=>x.id===id);
-  if(!m)return;
-
-  const used =
-    data.collections.some(x=>x.memberId===id) ||
-    data.loans.some(x=>x.memberId===id);
-
-  if(used){
-    alert("This member has transaction records. Delete the transactions first.");
-    return;
-  }
-
-  if(!confirm("Delete this member?"))return;
-
-  data.members=data.members.filter(x=>x.id!==id);
-  saveData();
-  refreshAll();
-}
-
-function clearMemberForm(){
-  editingMemberId=null;
-  document.getElementById("memberCode").value="";
-  document.getElementById("memberName").value="";
-  document.getElementById("memberMobile").value="";
-  document.getElementById("memberSaveBtn").textContent="Save Member";
-}
-
-function renderMembers(){
-  const body=document.getElementById("membersTableBody");
-  if(!body)return;
-
-  const q=(document.getElementById("memberSearch")?.value||"")
-    .toLowerCase();
-
-  body.innerHTML="";
-
-  data.members
-    .filter(m=>
-      m.code.toLowerCase().includes(q) ||
-      m.name.toLowerCase().includes(q)
-    )
-    .forEach(m=>{
-      const tr=document.createElement("tr");
-
-      tr.innerHTML=`
-        <td>${esc(m.code)}</td>
-        <td>${esc(m.name)}</td>
-        <td>${esc(m.mobile||"")}</td>
-        <td>
-          <button class="btn-blue"
-            onclick="openMemberAccount('${m.id}')">Account</button>
-        </td>
-        <td>
-          <button class="btn-orange"
-            onclick="editMember('${m.id}')">Edit</button>
-        </td>
-        <td>
-          <button class="btn-red"
-            onclick="deleteMember('${m.id}')">Delete</button>
-        </td>
-      `;
-
-      body.appendChild(tr);
-    });
-}
-
-function openMemberAccount(id){
-  showPage("accounts");
-  document.getElementById("accountMember").value=id;
-  renderMemberAccount();
-}
-
-/* ---------------- COLLECTORS ---------------- */
-
-function saveCollector(){
-  const name=document.getElementById("collectorName").value.trim();
-  const mobile=document.getElementById("collectorMobile").value.trim();
-
-  if(!name){
-    alert("Collector Name is required.");
-    return;
-  }
-
-  if(editingCollectorId){
-    const c=data.collectors.find(x=>x.id===editingCollectorId);
-
-    if(c){
-      c.name=name;
-      c.mobile=mobile;
-    }
-
-    editingCollectorId=null;
-    document.getElementById("collectorSaveBtn").textContent="Save Collector";
-  }else{
-    data.collectors.push({
-      id:uid("C"),
-      name,
-      mobile
-    });
-  }
-
-  saveData();
-  clearCollectorForm();
-  refreshAll();
-  alert("Collector saved successfully.");
-}
-
-function editCollector(id){
-  const c=data.collectors.find(x=>x.id===id);
-  if(!c)return;
-
-  editingCollectorId=id;
-
-  document.getElementById("collectorName").value=c.name;
-  document.getElementById("collectorMobile").value=c.mobile||"";
-
-  document.getElementById("collectorSaveBtn").textContent="Update Collector";
-
-  showPage("collectors");
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-function deleteCollector(id){
-  const used=data.collections.some(x=>x.collectorId===id);
-
-  if(used){
-    alert("This collector has collection records and cannot be deleted.");
-    return;
-  }
-
-  if(!confirm("Delete this collector?"))return;
-
-  data.collectors=data.collectors.filter(x=>x.id!==id);
-  saveData();
-  refreshAll();
-}
-
-function clearCollectorForm(){
-  editingCollectorId=null;
-  document.getElementById("collectorName").value="";
-  document.getElementById("collectorMobile").value="";
-  document.getElementById("collectorSaveBtn").textContent="Save Collector";
-}
-
-function renderCollectors(){
-  const body=document.getElementById("collectorsTableBody");
-  if(!body)return;
-
-  body.innerHTML="";
-
-  data.collectors.forEach(c=>{
-    const tr=document.createElement("tr");
-
-    tr.innerHTML=`
-      <td>${esc(c.name)}</td>
-      <td>${esc(c.mobile||"")}</td>
-      <td>
-        <button class="btn-orange"
-          onclick="editCollector('${c.id}')">Edit</button>
-      </td>
-      <td>
-        <button class="btn-red"
-          onclick="deleteCollector('${c.id}')">Delete</button>
-      </td>
-    `;
-
-    body.appendChild(tr);
-  });
-}
-
-/* ---------------- COLLECTION ---------------- */
-
-function collectionAmount(id){
-  return Number(document.getElementById(id)?.value||0);
-}
-
-function calculateCollectionTotal(){
-  const ids=[
-    "colShare",
-    "colSavings",
-    "colInstallment",
-    "colAdmission",
-    "colPassbook",
-    "colInsurance",
-    "colLoanForm",
-    "colOther"
-  ];
-
-  const total=ids.reduce((s,id)=>s+collectionAmount(id),0);
-
-  document.getElementById("collectionTotal").value=money(total);
-}
-
-[
-  "colShare",
-  "colSavings",
-  "colInstallment",
-  "colAdmission",
-  "colPassbook",
-  "colInsurance",
-  "colLoanForm",
-  "colOther"
-].forEach(id=>{
-  document.getElementById(id)?.addEventListener(
-    "input",calculateCollectionTotal
-  );
-});
-
-function dateToISO(value){
-  if(!value)return "";
-
-  const p=value.split("/");
-  if(p.length!==3)return "";
-
-  let y=p[2];
-  if(y.length===2)y="20"+y;
-
-  return `${y}-${p[1].padStart(2,"0")}-${p[0].padStart(2,"0")}`;
-}
-
-function isoToDisplay(iso){
-  if(!iso)return "";
-
-  const p=iso.split("-");
-  if(p.length!==3)return iso;
-
-  return `${p[2]}/${p[1]}/${p[0].slice(-2)}`;
-}
-
-function todayDisplay(){
   const d=new Date();
 
-  return String(d.getDate()).padStart(2,"0")+"/"+
-         String(d.getMonth()+1).padStart(2,"0")+"/"+
-         String(d.getFullYear()).slice(-2);
+  return d.getFullYear()+
+    "-"+
+    pad2(d.getMonth()+1)+
+    "-"+
+    pad2(d.getDate());
+
 }
+
+
+function displayDate(iso){
+
+  if(!iso) return "";
+
+  const parts=
+    String(iso).split("-");
+
+  if(parts.length!==3){
+    return iso;
+  }
+
+  return parts[2]+"/"+
+    parts[1]+"/"+
+    parts[0].slice(-2);
+
+}
+
+
+function dateInputValue(iso){
+
+  if(!iso) return "";
+
+  const parts=
+    String(iso).split("-");
+
+  if(parts.length!==3){
+    return "";
+  }
+
+  return parts[2]+"/"+
+    parts[1]+"/"+
+    parts[0].slice(-2);
+
+}
+
+
+function parseDateInput(value){
+
+  let v=
+    String(value||"").trim();
+
+  if(!v){
+    return "";
+  }
+
+  v=v.replace(
+    /[^\d/.-]/g,
+    ""
+  );
+
+  const parts=
+    v.split(/[\/.-]/);
+
+  if(parts.length!==3){
+    return "";
+  }
+
+  let day=parts[0];
+  let month=parts[1];
+  let year=parts[2];
+
+  if(day.length===1){
+    day="0"+day;
+  }
+
+  if(month.length===1){
+    month="0"+month;
+  }
+
+  if(year.length===2){
+    year="20"+year;
+  }
+
+  const d=Number(day);
+  const m=Number(month);
+  const y=Number(year);
+
+  if(!d || !m || !y){
+    return "";
+  }
+
+  if(m<1 || m>12 || d<1 || d>31){
+    return "";
+  }
+
+  const check=
+    new Date(y,m-1,d);
+
+  if(
+    check.getFullYear()!==y ||
+    check.getMonth()!==m-1 ||
+    check.getDate()!==d
+  ){
+    return "";
+  }
+
+  return y+"-"+pad2(m)+"-"+pad2(d);
+
+}
+
+
+function setToday(id){
+
+  const el=
+    document.getElementById(id);
+
+  if(el){
+    el.value=
+      dateInputValue(today());
+  }
+
+}
+
+
+function validDateOrToday(id){
+
+  const el=
+    document.getElementById(id);
+
+  const parsed=
+    parseDateInput(
+      el ? el.value : ""
+    );
+
+  return parsed||today();
+
+}
+
 
 function formatDateWhileTyping(el){
-  let v=el.value.replace(/\D/g,"").slice(0,6);
 
-  if(v.length>4)
-    v=v.slice(0,2)+"/"+v.slice(2,4)+"/"+v.slice(4);
-  else if(v.length>2)
-    v=v.slice(0,2)+"/"+v.slice(2);
+  let value=
+    el.value
+      .replace(/[^\d]/g,"")
+      .slice(0,6);
 
-  el.value=v;
+  if(value.length>4){
+
+    value=
+      value.slice(0,2)+
+      "/"+
+      value.slice(2,4)+
+      "/"+
+      value.slice(4);
+
+  }else if(value.length>2){
+
+    value=
+      value.slice(0,2)+
+      "/"+
+      value.slice(2);
+
+  }
+
+  el.value=value;
+
 }
 
-function validDateOrToday(value){
-  return dateToISO(value)||dateToISO(todayDisplay());
+
+/* ================= PAGE ================= */
+
+function showPage(id){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(p=>{
+      p.classList.remove("active");
+    });
+
+  const page=
+    document.getElementById(id);
+
+  if(page){
+    page.classList.add("active");
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+  refreshPage(id);
+
 }
 
-function saveCollection(){
-  const memberId=document.getElementById("collectionMember").value;
-  const collectorId=document.getElementById("collectionCollector").value;
-  const date=document.getElementById("collectionDate").value.trim();
 
-  if(!memberId){
-    alert("Please select a member.");
-    return;
+function refreshPage(id){
+
+  populateMemberSelects();
+  populateExpenseHeads();
+
+  if(id==="dashboard"){
+    renderDashboard();
   }
 
-  if(!collectorId){
-    alert("Please select a collector.");
-    return;
+  if(id==="members"){
+    renderMembers();
   }
 
-  if(!dateToISO(date)){
-    alert("Please enter a valid date.");
-    return;
+  if(id==="collection"){
+    updateCollectionTotal();
   }
 
-  calculateCollectionTotal();
+  if(id==="loan"){
 
-  const record={
-    memberId,
-    collectorId,
-    date:dateToISO(date),
-    share:collectionAmount("colShare"),
-    savings:collectionAmount("colSavings"),
-    installment:collectionAmount("colInstallment"),
-    admission:collectionAmount("colAdmission"),
-    passbook:collectionAmount("colPassbook"),
-    insurance:collectionAmount("colInsurance"),
-    loanForm:collectionAmount("colLoanForm"),
-    other:collectionAmount("colOther")
-  };
+    calculateLoan();
+    renderLoans();
 
-  if(editingCollectionId){
-    const old=data.collections.find(x=>x.id===editingCollectionId);
-
-    if(old){
-      Object.assign(old,record);
-    }
-
-    editingCollectionId=null;
-    document.getElementById("collectionSaveBtn").textContent=
-      "Save Collection";
-
-    saveData();
-    refreshAll();
-
-    document.getElementById("collectionDate").value=
-      isoToDisplay(record.date);
-
-    document.getElementById("collectionMember").value=record.memberId;
-    document.getElementById("collectionCollector").value=record.collectorId;
-
-    alert("Collection updated successfully.");
-    return;
   }
 
-  data.collections.push({
-    id:uid("COL"),
-    ...record
+  if(id==="accounts"){
+    renderAccount();
+  }
+
+  if(id==="ledger"){
+    renderLedger();
+  }
+
+  if(id==="cashbook"){
+    renderCashBook();
+  }
+
+  if(id==="expense"){
+    renderExpenses();
+  }
+
+  if(id==="reports"){
+    renderReports();
+  }
+
+}
+
+
+function memberName(id){
+
+  const m=
+    data.members.find(
+      x=>x.id===id
+    );
+
+  return m?m.name:"";
+
+}
+
+
+function memberCode(id){
+
+  const m=
+    data.members.find(
+      x=>x.id===id
+    );
+
+  return m?m.code:"";
+
+}
+
+
+/* ================= MEMBERS ================= */
+
+function saveMember(){
+
+  const code=
+    document.getElementById(
+      "memberCode"
+    ).value.trim();
+
+  const name=
+    document.getElementById(
+      "memberName"
+    ).value.trim();
+
+  const mobile=
+    document.getElementById(
+      "memberMobile"
+    ).value.trim();
+
+  if(!code||!name){
+
+    alert(
+      "Member Code and Member Name are required."
+    );
+
+    return;
+
+  }
+
+  const duplicate=
+    data.members.some(
+      m=>
+        m.code.toLowerCase()===
+        code.toLowerCase()
+    );
+
+  if(duplicate){
+
+    alert(
+      "This Member Code already exists."
+    );
+
+    return;
+
+  }
+
+  data.members.push({
+
+    id:uid("M"),
+    code,
+    name,
+    mobile,
+
+    createdAt:
+      new Date().toISOString()
+
   });
 
   saveData();
 
-  const savedDate=record.date;
-  const savedMember=record.memberId;
-  const savedCollector=record.collectorId;
-
-  clearCollectionAmounts();
+  clearMemberForm();
 
   refreshAll();
 
-  document.getElementById("collectionDate").value=
-    isoToDisplay(savedDate);
-  document.getElementById("collectionMember").value=savedMember;
-  document.getElementById("collectionCollector").value=savedCollector;
+  alert(
+    "Member saved successfully."
+  );
 
-  alert("Collection saved successfully.");
 }
 
-function editCollection(id){
-  const c=data.collections.find(x=>x.id===id);
-  if(!c)return;
 
-  editingCollectionId=id;
+function clearMemberForm(){
 
-  document.getElementById("collectionMember").value=c.memberId;
-  document.getElementById("collectionCollector").value=c.collectorId||"";
-  document.getElementById("collectionDate").value=isoToDisplay(c.date);
+  document.getElementById(
+    "memberCode"
+  ).value="";
 
-  document.getElementById("colShare").value=c.share||"";
-  document.getElementById("colSavings").value=c.savings||"";
-  document.getElementById("colInstallment").value=c.installment||"";
-  document.getElementById("colAdmission").value=c.admission||"";
-  document.getElementById("colPassbook").value=c.passbook||"";
-  document.getElementById("colInsurance").value=c.insurance||"";
-  document.getElementById("colLoanForm").value=c.loanForm||"";
-  document.getElementById("colOther").value=c.other||"";
+  document.getElementById(
+    "memberName"
+  ).value="";
 
-  calculateCollectionTotal();
+  document.getElementById(
+    "memberMobile"
+  ).value="";
 
-  document.getElementById("collectionSaveBtn").textContent=
-    "Update Collection";
+  document.getElementById(
+    "memberCode"
+  ).focus();
 
-  showPage("collection");
-  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-function deleteCollection(id){
-  if(!confirm("Delete this collection record?"))return;
 
-  data.collections=data.collections.filter(x=>x.id!==id);
-  saveData();
-  refreshAll();
+function renderMembers(){
+
+  const search=
+    document.getElementById(
+      "memberSearch"
+    ).value
+      .trim()
+      .toLowerCase();
+
+  const list=
+    data.members.filter(m=>{
+
+      return !search||
+
+        m.code
+          .toLowerCase()
+          .includes(search)||
+
+        m.name
+          .toLowerCase()
+          .includes(search);
+
+    });
+
+  const body=
+    document.getElementById(
+      "memberTable"
+    );
+
+  if(!list.length){
+
+    body.innerHTML=
+      `<tr>
+        <td colspan="4"
+            class="empty">
+          No members found.
+        </td>
+      </tr>`;
+
+    return;
+
+  }
+
+  body.innerHTML=
+    list.map(m=>`
+
+      <tr>
+
+        <td>
+          ${escapeHtml(m.code)}
+        </td>
+
+        <td>
+          ${escapeHtml(m.name)}
+        </td>
+
+        <td>
+          ${escapeHtml(m.mobile||"")}
+        </td>
+
+        <td>
+
+          <button
+            class="btn-small btn-blue"
+            onclick="openMemberAccount('${m.id}')">
+
+            Account
+
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("");
+
 }
 
-function clearCollectionAmounts(){
-  [
+
+function openMemberAccount(id){
+
+  populateMemberSelects();
+
+  document.getElementById(
+    "accountMember"
+  ).value=id;
+
+  showPage("accounts");
+
+}
+
+
+/* ================= SELECTS ================= */
+
+function fillSelect(
+  id,
+  options,
+  placeholder
+){
+
+  const select=
+    document.getElementById(id);
+
+  if(!select){
+    return;
+  }
+
+  const current=
+    select.value;
+
+  select.innerHTML=
+    `<option value="">
+      ${placeholder}
+    </option>`+
+
+    options.map(x=>
+      `<option value="${x.id}">
+        ${escapeHtml(x.label)}
+      </option>`
+    ).join("");
+
+  if(
+    options.some(
+      x=>x.id===current
+    )
+  ){
+
+    select.value=current;
+
+  }
+
+}
+
+
+function populateMemberSelects(){
+
+  const options=
+    data.members.map(m=>({
+
+      id:m.id,
+
+      label:
+        `${m.code} - ${m.name}`
+
+    }));
+
+  fillSelect(
+    "collectionMember",
+    options,
+    "Select Member"
+  );
+
+  fillSelect(
+    "loanMember",
+    options,
+    "Select Member"
+  );
+
+  fillSelect(
+    "accountMember",
+    options,
+    "Select Member"
+  );
+
+  fillSelect(
+    "reportMember",
+    options,
+    "All Members"
+  );
+
+}
+
+
+function populateExpenseHeads(){
+
+  const select=
+    document.getElementById(
+      "expenseHead"
+    );
+
+  if(!select){
+    return;
+  }
+
+  const heads=[
+    ...defaultExpenseHeads,
+    ...data.customExpenseHeads
+  ];
+
+  const current=
+    select.value;
+
+  select.innerHTML=
+    `<option value="">
+      Select Expense Head
+    </option>`+
+
+    heads.map(h=>
+      `<option value="${escapeHtml(h)}">
+        ${escapeHtml(h)}
+      </option>`
+    ).join("");
+
+  if(
+    heads.includes(current)
+  ){
+    select.value=current;
+  }
+
+}
+
+
+/* ================= COLLECTION ================= */
+
+function collectionFields(){
+
+  return [
+
+    ["Share","colShare"],
+    ["Savings","colSavings"],
+    ["Loan Installment","colInstallment"],
+    ["Admission Fee","colAdmission"],
+    ["Pass Book","colPassbook"],
+    ["Insurance","colInsurance"],
+    ["Loan Form Sales","colLoanForm"],
+    ["Other","colOther"]
+
+  ];
+
+}
+
+
+function collectionTotal(){
+
+  return collectionFields()
+    .reduce(
+      (sum,x)=>
+        sum+num(x[1]),
+      0
+    );
+
+}
+
+
+function updateCollectionTotal(){
+
+  document.getElementById(
+    "collectionTotal"
+  ).textContent=
+    money(collectionTotal());
+
+}
+
+
+function clearCollectionForm(){
+
+  const ids=[
+
     "colShare",
     "colSavings",
     "colInstallment",
@@ -1333,1014 +2159,2703 @@ function clearCollectionAmounts(){
     "colInsurance",
     "colLoanForm",
     "colOther"
-  ].forEach(id=>{
-    document.getElementById(id).value="";
+
+  ];
+
+  ids.forEach(id=>{
+
+    document.getElementById(id)
+      .value="";
+
   });
 
-  document.getElementById("collectionTotal").value="0.00";
+  setToday("collectionDate");
+
+  updateCollectionTotal();
+
 }
 
-function clearCollectionForm(){
-  editingCollectionId=null;
 
-  document.getElementById("collectionMember").value="";
-  document.getElementById("collectionCollector").value="";
-  document.getElementById("collectionDate").value=todayDisplay();
+function saveCollection(){
 
-  clearCollectionAmounts();
+  const memberId=
+    document.getElementById(
+      "collectionMember"
+    ).value;
 
-  document.getElementById("collectionSaveBtn").textContent=
-    "Save Collection";
-}
-
-function getMember(id){
-  return data.members.find(x=>x.id===id);
-}
-
-function getCollector(id){
-  return data.collectors.find(x=>x.id===id);
-}
-
-function renderCollections(){
-  const body=document.getElementById("collectionTableBody");
-  if(!body)return;
-
-  const q=(document.getElementById("collectionSearch")?.value||"")
-    .toLowerCase();
-
-  body.innerHTML="";
-
-  data.collections
-    .slice()
-    .reverse()
-    .filter(c=>{
-      const m=getMember(c.memberId);
-      const col=getCollector(c.collectorId);
-
-      return (m?.name||"").toLowerCase().includes(q) ||
-             (m?.code||"").toLowerCase().includes(q) ||
-             (col?.name||"").toLowerCase().includes(q);
-    })
-    .forEach(c=>{
-      const m=getMember(c.memberId);
-      const col=getCollector(c.collectorId);
-
-      const fees=
-        Number(c.admission||0)+
-        Number(c.passbook||0)+
-        Number(c.insurance||0)+
-        Number(c.loanForm||0)+
-        Number(c.other||0);
-
-      const total=
-        Number(c.share||0)+
-        Number(c.savings||0)+
-        Number(c.installment||0)+fees;
-
-      const tr=document.createElement("tr");
-
-      tr.innerHTML=`
-        <td>${isoToDisplay(c.date)}</td>
-        <td>${esc(m?.name||"Unknown")}</td>
-        <td>${esc(col?.name||"Unknown")}</td>
-        <td>${money(c.share)}</td>
-        <td>${money(c.savings)}</td>
-        <td>${money(c.installment)}</td>
-        <td>${money(fees)}</td>
-        <td><b>${money(total)}</b></td>
-        <td>
-          <button class="btn-orange"
-            onclick="editCollection('${c.id}')">Edit</button>
-        </td>
-        <td>
-          <button class="btn-red"
-            onclick="deleteCollection('${c.id}')">Delete</button>
-        </td>
-      `;
-
-      body.appendChild(tr);
-    });
-}
-
-/* ---------------- LOAN ---------------- */
-
-function calculateLoan(){
-  const principal=Number(
-    document.getElementById("loanPrincipal").value||0
-  );
-
-  const rate=Number(
-    document.getElementById("loanRate").value||0
-  );
-
-  const installments=Number(
-    document.getElementById("loanInstallments").value||0
-  );
-
-  const service=principal*rate/100;
-  const total=principal+service;
-  const amount=installments ? total/installments : 0;
-
-  document.getElementById("loanService").value=money(service);
-  document.getElementById("loanTotal").value=money(total);
-  document.getElementById("loanInstallmentAmount").value=money(amount);
-}
-
-function saveLoan(){
-  const memberId=document.getElementById("loanMember").value;
-  const date=document.getElementById("loanDate").value;
-  const principal=Number(
-    document.getElementById("loanPrincipal").value||0
-  );
-  const rate=Number(
-    document.getElementById("loanRate").value||0
-  );
-  const installments=Number(
-    document.getElementById("loanInstallments").value||0
-  );
-  const firstDate=document.getElementById("loanFirstDate").value;
-  const note=document.getElementById("loanNote").value.trim();
+  const date=
+    validDateOrToday(
+      "collectionDate"
+    );
 
   if(!memberId){
-    alert("Please select a member.");
+
+    alert(
+      "Please select a member."
+    );
+
     return;
+
   }
 
-  if(principal<=0){
-    alert("Enter loan principal.");
+  const total=
+    collectionTotal();
+
+  if(total<=0){
+
+    alert(
+      "Enter at least one collection amount."
+    );
+
     return;
+
   }
 
-  if(!dateToISO(date)){
-    alert("Enter valid loan date.");
-    return;
-  }
+  const item={
 
-  const service=principal*rate/100;
-  const total=principal+service;
+    id:uid("C"),
 
-  data.loans.push({
-    id:uid("L"),
     memberId,
-    date:dateToISO(date),
-    principal,
-    rate,
-    service,
+
+    date,
+
+    share:num("colShare"),
+    savings:num("colSavings"),
+    installment:num("colInstallment"),
+    admission:num("colAdmission"),
+    passbook:num("colPassbook"),
+    insurance:num("colInsurance"),
+    loanForm:num("colLoanForm"),
+    other:num("colOther"),
+
     total,
-    installments,
-    installmentAmount:installments ? total/installments : total,
-    firstDate:dateToISO(firstDate),
-    note
-  });
+
+    createdAt:
+      new Date().toISOString()
+
+  };
+
+  if(item.installment>0){
+
+    const activeLoans=
+      data.loans
+
+        .filter(
+          l=>l.memberId===memberId
+        )
+
+        .filter(
+          l=>loanOutstanding(l)>0
+        )
+
+        .sort(
+          (a,b)=>
+            a.date.localeCompare(b.date)
+        );
+
+    if(!activeLoans.length){
+
+      alert(
+        "No outstanding loan found for this member."
+      );
+
+      return;
+
+    }
+
+    const totalOutstanding=
+      activeLoans.reduce(
+        (s,l)=>
+          s+loanOutstanding(l),
+        0
+      );
+
+    if(
+      item.installment>
+      totalOutstanding+0.01
+    ){
+
+      alert(
+        "The installment amount is greater than the member's loan outstanding."
+      );
+
+      return;
+
+    }
+
+    let remaining=
+      item.installment;
+
+    for(
+      const loan of activeLoans
+    ){
+
+      if(remaining<=0){
+        break;
+      }
+
+      const outstanding=
+        loanOutstanding(loan);
+
+      const pay=
+        Math.min(
+          remaining,
+          outstanding
+        );
+
+      allocateInstallment(
+        loan,
+        pay,
+        date
+      );
+
+      remaining-=pay;
+
+    }
+
+  }
+
+  data.collections.push(item);
 
   saveData();
-  clearLoanForm();
+
   refreshAll();
 
-  alert("Loan saved successfully.");
+  alert(
+    "Collection saved successfully."
+  );
+
+  document.getElementById(
+    "collectionDate"
+  ).value=
+    dateInputValue(date);
+
+  [
+
+    "colShare",
+    "colSavings",
+    "colInstallment",
+    "colAdmission",
+    "colPassbook",
+    "colInsurance",
+    "colLoanForm",
+    "colOther"
+
+  ].forEach(id=>{
+
+    document.getElementById(id)
+      .value="";
+
+  });
+
+  updateCollectionTotal();
+
 }
+
+
+function allocateInstallment(
+  loan,
+  payment,
+  paymentDate
+){
+
+  if(!loan.payments){
+    loan.payments=[];
+  }
+
+  const totalInstallments=
+    Number(loan.installments)||1;
+
+  const serviceTotal=
+    Number(loan.service)||0;
+
+  let servicePaid=
+    loan.payments.reduce(
+      (s,p)=>
+        s+Number(p.service||0),
+      0
+    );
+
+  let principalPaid=
+    loan.payments.reduce(
+      (s,p)=>
+        s+Number(p.principal||0),
+      0
+    );
+
+  let remainingService=
+    Math.max(
+      0,
+      serviceTotal-servicePaid
+    );
+
+  let remainingPrincipal=
+    Math.max(
+      0,
+      loan.principal-principalPaid
+    );
+
+  let servicePart=
+    Math.min(
+      remainingService,
+      Math.round(
+        (serviceTotal/
+        totalInstallments)*100
+      )/100
+    );
+
+  if(payment>=remainingService){
+
+    servicePart=
+      remainingService;
+
+  }
+
+  let principalPart=
+    payment-servicePart;
+
+  if(
+    principalPart>
+    remainingPrincipal
+  ){
+
+    principalPart=
+      remainingPrincipal;
+
+    servicePart=
+      payment-principalPart;
+
+  }
+
+  loan.payments.push({
+
+    id:uid("P"),
+
+    amount:payment,
+
+    principal:principalPart,
+
+    service:servicePart,
+
+    date:paymentDate
+
+  });
+
+}
+
+
+/* ================= LOAN ================= */
+
+function calculateLoan(){
+
+  const principal=
+    num("loanPrincipal");
+
+  let rate=
+    Number(
+      document.getElementById(
+        "loanRate"
+      ).value
+        .toString()
+        .replace(/,/g,"")
+    )||0;
+
+  const installments=
+    Number(
+      document.getElementById(
+        "loanInstallments"
+      ).value
+    )||0;
+
+  const service=
+    principal*rate/100;
+
+  const total=
+    principal+service;
+
+  const installment=
+    installments>0
+      ?total/installments
+      :0;
+
+  document.getElementById(
+    "loanService"
+  ).value=
+    service?money(service):"";
+
+  document.getElementById(
+    "loanTotal"
+  ).value=
+    total?money(total):"";
+
+  document.getElementById(
+    "loanInstallmentAmount"
+  ).value=
+    installment
+      ?money(installment)
+      :"";
+
+  document.getElementById(
+    "loanPreviewPrincipal"
+  ).textContent=
+    money(principal);
+
+  document.getElementById(
+    "loanPreviewService"
+  ).textContent=
+    money(service);
+
+  document.getElementById(
+    "loanPreviewTotal"
+  ).textContent=
+    money(total);
+
+  document.getElementById(
+    "loanPreviewInstallment"
+  ).textContent=
+    money(installment);
+
+}
+
+
+function saveLoan(){
+
+  const memberId=
+    document.getElementById(
+      "loanMember"
+    ).value;
+
+  const date=
+    validDateOrToday(
+      "loanDate"
+    );
+
+  const principal=
+    num("loanPrincipal");
+
+  const rate=
+    Number(
+      document.getElementById(
+        "loanRate"
+      ).value
+        .toString()
+        .replace(/,/g,"")
+    )||0;
+
+  const installments=
+    Number(
+      document.getElementById(
+        "loanInstallments"
+      ).value
+    )||0;
+
+  const firstDate=
+    validDateOrToday(
+      "loanFirstDate"
+    );
+
+  const note=
+    document.getElementById(
+      "loanNote"
+    ).value.trim();
+
+  if(
+    !memberId||
+    principal<=0||
+    installments<=0
+  ){
+
+    alert(
+      "Please complete Member, Loan Principal and Number of Installments."
+    );
+
+    return;
+
+  }
+
+  const service=
+    principal*rate/100;
+
+  const total=
+    principal+service;
+
+  const loan={
+
+    id:uid("L"),
+
+    memberId,
+
+    date,
+
+    principal,
+
+    rate,
+
+    service,
+
+    total,
+
+    installments,
+
+    installmentAmount:
+      total/installments,
+
+    firstDate,
+
+    note,
+
+    payments:[],
+
+    createdAt:
+      new Date().toISOString()
+
+  };
+
+  data.loans.push(loan);
+
+  saveData();
+
+  refreshAll();
+
+  alert(
+    "Loan saved successfully."
+  );
+
+  clearLoanForm();
+
+}
+
 
 function clearLoanForm(){
-  document.getElementById("loanMember").value="";
-  document.getElementById("loanDate").value=todayDisplay();
-  document.getElementById("loanPrincipal").value="";
-  document.getElementById("loanRate").value="";
-  document.getElementById("loanService").value="0.00";
-  document.getElementById("loanTotal").value="0.00";
-  document.getElementById("loanInstallments").value="";
-  document.getElementById("loanInstallmentAmount").value="0.00";
-  document.getElementById("loanFirstDate").value=todayDisplay();
-  document.getElementById("loanNote").value="";
+
+  document.getElementById(
+    "loanPrincipal"
+  ).value="";
+
+  document.getElementById(
+    "loanRate"
+  ).value="10";
+
+  document.getElementById(
+    "loanInstallments"
+  ).value="";
+
+  document.getElementById(
+    "loanService"
+  ).value="";
+
+  document.getElementById(
+    "loanTotal"
+  ).value="";
+
+  document.getElementById(
+    "loanInstallmentAmount"
+  ).value="";
+
+  document.getElementById(
+    "loanNote"
+  ).value="";
+
+  setToday("loanDate");
+
+  setToday("loanFirstDate");
+
+  calculateLoan();
+
 }
+
 
 function loanPaid(loan){
-  return data.collections
-    .filter(c=>c.memberId===loan.memberId)
-    .reduce((s,c)=>s+Number(c.installment||0),0);
+
+  return (loan.payments||[])
+    .reduce(
+      (s,p)=>
+        s+Number(p.amount||0),
+      0
+    );
+
 }
+
+
+function loanOutstanding(loan){
+
+  return Math.max(
+    0,
+    Number(loan.total||0)-
+    loanPaid(loan)
+  );
+
+}
+
+
+function loanServicePaid(loan){
+
+  return (loan.payments||[])
+    .reduce(
+      (s,p)=>
+        s+Number(p.service||0),
+      0
+    );
+
+}
+
 
 function renderLoans(){
-  const body=document.getElementById("loanTableBody");
-  if(!body)return;
 
-  body.innerHTML="";
+  const body=
+    document.getElementById(
+      "loanTable"
+    );
 
-  data.loans.slice().reverse().forEach(l=>{
-    const m=getMember(l.memberId);
-    const paid=loanPaid(l);
-    const outstanding=Math.max(0,Number(l.total)-paid);
+  if(!data.loans.length){
 
-    const tr=document.createElement("tr");
+    body.innerHTML=
+      `<tr>
+        <td colspan="8"
+            class="empty">
+          No loans found.
+        </td>
+      </tr>`;
 
-    tr.innerHTML=`
-      <td>${esc(l.id)}</td>
-      <td>${esc(m?.name||"Unknown")}</td>
-      <td>${isoToDisplay(l.date)}</td>
-      <td>${money(l.principal)}</td>
-      <td>${money(l.service)}</td>
-      <td>${money(l.total)}</td>
-      <td>${money(paid)}</td>
-      <td>${money(outstanding)}</td>
-      <td>
-        <button class="btn-red"
-          onclick="deleteLoan('${l.id}')">Delete</button>
-      </td>
-    `;
-
-    body.appendChild(tr);
-  });
-}
-
-function deleteLoan(id){
-  if(!confirm("Delete this loan record?"))return;
-
-  data.loans=data.loans.filter(x=>x.id!==id);
-  saveData();
-  refreshAll();
-}
-
-/* ---------------- MEMBER ACCOUNT ---------------- */
-
-function renderMemberAccount(){
-  const id=document.getElementById("accountMember")?.value;
-
-  const summary=document.getElementById("accountSummary");
-  const transactions=document.getElementById("accountTransactions");
-
-  if(!summary || !transactions)return;
-
-  if(!id){
-    summary.innerHTML="";
-    transactions.innerHTML="";
     return;
+
   }
 
-  const m=getMember(id);
+  body.innerHTML=
+    data.loans.map(l=>`
 
-  const collections=data.collections.filter(x=>x.memberId===id);
-  const loans=data.loans.filter(x=>x.memberId===id);
+      <tr>
 
-  const share=collections.reduce((s,x)=>s+Number(x.share||0),0);
-  const savings=collections.reduce((s,x)=>s+Number(x.savings||0),0);
-  const installment=collections.reduce(
-    (s,x)=>s+Number(x.installment||0),0
-  );
+        <td>
+          ${escapeHtml(l.id)}
+        </td>
 
-  const servicePaid=loans.reduce((s,l)=>{
-    const paid=installment;
-    const service=Number(l.service||0);
+        <td>
+          ${escapeHtml(
+            memberName(l.memberId)
+          )}
+        </td>
 
-    return s+Math.min(service,paid);
-  },0);
+        <td>
+          ${escapeHtml(
+            displayDate(l.date)
+          )}
+        </td>
 
-  const totalLoan=loans.reduce((s,l)=>s+Number(l.total||0),0);
-  const outstanding=Math.max(0,totalLoan-installment);
+        <td>${money(l.principal)}</td>
+
+        <td>${money(l.service)}</td>
+
+        <td>${money(l.total)}</td>
+
+        <td>${money(loanPaid(l))}</td>
+
+        <td>${money(
+          loanOutstanding(l)
+        )}</td>
+
+      </tr>
+
+    `).join("");
+
+}
+
+
+/* ================= ACCOUNTS ================= */
+
+function renderAccount(){
+
+  const memberId=
+    document.getElementById(
+      "accountMember"
+    ).value;
+
+  const summary=
+    document.getElementById(
+      "accountSummary"
+    );
+
+  const body=
+    document.getElementById(
+      "accountTransactions"
+    );
+
+  if(!memberId){
+
+    summary.innerHTML=
+      `<div class="empty">
+        Select a member to view account.
+      </div>`;
+
+    body.innerHTML="";
+
+    return;
+
+  }
+
+  const member=
+    data.members.find(
+      m=>m.id===memberId
+    );
+
+  if(!member){
+
+    summary.innerHTML=
+      `<div class="empty">
+        Member not found.
+      </div>`;
+
+    body.innerHTML="";
+
+    return;
+
+  }
+
+  const share=
+    data.collections
+      .filter(
+        c=>c.memberId===memberId
+      )
+      .reduce(
+        (s,c)=>
+          s+Number(c.share||0),
+        0
+      );
+
+  const savings=
+    data.collections
+      .filter(
+        c=>c.memberId===memberId
+      )
+      .reduce(
+        (s,c)=>
+          s+Number(c.savings||0),
+        0
+      );
+
+  const installments=
+    data.collections
+      .filter(
+        c=>c.memberId===memberId
+      )
+      .reduce(
+        (s,c)=>
+          s+Number(c.installment||0),
+        0
+      );
+
+  const service=
+    data.loans
+      .filter(
+        l=>l.memberId===memberId
+      )
+      .reduce(
+        (s,l)=>
+          s+loanServicePaid(l),
+        0
+      );
+
+  const loans=
+    data.loans.filter(
+      l=>l.memberId===memberId
+    );
+
+  const loanOutstandingTotal=
+    loans.reduce(
+      (s,l)=>
+        s+loanOutstanding(l),
+      0
+    );
 
   summary.innerHTML=`
-    <div class="summary">
-      <div class="stat"><small>Member Code</small><strong>${esc(m?.code||"")}</strong></div>
-      <div class="stat"><small>Name</small><strong>${esc(m?.name||"")}</strong></div>
-      <div class="stat"><small>Mobile</small><strong>${esc(m?.mobile||"")}</strong></div>
-      <div class="stat"><small>Share</small><strong>${money(share)}</strong></div>
-      <div class="stat"><small>Savings</small><strong>${money(savings)}</strong></div>
-      <div class="stat"><small>Loan Installment</small><strong>${money(installment)}</strong></div>
-      <div class="stat"><small>Service Charge Paid</small><strong>${money(servicePaid)}</strong></div>
-      <div class="stat"><small>Loan Outstanding</small><strong>${money(outstanding)}</strong></div>
+
+    <div class="summary-box">
+
+      <div class="summary-line">
+        <span>Member Code</span>
+        <strong>
+          ${escapeHtml(member.code)}
+        </strong>
+      </div>
+
+      <div class="summary-line">
+        <span>Member Name</span>
+        <strong>
+          ${escapeHtml(member.name)}
+        </strong>
+      </div>
+
+      <div class="summary-line">
+        <span>Mobile</span>
+        <strong>
+          ${escapeHtml(
+            member.mobile||""
+          )}
+        </strong>
+      </div>
+
+      <div class="summary-line">
+        <span>Share</span>
+        <strong>${money(share)}</strong>
+      </div>
+
+      <div class="summary-line">
+        <span>Savings</span>
+        <strong>${money(savings)}</strong>
+      </div>
+
+      <div class="summary-line">
+        <span>Loan Installment Paid</span>
+        <strong>${money(installments)}</strong>
+      </div>
+
+      <div class="summary-line">
+        <span>Service Charge Paid</span>
+        <strong>${money(service)}</strong>
+      </div>
+
+      <div class="summary-line">
+        <span>Loan Outstanding</span>
+        <strong>
+          ${money(loanOutstandingTotal)}
+        </strong>
+      </div>
+
     </div>
+
   `;
 
-  let html=`
-    <h3>Transaction History</h3>
-    <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Type</th>
-          <th>Details</th>
-          <th>Amount</th>
-        </tr>
-      </thead>
-      <tbody>
-  `;
+  const transactions=[];
 
-  collections.forEach(c=>{
-    const total=
-      Number(c.share||0)+
-      Number(c.savings||0)+
-      Number(c.installment||0)+
-      Number(c.admission||0)+
-      Number(c.passbook||0)+
-      Number(c.insurance||0)+
-      Number(c.loanForm||0)+
-      Number(c.other||0);
+  data.collections
+    .filter(
+      c=>c.memberId===memberId
+    )
+    .forEach(c=>{
 
-    html+=`
-      <tr>
-        <td>${isoToDisplay(c.date)}</td>
-        <td>Collection</td>
-        <td>Share / Savings / Loan Installment</td>
-        <td>${money(total)}</td>
-      </tr>
-    `;
-  });
+      transactions.push({
 
-  loans.forEach(l=>{
-    html+=`
-      <tr>
-        <td>${isoToDisplay(l.date)}</td>
-        <td>Loan</td>
-        <td>Principal ${money(l.principal)} + Service ${money(l.service)}</td>
-        <td>${money(l.total)}</td>
-      </tr>
-    `;
-  });
+        date:c.date,
 
-  html+=`</tbody></table></div>`;
+        description:"Collection",
 
-  transactions.innerHTML=html;
-}
+        amount:c.total,
 
-/* ---------------- LEDGER ---------------- */
+        details:[
 
-function renderLedger(){
-  const head=document.getElementById("ledgerHead")?.value;
-  const content=document.getElementById("ledgerContent");
+          c.share?
+            `Share ${money(c.share)}`:"",
 
-  if(!content)return;
+          c.savings?
+            `Savings ${money(c.savings)}`:"",
 
-  let rows=[];
-  let total=0;
+          c.installment?
+            `Installment ${money(c.installment)}`:"",
 
-  data.collections.forEach(c=>{
-    let amount=0;
+          c.admission?
+            `Admission ${money(c.admission)}`:"",
 
-    if(head==="Share")amount=Number(c.share||0);
-    if(head==="Savings")amount=Number(c.savings||0);
-    if(head==="Loan Installment")amount=Number(c.installment||0);
-    if(head==="Admission Fee")amount=Number(c.admission||0);
-    if(head==="Pass Book")amount=Number(c.passbook||0);
-    if(head==="Insurance")amount=Number(c.insurance||0);
-    if(head==="Loan Form Sales")amount=Number(c.loanForm||0);
-    if(head==="Other Income")amount=Number(c.other||0);
+          c.passbook?
+            `Pass Book ${money(c.passbook)}`:"",
 
-    if(amount){
-      const m=getMember(c.memberId);
+          c.insurance?
+            `Insurance ${money(c.insurance)}`:"",
 
-      rows.push(`
-        <tr>
-          <td>${isoToDisplay(c.date)}</td>
-          <td>Collection</td>
-          <td>${esc(m?.name||"")}</td>
-          <td>${money(amount)}</td>
-        </tr>
-      `);
+          c.loanForm?
+            `Loan Form ${money(c.loanForm)}`:"",
 
-      total+=amount;
-    }
-  });
+          c.other?
+            `Other ${money(c.other)}`:""
 
-  if(head==="Loan Disbursement"){
-    data.loans.forEach(l=>{
-      const m=getMember(l.memberId);
+        ]
+        .filter(Boolean)
+        .join(" • ")
 
-      rows.push(`
-        <tr>
-          <td>${isoToDisplay(l.date)}</td>
-          <td>Loan</td>
-          <td>${esc(m?.name||"")}</td>
-          <td>${money(l.principal)}</td>
-        </tr>
-      `);
+      });
 
-      total+=Number(l.principal||0);
     });
-  }
 
-  data.expenses.forEach(e=>{
-    if(e.head===head){
-      rows.push(`
-        <tr>
-          <td>${isoToDisplay(e.date)}</td>
-          <td>Expense</td>
-          <td>${esc(e.note||"")}</td>
-          <td>${money(e.amount)}</td>
-        </tr>
-      `);
+  data.loans
+    .filter(
+      l=>l.memberId===memberId
+    )
+    .forEach(l=>{
 
-      total+=Number(e.amount||0);
-    }
-  });
+      transactions.push({
 
-  content.innerHTML=`
-    <div class="stat" style="margin-bottom:10px">
-      <small>Total</small>
-      <strong>${money(total)}</strong>
-    </div>
+        date:l.date,
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Type</th>
-            <th>Details</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>${rows.join("")}</tbody>
-      </table>
-    </div>
-  `;
-}
+        description:
+          "Loan Disbursement",
 
-/* ---------------- CASH BOOK ---------------- */
+        amount:l.principal,
 
-function saveOpeningCash(){
-  data.openingCash=Number(
-    document.getElementById("openingCash").value||0
+        details:
+          `Principal ${money(l.principal)} • `+
+          `Service ${money(l.service)} • `+
+          `Total ${money(l.total)}`
+
+      });
+
+      (l.payments||[])
+        .forEach(p=>{
+
+          transactions.push({
+
+            date:p.date,
+
+            description:
+              "Loan Installment",
+
+            amount:p.amount,
+
+            details:
+              `Principal ${money(p.principal)} • `+
+              `Service ${money(p.service)}`
+
+          });
+
+        });
+
+    });
+
+  transactions.sort(
+    (a,b)=>
+      a.date.localeCompare(b.date)
   );
 
-  saveData();
-  renderCashBook();
+  if(!transactions.length){
 
-  alert("Opening cash balance saved.");
+    body.innerHTML=
+      `<tr>
+        <td colspan="4"
+            class="empty">
+          No transactions found.
+        </td>
+      </tr>`;
+
+    return;
+
+  }
+
+  body.innerHTML=
+    transactions.map(t=>`
+
+      <tr>
+
+        <td>
+          ${escapeHtml(
+            displayDate(t.date)
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            t.description
+          )}
+        </td>
+
+        <td>${money(t.amount)}</td>
+
+        <td>
+          ${escapeHtml(t.details)}
+        </td>
+
+      </tr>
+
+    `).join("");
+
 }
 
-function renderCashBook(){
-  const opening=Number(data.openingCash||0);
 
-  let cashIn=0;
-  let cashOut=0;
-  let rows=[];
+/* ================= LEDGER ================= */
+
+function ledgerRows(){
+
+  const rows=[];
 
   data.collections.forEach(c=>{
-    const amount=
-      Number(c.share||0)+
-      Number(c.savings||0)+
-      Number(c.installment||0)+
-      Number(c.admission||0)+
-      Number(c.passbook||0)+
-      Number(c.insurance||0)+
-      Number(c.loanForm||0)+
-      Number(c.other||0);
 
-    cashIn+=amount;
+    const name=
+      memberName(c.memberId);
 
-    rows.push(`
-      <tr>
-        <td>${isoToDisplay(c.date)}</td>
-        <td>Collection</td>
-        <td>${money(amount)}</td>
-        <td>In</td>
-      </tr>
-    `);
+    const heads=[
+
+      ["Share",c.share],
+      ["Savings",c.savings],
+      ["Loan Installment",c.installment],
+      ["Admission Fee",c.admission],
+      ["Pass Book",c.passbook],
+      ["Insurance",c.insurance],
+      ["Loan Form Sales",c.loanForm],
+      ["Other Income",c.other]
+
+    ];
+
+    heads.forEach(
+      ([head,amount])=>{
+
+        if(Number(amount)>0){
+
+          rows.push({
+
+            date:c.date,
+            head,
+            member:name,
+            in:Number(amount),
+            out:0
+
+          });
+
+        }
+
+      }
+    );
+
   });
 
   data.loans.forEach(l=>{
-    cashOut+=Number(l.principal||0);
 
-    rows.push(`
-      <tr>
-        <td>${isoToDisplay(l.date)}</td>
-        <td>Loan Disbursement</td>
-        <td>${money(l.principal)}</td>
-        <td>Out</td>
-      </tr>
-    `);
+    rows.push({
+
+      date:l.date,
+
+      head:"Loan Disbursement",
+
+      member:
+        memberName(l.memberId),
+
+      in:0,
+
+      out:l.principal
+
+    });
+
+    (l.payments||[])
+      .forEach(p=>{
+
+        if(Number(p.service)>0){
+
+          rows.push({
+
+            date:p.date,
+
+            head:"Service Charge",
+
+            member:
+              memberName(l.memberId),
+
+            in:p.service,
+
+            out:0
+
+          });
+
+        }
+
+      });
+
   });
 
   data.expenses.forEach(e=>{
-    cashOut+=Number(e.amount||0);
 
-    rows.push(`
-      <tr>
-        <td>${isoToDisplay(e.date)}</td>
-        <td>${esc(e.head)}</td>
-        <td>${money(e.amount)}</td>
-        <td>Out</td>
-      </tr>
-    `);
+    rows.push({
+
+      date:e.date,
+
+      head:e.head,
+
+      member:"",
+
+      in:0,
+
+      out:e.amount
+
+    });
+
   });
 
-  const balance=opening+cashIn-cashOut;
+  return rows.sort(
+    (a,b)=>
+      a.date.localeCompare(b.date)
+  );
 
-  const cin=document.getElementById("cashIn");
-  const cout=document.getElementById("cashOut");
-  const cb=document.getElementById("cashBalance");
-
-  if(cin)cin.textContent=money(cashIn);
-  if(cout)cout.textContent=money(cashOut);
-  if(cb)cb.textContent=money(balance);
-
-  const content=document.getElementById("cashBookContent");
-
-  if(content){
-    content.innerHTML=`
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Particular</th>
-              <th>Amount</th>
-              <th>Type</th>
-            </tr>
-          </thead>
-          <tbody>${rows.join("")}</tbody>
-        </table>
-      </div>
-    `;
-  }
 }
 
-/* ---------------- EXPENSE ---------------- */
 
-function saveExpense(){
-  const date=document.getElementById("expenseDate").value;
-  const head=document.getElementById("expenseHead").value;
-  const amount=Number(
-    document.getElementById("expenseAmount").value||0
-  );
-  const note=document.getElementById("expenseNote").value.trim();
+function renderLedger(){
 
-  if(!dateToISO(date)){
-    alert("Enter valid date.");
+  const selected=
+    document.getElementById(
+      "ledgerHead"
+    ).value;
+
+  const rows=
+    ledgerRows()
+      .filter(
+        r=>!selected||
+        r.head===selected
+      );
+
+  const body=
+    document.getElementById(
+      "ledgerTable"
+    );
+
+  if(!rows.length){
+
+    body.innerHTML=
+      `<tr>
+        <td colspan="5"
+            class="empty">
+          No ledger entries found.
+        </td>
+      </tr>`;
+
     return;
+
   }
 
-  if(!head){
-    alert("Select expense head.");
+  body.innerHTML=
+    rows.map(r=>`
+
+      <tr>
+
+        <td>
+          ${escapeHtml(
+            displayDate(r.date)
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(r.head)}
+        </td>
+
+        <td>
+          ${escapeHtml(r.member)}
+        </td>
+
+        <td>
+          ${r.in?money(r.in):""}
+        </td>
+
+        <td>
+          ${r.out?money(r.out):""}
+        </td>
+
+      </tr>
+
+    `).join("");
+
+}
+
+
+/* ================= CASH BOOK ================= */
+
+function cashRows(){
+
+  const rows=[];
+
+  data.collections.forEach(c=>{
+
+    rows.push({
+
+      date:c.date,
+
+      description:
+        `Collection - ${
+          memberName(c.memberId)
+        }`,
+
+      in:c.total,
+
+      out:0
+
+    });
+
+  });
+
+  data.loans.forEach(l=>{
+
+    rows.push({
+
+      date:l.date,
+
+      description:
+        `Loan Disbursement - ${
+          memberName(l.memberId)
+        }`,
+
+      in:0,
+
+      out:l.principal
+
+    });
+
+  });
+
+  data.expenses.forEach(e=>{
+
+    if(e.payment==="Cash"){
+
+      rows.push({
+
+        date:e.date,
+
+        description:
+          `Expense - ${e.head}`,
+
+        in:0,
+
+        out:e.amount
+
+      });
+
+    }
+
+  });
+
+  return rows.sort(
+    (a,b)=>
+      a.date.localeCompare(b.date)
+  );
+
+}
+
+
+function cashBalance(){
+
+  let balance=
+    Number(data.openingCash)||0;
+
+  cashRows().forEach(r=>{
+
+    balance+=
+      Number(r.in||0);
+
+    balance-=
+      Number(r.out||0);
+
+  });
+
+  return balance;
+
+}
+
+
+function renderCashBook(){
+
+  const rows=
+    cashRows();
+
+  let balance=
+    Number(data.openingCash)||0;
+
+  document.getElementById(
+    "cashOpening"
+  ).textContent=
+    money(data.openingCash);
+
+  const totalIn=
+    rows.reduce(
+      (s,r)=>
+        s+Number(r.in||0),
+      0
+    );
+
+  const totalOut=
+    rows.reduce(
+      (s,r)=>
+        s+Number(r.out||0),
+      0
+    );
+
+  document.getElementById(
+    "cashIn"
+  ).textContent=
+    money(totalIn);
+
+  document.getElementById(
+    "cashOut"
+  ).textContent=
+    money(totalOut);
+
+  document.getElementById(
+    "cashBalance"
+  ).textContent=
+    money(cashBalance());
+
+  const body=
+    document.getElementById(
+      "cashTable"
+    );
+
+  if(!rows.length){
+
+    body.innerHTML=
+      `<tr>
+        <td colspan="5"
+            class="empty">
+          No cash transactions found.
+        </td>
+      </tr>`;
+
     return;
+
+  }
+
+  body.innerHTML=
+    rows.map(r=>{
+
+      balance+=
+        Number(r.in||0);
+
+      balance-=
+        Number(r.out||0);
+
+      return `
+
+        <tr>
+
+          <td>
+            ${escapeHtml(
+              displayDate(r.date)
+            )}
+          </td>
+
+          <td>
+            ${escapeHtml(
+              r.description
+            )}
+          </td>
+
+          <td>
+            ${r.in?
+              money(r.in):""}
+          </td>
+
+          <td>
+            ${r.out?
+              money(r.out):""}
+          </td>
+
+          <td>
+            ${money(balance)}
+          </td>
+
+        </tr>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/* ================= EXPENSE ================= */
+
+function saveExpense(){
+
+  const date=
+    validDateOrToday(
+      "expenseDate"
+    );
+
+  const head=
+    document.getElementById(
+      "expenseHead"
+    ).value.trim();
+
+  const amount=
+    num("expenseAmount");
+
+  const note=
+    document.getElementById(
+      "expenseNote"
+    ).value.trim();
+
+  if(!head){
+
+    alert(
+      "Please select an Expense Head."
+    );
+
+    return;
+
   }
 
   if(amount<=0){
-    alert("Enter expense amount.");
+
+    alert(
+      "Please enter a valid expense amount."
+    );
+
     return;
+
   }
 
-  if(editingExpenseId){
-    const e=data.expenses.find(x=>x.id===editingExpenseId);
+  const expense={
 
-    if(e){
-      e.date=dateToISO(date);
-      e.head=head;
-      e.amount=amount;
-      e.note=note;
-      e.payment="Cash";
-    }
-
-    editingExpenseId=null;
-    document.getElementById("expenseSaveBtn").textContent=
-      "Save Expense";
-
-    saveData();
-    clearExpenseForm();
-    refreshAll();
-
-    alert("Expense updated successfully.");
-    return;
-  }
-
-  data.expenses.push({
     id:uid("E"),
-    date:dateToISO(date),
+
+    date,
+
     head,
+
     amount,
+
     note,
-    payment:"Cash"
-  });
+
+    payment:"Cash",
+
+    createdAt:
+      new Date().toISOString()
+
+  };
+
+  data.expenses.push(expense);
 
   saveData();
+
+  refreshAll();
+
+  alert(
+    "Expense saved successfully."
+  );
+
   clearExpenseForm();
-  refreshAll();
 
-  alert("Expense saved successfully.");
 }
 
-function editExpense(id){
-  const e=data.expenses.find(x=>x.id===id);
-  if(!e)return;
-
-  editingExpenseId=id;
-
-  document.getElementById("expenseDate").value=
-    isoToDisplay(e.date);
-
-  document.getElementById("expenseHead").value=e.head;
-  document.getElementById("expenseAmount").value=e.amount;
-  document.getElementById("expenseNote").value=e.note||"";
-
-  document.getElementById("expenseSaveBtn").textContent=
-    "Update Expense";
-
-  showPage("expense");
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-function deleteExpense(id){
-  if(!confirm("Delete this expense?"))return;
-
-  data.expenses=data.expenses.filter(x=>x.id!==id);
-  saveData();
-  refreshAll();
-}
 
 function clearExpenseForm(){
-  editingExpenseId=null;
 
-  document.getElementById("expenseDate").value=todayDisplay();
-  document.getElementById("expenseHead").value="";
-  document.getElementById("expenseAmount").value="";
-  document.getElementById("expenseNote").value="";
+  setToday("expenseDate");
 
-  document.getElementById("expenseSaveBtn").textContent=
-    "Save Expense";
+  document.getElementById(
+    "expenseHead"
+  ).value="";
+
+  document.getElementById(
+    "expenseAmount"
+  ).value="";
+
+  document.getElementById(
+    "expenseNote"
+  ).value="";
+
 }
 
-function addExpenseHead(){
-  const head=prompt("Enter new expense head:");
 
-  if(!head)return;
+function addExpenseForm(){
 
-  const h=head.trim();
+  const head=
+    prompt(
+      "Enter new expense head:"
+    );
 
-  if(!h)return;
-
-  if(!data.customExpenseHeads.includes(h)){
-    data.customExpenseHeads.push(h);
-    saveData();
+  if(!head||!head.trim()){
+    return;
   }
+
+  const clean=
+    head.trim();
+
+  const exists=[
+
+    ...defaultExpenseHeads,
+    ...data.customExpenseHeads
+
+  ].some(
+    h=>
+      h.toLowerCase()===
+      clean.toLowerCase()
+  );
+
+  if(exists){
+
+    alert(
+      "This expense head already exists."
+    );
+
+    return;
+
+  }
+
+  data.customExpenseHeads.push(
+    clean
+  );
+
+  saveData();
 
   populateExpenseHeads();
 
-  document.getElementById("expenseHead").value=h;
+  document.getElementById(
+    "expenseHead"
+  ).value=clean;
+
 }
+
 
 function renderExpenses(){
-  const body=document.getElementById("expenseTableBody");
-  if(!body)return;
 
-  body.innerHTML="";
+  const body=
+    document.getElementById(
+      "expenseTable"
+    );
 
-  data.expenses.slice().reverse().forEach(e=>{
-    const tr=document.createElement("tr");
+  if(!body){
+    return;
+  }
 
-    tr.innerHTML=`
-      <td>${isoToDisplay(e.date)}</td>
-      <td>${esc(e.head)}</td>
-      <td>${money(e.amount)}</td>
-      <td>${esc(e.note||"")}</td>
-      <td>
-        <button class="btn-orange"
-          onclick="editExpense('${e.id}')">Edit</button>
-      </td>
-      <td>
-        <button class="btn-red"
-          onclick="deleteExpense('${e.id}')">Delete</button>
-      </td>
-    `;
+  const search=
+    (
+      document.getElementById(
+        "expenseSearch"
+      )?.value||""
+    )
+    .trim()
+    .toLowerCase();
 
-    body.appendChild(tr);
-  });
+  const rows=
+    data.expenses
+      .filter(e=>{
+
+        if(!search){
+          return true;
+        }
+
+        return (
+
+          String(e.head||"")
+            .toLowerCase()
+            .includes(search)
+
+          ||
+
+          String(e.note||"")
+            .toLowerCase()
+            .includes(search)
+
+        );
+
+      })
+      .sort(
+        (a,b)=>
+          b.date.localeCompare(a.date)
+      );
+
+  const total=
+    data.expenses.reduce(
+      (s,e)=>
+        s+Number(e.amount||0),
+      0
+    );
+
+  document.getElementById(
+    "expenseGrandTotal"
+  ).textContent=
+    money(total);
+
+  if(!rows.length){
+
+    body.innerHTML=
+      `<tr>
+        <td colspan="5"
+            class="empty">
+          No expense records found.
+        </td>
+      </tr>`;
+
+    return;
+
+  }
+
+  body.innerHTML=
+    rows.map(e=>`
+
+      <tr>
+
+        <td>
+          ${escapeHtml(
+            displayDate(e.date)
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(e.head)}
+        </td>
+
+        <td>
+          ${money(e.amount)}
+        </td>
+
+        <td>
+          ${escapeHtml(e.note||"")}
+        </td>
+
+        <td>
+
+          <button
+            class="btn-small btn-blue"
+            onclick="editExpense('${e.id}')">
+
+            Edit
+
+          </button>
+
+          <button
+            class="btn-small btn-red"
+            onclick="deleteExpense('${e.id}')">
+
+            Delete
+
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("");
+
 }
 
-/* ---------------- REPORTS ---------------- */
 
-function renderReports(){
-  const from=dateToISO(
-    document.getElementById("reportFrom")?.value||""
+function editExpense(id){
+
+  const expense=
+    data.expenses.find(
+      e=>e.id===id
+    );
+
+  if(!expense){
+    return;
+  }
+
+  document.getElementById(
+    "expenseDate"
+  ).value=
+    dateInputValue(
+      expense.date
+    );
+
+  document.getElementById(
+    "expenseHead"
+  ).value=
+    expense.head;
+
+  document.getElementById(
+    "expenseAmount"
+  ).value=
+    expense.amount;
+
+  document.getElementById(
+    "expenseNote"
+  ).value=
+    expense.note||"";
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+  const saveButton=
+    document.querySelector(
+      "#expense .btn-orange"
+    );
+
+  if(saveButton){
+
+    saveButton.textContent=
+      "Update Expense";
+
+    saveButton.onclick=
+      function(){
+
+        updateExpense(id);
+
+      };
+
+  }
+
+}
+
+
+function updateExpense(id){
+
+  const expense=
+    data.expenses.find(
+      e=>e.id===id
+    );
+
+  if(!expense){
+    return;
+  }
+
+  const date=
+    validDateOrToday(
+      "expenseDate"
+    );
+
+  const head=
+    document.getElementById(
+      "expenseHead"
+    ).value.trim();
+
+  const amount=
+    num("expenseAmount");
+
+  const note=
+    document.getElementById(
+      "expenseNote"
+    ).value.trim();
+
+  if(!head){
+
+    alert(
+      "Please select an Expense Head."
+    );
+
+    return;
+
+  }
+
+  if(amount<=0){
+
+    alert(
+      "Please enter a valid expense amount."
+    );
+
+    return;
+
+  }
+
+  expense.date=date;
+  expense.head=head;
+  expense.amount=amount;
+  expense.note=note;
+
+  saveData();
+
+  refreshAll();
+
+  resetExpenseSaveButton();
+
+  alert(
+    "Expense updated successfully."
   );
 
-  const to=dateToISO(
-    document.getElementById("reportTo")?.value||""
+  clearExpenseForm();
+
+}
+
+
+function resetExpenseSaveButton(){
+
+  const saveButton=
+    document.querySelector(
+      "#expense .btn-orange"
+    );
+
+  if(!saveButton){
+    return;
+  }
+
+  saveButton.textContent=
+    "Save Expense";
+
+  saveButton.onclick=
+    function(){
+
+      saveExpense();
+
+    };
+
+}
+
+
+function deleteExpense(id){
+
+  const expense=
+    data.expenses.find(
+      e=>e.id===id
+    );
+
+  if(!expense){
+    return;
+  }
+
+  if(!confirm(
+    `Delete this expense?\n\n${expense.head} - ${money(expense.amount)}`
+  )){
+    return;
+  }
+
+  data.expenses=
+    data.expenses.filter(
+      e=>e.id!==id
+    );
+
+  saveData();
+
+  refreshAll();
+
+  alert(
+    "Expense deleted successfully."
   );
 
-  const memberId=document.getElementById("reportMember")?.value||"";
-  const type=document.getElementById("reportType")?.value||"all";
+}
+
+
+/* ================= REPORTS ================= */
+
+function allReportRows(){
 
   const rows=[];
-  let total=0;
-
-  if(type==="all" || type==="collection"){
-    data.collections.forEach(c=>{
-      if(from && c.date<from)return;
-      if(to && c.date>to)return;
-      if(memberId && c.memberId!==memberId)return;
-
-      const amount=
-        Number(c.share||0)+
-        Number(c.savings||0)+
-        Number(c.installment||0)+
-        Number(c.admission||0)+
-        Number(c.passbook||0)+
-        Number(c.insurance||0)+
-        Number(c.loanForm||0)+
-        Number(c.other||0);
-
-      const m=getMember(c.memberId);
-      const col=getCollector(c.collectorId);
-
-      rows.push({
-        date:c.date,
-        type:"Collection",
-        name:m?.name||"",
-        collector:col?.name||"",
-        amount
-      });
-
-      total+=amount;
-    });
-  }
-
-  if(type==="all" || type==="loan"){
-    data.loans.forEach(l=>{
-      if(from && l.date<from)return;
-      if(to && l.date>to)return;
-      if(memberId && l.memberId!==memberId)return;
-
-      const m=getMember(l.memberId);
-
-      rows.push({
-        date:l.date,
-        type:"Loan",
-        name:m?.name||"",
-        collector:"",
-        amount:Number(l.principal||0)
-      });
-
-      total+=Number(l.principal||0);
-    });
-  }
-
-  if(type==="all" || type==="expense"){
-    data.expenses.forEach(e=>{
-      if(from && e.date<from)return;
-      if(to && e.date>to)return;
-
-      rows.push({
-        date:e.date,
-        type:"Expense",
-        name:e.head,
-        collector:"",
-        amount:Number(e.amount||0)
-      });
-
-      total+=Number(e.amount||0);
-    });
-  }
-
-  rows.sort((a,b)=>a.date.localeCompare(b.date));
-
-  const body=document.getElementById("reportTableBody");
-
-  body.innerHTML=rows.map(r=>`
-    <tr>
-      <td>${isoToDisplay(r.date)}</td>
-      <td>${esc(r.type)}</td>
-      <td>${esc(r.name)}</td>
-      <td>${esc(r.collector)}</td>
-      <td>${money(r.amount)}</td>
-    </tr>
-  `).join("");
-
-  document.getElementById("reportSummary").innerHTML=`
-    <div class="stat">
-      <small>Grand Total</small>
-      <strong>${money(total)}</strong>
-    </div>
-  `;
-}
-
-/* ---------------- DASHBOARD ---------------- */
-
-function renderDashboard(){
-  const members=data.members.length;
-  const collectors=data.collectors.length;
-
-  const share=data.collections.reduce(
-    (s,x)=>s+Number(x.share||0),0
-  );
-
-  const savings=data.collections.reduce(
-    (s,x)=>s+Number(x.savings||0),0
-  );
-
-  const installment=data.collections.reduce(
-    (s,x)=>s+Number(x.installment||0),0
-  );
-
-  const loanTotal=data.loans.reduce(
-    (s,x)=>s+Number(x.total||0),0
-  );
-
-  const outstanding=Math.max(0,loanTotal-installment);
-
-  let cashIn=0;
 
   data.collections.forEach(c=>{
-    cashIn+=
-      Number(c.share||0)+
-      Number(c.savings||0)+
-      Number(c.installment||0)+
-      Number(c.admission||0)+
-      Number(c.passbook||0)+
-      Number(c.insurance||0)+
-      Number(c.loanForm||0)+
-      Number(c.other||0);
+
+    rows.push({
+
+      date:c.date,
+
+      member:
+        memberName(c.memberId),
+
+      memberId:c.memberId,
+
+      type:"Collection",
+
+      description:"Collection",
+
+      amount:c.total
+
+    });
+
   });
 
-  const loanOut=data.loans.reduce(
-    (s,x)=>s+Number(x.principal||0),0
+  data.loans.forEach(l=>{
+
+    rows.push({
+
+      date:l.date,
+
+      member:
+        memberName(l.memberId),
+
+      memberId:l.memberId,
+
+      type:"Loan",
+
+      description:
+        "Loan Disbursement",
+
+      amount:l.principal
+
+    });
+
+    (l.payments||[])
+      .forEach(p=>{
+
+        rows.push({
+
+          date:p.date,
+
+          member:
+            memberName(l.memberId),
+
+          memberId:l.memberId,
+
+          type:"Loan",
+
+          description:
+            "Loan Installment",
+
+          amount:p.amount
+
+        });
+
+      });
+
+  });
+
+  data.expenses.forEach(e=>{
+
+    rows.push({
+
+      date:e.date,
+
+      member:"",
+
+      memberId:"",
+
+      type:"Expense",
+
+      description:e.head,
+
+      amount:e.amount
+
+    });
+
+  });
+
+  return rows.sort(
+    (a,b)=>
+      a.date.localeCompare(b.date)
   );
 
-  const expenseOut=data.expenses.reduce(
-    (s,x)=>s+Number(x.amount||0),0
-  );
-
-  const cash=Number(data.openingCash||0)+
-             cashIn-loanOut-expenseOut;
-
-  document.getElementById("dashMembers").textContent=members;
-  document.getElementById("dashCollectors").textContent=collectors;
-  document.getElementById("dashSavings").textContent=money(savings);
-  document.getElementById("dashShare").textContent=money(share);
-  document.getElementById("dashOutstanding").textContent=money(outstanding);
-  document.getElementById("dashCash").textContent=money(cash);
 }
 
-/* ---------------- BACKUP ---------------- */
+
+function renderReports(){
+
+  const fromInput=
+    document.getElementById(
+      "reportFrom"
+    ).value;
+
+  const toInput=
+    document.getElementById(
+      "reportTo"
+    ).value;
+
+  const from=
+    parseDateInput(fromInput);
+
+  const to=
+    parseDateInput(toInput);
+
+  if(
+    fromInput.trim()&&!from
+  ){
+
+    alert(
+      "Please enter From Date as dd/mm/yy."
+    );
+
+    return;
+
+  }
+
+  if(
+    toInput.trim()&&!to
+  ){
+
+    alert(
+      "Please enter To Date as dd/mm/yy."
+    );
+
+    return;
+
+  }
+
+  const member=
+    document.getElementById(
+      "reportMember"
+    ).value;
+
+  const type=
+    document.getElementById(
+      "reportType"
+    ).value;
+
+  const rows=
+    allReportRows()
+      .filter(r=>{
+
+        if(from&&r.date<from){
+          return false;
+        }
+
+        if(to&&r.date>to){
+          return false;
+        }
+
+        if(
+          member&&
+          r.memberId!==member
+        ){
+
+          return false;
+
+        }
+
+        if(
+          type!=="all"&&
+          r.type.toLowerCase()!==type
+        ){
+
+          return false;
+
+        }
+
+        return true;
+
+      });
+
+  const body=
+    document.getElementById(
+      "reportTable"
+    );
+
+  const total=
+    rows.reduce(
+      (s,r)=>
+        s+Number(r.amount||0),
+      0
+    );
+
+  document.getElementById(
+    "reportTotal"
+  ).textContent=
+    money(total);
+
+  if(!rows.length){
+
+    body.innerHTML=
+      `<tr>
+        <td colspan="5"
+            class="empty">
+          No report data found.
+        </td>
+      </tr>`;
+
+    return;
+
+  }
+
+  body.innerHTML=
+    rows.map(r=>`
+
+      <tr>
+
+        <td>
+          ${escapeHtml(
+            displayDate(r.date)
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(r.member)}
+        </td>
+
+        <td>
+          ${escapeHtml(r.type)}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            r.description
+          )}
+        </td>
+
+        <td>
+          ${money(r.amount)}
+        </td>
+
+      </tr>
+
+    `).join("");
+
+}
+
+
+function clearReport(){
+
+  document.getElementById(
+    "reportFrom"
+  ).value="";
+
+  document.getElementById(
+    "reportTo"
+  ).value="";
+
+  document.getElementById(
+    "reportMember"
+  ).value="";
+
+  document.getElementById(
+    "reportType"
+  ).value="all";
+
+  renderReports();
+
+}
+
+
+/* ================= DASHBOARD ================= */
+
+function renderDashboard(){
+
+  const share=
+    data.collections.reduce(
+      (s,c)=>
+        s+Number(c.share||0),
+      0
+    );
+
+  const savings=
+    data.collections.reduce(
+      (s,c)=>
+        s+Number(c.savings||0),
+      0
+    );
+
+  const loan=
+    data.loans.reduce(
+      (s,l)=>
+        s+Number(l.principal||0),
+      0
+    );
+
+  const installment=
+    data.collections.reduce(
+      (s,c)=>
+        s+Number(c.installment||0),
+      0
+    );
+
+  const service=
+    data.loans.reduce(
+      (s,l)=>
+        s+loanServicePaid(l),
+      0
+    );
+
+  const outstanding=
+    data.loans.reduce(
+      (s,l)=>
+        s+loanOutstanding(l),
+      0
+    );
+
+  const t=today();
+
+  const todayCollection=
+    data.collections
+      .filter(c=>c.date===t)
+      .reduce(
+        (s,c)=>
+          s+Number(c.total||0),
+        0
+      );
+
+  const todayExpense=
+    data.expenses
+      .filter(e=>e.date===t)
+      .reduce(
+        (s,e)=>
+          s+Number(e.amount||0),
+        0
+      );
+
+  document.getElementById(
+    "dMembers"
+  ).textContent=
+    money(data.members.length);
+
+  document.getElementById(
+    "dShare"
+  ).textContent=
+    money(share);
+
+  document.getElementById(
+    "dSavings"
+  ).textContent=
+    money(savings);
+
+  document.getElementById(
+    "dLoan"
+  ).textContent=
+    money(loan);
+
+  document.getElementById(
+    "dInstallment"
+  ).textContent=
+    money(installment);
+
+  document.getElementById(
+    "dService"
+  ).textContent=
+    money(service);
+
+  document.getElementById(
+    "dOutstanding"
+  ).textContent=
+    money(outstanding);
+
+  document.getElementById(
+    "dCash"
+  ).textContent=
+    money(cashBalance());
+
+  document.getElementById(
+    "dTodayCollection"
+  ).textContent=
+    money(todayCollection);
+
+  document.getElementById(
+    "dTodayExpense"
+  ).textContent=
+    money(todayExpense);
+
+  document.getElementById(
+    "dBank"
+  ).textContent=
+    money(data.bankBalance);
+
+}
+
+
+/* ================= BACKUP ================= */
 
 function backupData(){
-  const blob=new Blob(
-    [JSON.stringify(data,null,2)],
-    {type:"application/json"}
-  );
 
-  const url=URL.createObjectURL(blob);
+  const payload={
 
-  const a=document.createElement("a");
+    app:
+      "Cooperative Accounts",
+
+    version:2,
+
+    exportedAt:
+      new Date().toISOString(),
+
+    data
+
+  };
+
+  const blob=
+    new Blob(
+      [
+        JSON.stringify(
+          payload,
+          null,
+          2
+        )
+      ],
+      {
+        type:
+          "application/json"
+      }
+    );
+
+  const url=
+    URL.createObjectURL(blob);
+
+  const a=
+    document.createElement("a");
+
   a.href=url;
 
-  const d=new Date();
-  const stamp=
-    d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+
-    "-"+String(d.getDate()).padStart(2,"0");
+  a.download=
+    "Cooperative-Backup-"+
+    today()+
+    ".json";
 
-  a.download="Cooperative-Accounts-Backup-"+stamp+".json";
+  document.body.appendChild(a);
+
   a.click();
 
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  a.remove();
+
+  URL.revokeObjectURL(url);
+
 }
 
-function restoreData(event){
-  const file=event.target.files[0];
 
-  if(!file)return;
+function restoreData(){
 
-  const reader=new FileReader();
+  const input=
+    document.getElementById(
+      "restoreFile"
+    );
 
-  reader.onload=function(e){
+  if(!input.files.length){
+
+    alert(
+      "Please select a backup file."
+    );
+
+    return;
+
+  }
+
+  if(!confirm(
+    "Restoring a backup will replace the current data. Continue?"
+  )){
+
+    return;
+
+  }
+
+  const file=
+    input.files[0];
+
+  const reader=
+    new FileReader();
+
+  reader.onload=function(){
+
     try{
-      const restored=JSON.parse(e.target.result);
 
-      if(!restored || !Array.isArray(restored.members)){
-        throw new Error("Invalid backup");
+      const parsed=
+        JSON.parse(
+          reader.result
+        );
+
+      if(!parsed.data){
+
+        throw new Error(
+          "Invalid backup"
+        );
+
       }
 
       data={
-        members:restored.members||[],
-        collectors:restored.collectors||[],
-        collections:restored.collections||[],
-        loans:restored.loans||[],
-        expenses:restored.expenses||[],
-        customExpenseHeads:restored.customExpenseHeads||[],
-        bankBalance:Number(restored.bankBalance)||0,
-        openingCash:Number(restored.openingCash)||0
+
+        ...blankData(),
+
+        ...parsed.data,
+
+        members:
+          parsed.data.members||[],
+
+        collections:
+          parsed.data.collections||[],
+
+        loans:
+          parsed.data.loans||[],
+
+        expenses:
+          parsed.data.expenses||[],
+
+        customExpenseHeads:
+          parsed.data.customExpenseHeads||[]
+
       };
 
       saveData();
+
       refreshAll();
 
-      alert("Backup restored successfully.");
-    }catch(err){
-      alert("Invalid backup file.");
+      alert(
+        "Backup restored successfully."
+      );
+
+    }catch(e){
+
+      alert(
+        "Invalid backup file."
+      );
+
     }
 
-    event.target.value="";
   };
 
   reader.readAsText(file);
+
 }
+
 
 function clearAllData(){
-  if(!confirm(
-    "Clear all transaction and member data?\n\n"+
-    "Collector and Expense Head master data will also be kept."
-  ))return;
 
-  data.members=[];
-  data.collections=[];
-  data.loans=[];
-  data.expenses=[];
+  if(!confirm(
+    "This will permanently delete all accounting data. Make sure you have a backup. Continue?"
+  )){
+
+    return;
+
+  }
+
+  if(!confirm(
+    "Final confirmation: delete all current data?"
+  )){
+
+    return;
+
+  }
+
+  /*
+    Keep custom Expense Heads.
+    They are master/setup data and should
+    not be removed by transaction clearing.
+  */
+
+  const savedCustomExpenseHeads=
+    Array.isArray(
+      data.customExpenseHeads
+    )
+      ?[...data.customExpenseHeads]
+      :[];
+
+  data=blankData();
+
+  data.customExpenseHeads=
+    savedCustomExpenseHeads;
 
   saveData();
+
   refreshAll();
 
-  alert("Transaction data cleared.");
+  alert(
+    "All accounting data has been cleared. Custom Expense Heads were kept."
+  );
+
 }
 
-/* ---------------- ENTER KEY ---------------- */
+
+/* ================= UTILITIES ================= */
+
+function refreshAll(){
+
+  populateMemberSelects();
+
+  populateExpenseHeads();
+
+  renderDashboard();
+
+  renderMembers();
+
+  renderLoans();
+
+  renderAccount();
+
+  renderLedger();
+
+  renderCashBook();
+
+  renderExpenses();
+
+  renderReports();
+
+}
+
+
+function escapeHtml(value){
+
+  return String(value??"")
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* ================= ENTER NAVIGATION ================= */
+
+const focusOrder={
+
+  members:[
+
+    "memberCode",
+    "memberMobile",
+    "memberName"
+
+  ],
+
+  collection:[
+
+    "collectionMember",
+    "collectionDate",
+    "colShare",
+    "colSavings",
+    "colInstallment",
+    "colAdmission",
+    "colPassbook",
+    "colInsurance",
+    "colLoanForm",
+    "colOther"
+
+  ],
+
+  loan:[
+
+    "loanMember",
+    "loanDate",
+    "loanPrincipal",
+    "loanRate",
+    "loanInstallments",
+    "loanFirstDate",
+    "loanNote"
+
+  ],
+
+  expense:[
+
+    "expenseDate",
+    "expenseHead",
+    "expenseAmount",
+    "expenseNote"
+
+  ]
+
+};
+
 
 function setupEnterNavigation(){
-  const groups=[
-    [
-      "memberCode",
-      "memberMobile",
-      "memberName"
-    ],
-    [
-      "collectionMember",
-      "collectionDate",
-      "collectionCollector",
-      "colShare",
-      "colSavings",
-      "colInstallment",
-      "colAdmission",
-      "colPassbook",
-      "colInsurance",
-      "colLoanForm",
-      "colOther"
-    ],
-    [
-      "loanMember",
-      "loanDate",
-      "loanPrincipal",
-      "loanRate",
-      "loanInstallments",
-      "loanFirstDate",
-      "loanNote"
-    ],
-    [
-      "expenseDate",
-      "expenseHead",
-      "expenseAmount",
-      "expenseNote"
-    ]
-  ];
 
-  groups.forEach(group=>{
-    group.forEach((id,index)=>{
-      const el=document.getElementById(id);
+  Object.values(
+    focusOrder
+  ).forEach(order=>{
 
-      if(!el)return;
+    order.forEach(
+      (id,index)=>{
 
-      el.addEventListener("keydown",function(e){
-        if(e.key!=="Enter")return;
+        const el=
+          document.getElementById(id);
 
-        e.preventDefault();
+        if(!el){
+          return;
+        }
 
-        const nextId=group[index+1];
+        el.addEventListener(
+          "keydown",
+          function(e){
 
-        if(nextId){
-          const next=document.getElementById(nextId);
-
-          if(next){
-            next.focus();
-
-            if(next.select && next.tagName==="INPUT"){
-              next.select();
+            if(e.key!=="Enter"){
+              return;
             }
-          }
-        }else{
-          const page=el.closest(".page");
 
-          const button=page?.querySelector(
-            ".btn-green,.btn-blue,.btn-orange"
+            e.preventDefault();
+
+            const nextId=
+              order[index+1];
+
+            if(nextId){
+
+              const next=
+                document.getElementById(
+                  nextId
+                );
+
+              if(next){
+
+                next.focus();
+
+                if(next.select){
+
+                  try{
+                    next.select();
+                  }catch(_){}
+
+                }
+
+              }
+
+            }else{
+
+              const saveButton=
+                el.closest(".card")
+                  ?.querySelector(
+                    ".btn-green,.btn-blue,.btn-orange"
+                  );
+
+              if(saveButton){
+
+                saveButton.focus();
+
+              }
+
+            }
+
+          }
+
+        );
+
+      }
+
+    );
+
+  });
+
+
+  /* Collection calculation */
+
+  [
+
+    "colShare",
+    "colSavings",
+    "colInstallment",
+    "colAdmission",
+    "colPassbook",
+    "colInsurance",
+    "colLoanForm",
+    "colOther"
+
+  ].forEach(id=>{
+
+    const el=
+      document.getElementById(id);
+
+    if(el){
+
+      el.addEventListener(
+        "input",
+        updateCollectionTotal
+      );
+
+    }
+
+  });
+
+
+  /* Loan calculation */
+
+  [
+
+    "loanPrincipal",
+    "loanRate",
+    "loanInstallments"
+
+  ].forEach(id=>{
+
+    const el=
+      document.getElementById(id);
+
+    if(el){
+
+      el.addEventListener(
+        "input",
+        calculateLoan
+      );
+
+    }
+
+  });
+
+
+  /* Date formatting */
+
+  [
+
+    "collectionDate",
+    "loanDate",
+    "loanFirstDate",
+    "expenseDate",
+    "reportFrom",
+    "reportTo"
+
+  ].forEach(id=>{
+
+    const el=
+      document.getElementById(id);
+
+    if(!el){
+      return;
+    }
+
+    el.addEventListener(
+      "input",
+      function(){
+
+        formatDateWhileTyping(
+          this
+        );
+
+      }
+    );
+
+    el.addEventListener(
+      "blur",
+      function(){
+
+        const parsed=
+          parseDateInput(
+            this.value
           );
 
-          if(button)button.focus();
+        if(parsed){
+
+          this.value=
+            dateInputValue(
+              parsed
+            );
+
         }
-      });
-    });
+
+      }
+    );
+
   });
+
+
+  /* Expense amount */
+
+  const expenseAmount=
+    document.getElementById(
+      "expenseAmount"
+    );
+
+  if(expenseAmount){
+
+    expenseAmount.addEventListener(
+      "input",
+      function(){
+
+        this.value=
+          this.value.replace(
+            /[^\d]/g,
+            ""
+          );
+
+      }
+    );
+
+  }
+
 }
 
-/* ---------------- INITIALIZE ---------------- */
 
-function initialize(){
-  document.getElementById("collectionDate").value=todayDisplay();
-  document.getElementById("loanDate").value=todayDisplay();
-  document.getElementById("loanFirstDate").value=todayDisplay();
-  document.getElementById("expenseDate").value=todayDisplay();
+/* ================= INITIALIZATION ================= */
 
-  refreshAll();
-  setupEnterNavigation();
+document.addEventListener(
+  "DOMContentLoaded",
+  ()=>{
 
-  showPage("dashboard");
-}
+    setToday(
+      "collectionDate"
+    );
 
-initialize();
+    setToday(
+      "loanDate"
+    );
+
+    setToday(
+      "loanFirstDate"
+    );
+
+    setToday(
+      "expenseDate"
+    );
+
+    populateMemberSelects();
+
+    populateExpenseHeads();
+
+    setupEnterNavigation();
+
+    refreshAll();
+
+  }
+);
 
 </script>
 
