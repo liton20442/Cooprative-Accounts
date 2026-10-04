@@ -301,6 +301,7 @@ button{
 .q6{background:#d97706}
 .q7{background:#475569}
 .q8{background:#9333ea}
+.q9{background:#dc2626}
 
 table{
   width:100%;
@@ -407,6 +408,7 @@ footer{
 }
 
 @media(max-width:620px){
+
   .form-grid{
     grid-template-columns:1fr;
   }
@@ -429,6 +431,7 @@ footer{
 }
 
 @media(max-width:390px){
+
   html,body{
     font-size:16px;
   }
@@ -460,16 +463,25 @@ footer{
 <div class="app">
 
 <header>
+
   <div class="header-row">
+
     <div>
       <div class="app-title">Cooperative Accounts</div>
       <div class="app-subtitle">Mobile Collection & Accounts</div>
     </div>
-    <button class="home-btn" onclick="showPage('dashboard')">Home</button>
+
+    <button class="home-btn" onclick="showPage('dashboard')">
+      Home
+    </button>
+
   </div>
+
 </header>
 
 <main>
+
+<!-- ================= DASHBOARD ================= -->
 
 <section id="dashboard" class="page active">
 
@@ -522,6 +534,7 @@ footer{
 <h2>Today's Summary</h2>
 
 <div class="card">
+
   <div class="summary-line">
     <span>Today's Collection</span>
     <strong id="dTodayCollection">0</strong>
@@ -536,6 +549,7 @@ footer{
     <span>Bank Balance</span>
     <strong id="dBank">0</strong>
   </div>
+
 </div>
 
 <h2>Quick Actions</h2>
@@ -577,6 +591,11 @@ footer{
   Reports
 </button>
 
+<button class="quick-btn q9" onclick="showPage('expense')">
+  <span class="quick-icon">💸</span>
+  Expense
+</button>
+
 <button class="quick-btn q8" onclick="showPage('backup')">
   <span class="quick-icon">💾</span>
   Backup
@@ -587,7 +606,8 @@ footer{
 </section>
 
 
-<!-- MEMBERS -->
+<!-- ================= MEMBERS ================= -->
+
 <section id="members" class="page">
 
 <h1>Members</h1>
@@ -614,8 +634,15 @@ footer{
 </div>
 
 <div class="actions">
-<button class="btn-green" onclick="saveMember()">Save Member</button>
-<button class="btn-secondary" onclick="clearMemberForm()">Clear</button>
+
+<button class="btn-green" onclick="saveMember()">
+Save Member
+</button>
+
+<button class="btn-secondary" onclick="clearMemberForm()">
+Clear
+</button>
+
 </div>
 
 </div>
@@ -625,11 +652,15 @@ footer{
 <h2>Member Search</h2>
 
 <div class="search-row">
-<input id="memberSearch" placeholder="Search by code or name" oninput="renderMembers()">
+<input id="memberSearch"
+       placeholder="Search by code or name"
+       oninput="renderMembers()">
 </div>
 
 <div class="table-wrap">
+
 <table>
+
 <thead>
 <tr>
 <th>Code</th>
@@ -638,8 +669,11 @@ footer{
 <th>Action</th>
 </tr>
 </thead>
+
 <tbody id="memberTable"></tbody>
+
 </table>
+
 </div>
 
 </div>
@@ -647,7 +681,8 @@ footer{
 </section>
 
 
-<!-- COLLECTION -->
+<!-- ================= COLLECTION ================= -->
+
 <section id="collection" class="page">
 
 <h1>Collection</h1>
@@ -667,7 +702,10 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 
 <div class="field">
 <label>Date</label>
-<input type="text" id="collectionDate" placeholder="dd/mm/yy" autocomplete="off">
+<input type="text"
+       id="collectionDate"
+       placeholder="dd/mm/yy"
+       autocomplete="off">
 </div>
 
 <div class="field">
@@ -713,15 +751,24 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 </div>
 
 <div class="summary-box">
+
 <div class="summary-line">
 <span>Total Collection</span>
 <strong id="collectionTotal">0</strong>
 </div>
+
 </div>
 
 <div class="actions">
-<button class="btn-green" onclick="saveCollection()">Save Collection</button>
-<button class="btn-secondary" onclick="clearCollectionForm()">Clear</button>
+
+<button class="btn-green" onclick="saveCollection()">
+Save Collection
+</button>
+
+<button class="btn-secondary" onclick="clearCollectionForm()">
+Clear
+</button>
+
 </div>
 
 </div>
@@ -729,7 +776,8 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 </section>
 
 
-<!-- LOAN -->
+<!-- ================= LOAN ================= -->
+
 <section id="loan" class="page">
 
 <h1>Loan</h1>
@@ -745,7 +793,10 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 
 <div class="field">
 <label>Loan Date</label>
-<input type="text" id="loanDate" placeholder="dd/mm/yy" autocomplete="off">
+<input type="text"
+       id="loanDate"
+       placeholder="dd/mm/yy"
+       autocomplete="off">
 </div>
 
 <div class="field">
@@ -780,7 +831,10 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 
 <div class="field">
 <label>First Installment Date</label>
-<input type="text" id="loanFirstDate" placeholder="dd/mm/yy" autocomplete="off">
+<input type="text"
+       id="loanFirstDate"
+       placeholder="dd/mm/yy"
+       autocomplete="off">
 </div>
 
 <div class="field full">
@@ -791,35 +845,51 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 </div>
 
 <div class="summary-box">
+
 <div class="summary-line">
 <span>Principal</span>
 <strong id="loanPreviewPrincipal">0</strong>
 </div>
+
 <div class="summary-line">
 <span>Service Charge</span>
 <strong id="loanPreviewService">0</strong>
 </div>
+
 <div class="summary-line">
 <span>Total Payable</span>
 <strong id="loanPreviewTotal">0</strong>
 </div>
+
 <div class="summary-line">
 <span>Installment</span>
 <strong id="loanPreviewInstallment">0</strong>
 </div>
+
 </div>
 
 <div class="actions">
-<button class="btn-blue" onclick="saveLoan()">Save Loan</button>
-<button class="btn-secondary" onclick="clearLoanForm()">Clear</button>
+
+<button class="btn-blue" onclick="saveLoan()">
+Save Loan
+</button>
+
+<button class="btn-secondary" onclick="clearLoanForm()">
+Clear
+</button>
+
 </div>
 
 </div>
 
 <div class="card">
+
 <h2>Loan Schedule</h2>
+
 <div class="table-wrap">
+
 <table>
+
 <thead>
 <tr>
 <th>Loan</th>
@@ -832,15 +902,20 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <th>Outstanding</th>
 </tr>
 </thead>
+
 <tbody id="loanTable"></tbody>
+
 </table>
+
 </div>
+
 </div>
 
 </section>
 
 
-<!-- ACCOUNTS -->
+<!-- ================= ACCOUNTS ================= -->
+
 <section id="accounts" class="page">
 
 <h1>Member Accounts</h1>
@@ -848,8 +923,13 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <div class="card">
 
 <div class="field">
+
 <label>Member</label>
-<select id="accountMember" onchange="renderAccount()"></select>
+
+<select id="accountMember"
+        onchange="renderAccount()">
+</select>
+
 </div>
 
 <div id="accountSummary"></div>
@@ -857,10 +937,13 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 </div>
 
 <div class="card">
+
 <h2>Transaction History</h2>
 
 <div class="table-wrap">
+
 <table>
+
 <thead>
 <tr>
 <th>Date</th>
@@ -869,8 +952,11 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <th>Details</th>
 </tr>
 </thead>
+
 <tbody id="accountTransactions"></tbody>
+
 </table>
+
 </div>
 
 </div>
@@ -878,7 +964,8 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 </section>
 
 
-<!-- LEDGER -->
+<!-- ================= LEDGER ================= -->
+
 <section id="ledger" class="page">
 
 <h1>General Ledger</h1>
@@ -886,9 +973,14 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <div class="card">
 
 <div class="field">
+
 <label>Ledger Head</label>
-<select id="ledgerHead" onchange="renderLedger()">
+
+<select id="ledgerHead"
+        onchange="renderLedger">
+
 <option value="">All Heads</option>
+
 <option>Share</option>
 <option>Savings</option>
 <option>Loan Disbursement</option>
@@ -899,6 +991,7 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <option>Insurance</option>
 <option>Loan Form Sales</option>
 <option>Other Income</option>
+
 <option>Office Expense</option>
 <option>Stationery</option>
 <option>Transport</option>
@@ -909,14 +1002,19 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <option>Bank Charges</option>
 <option>Meeting/Training</option>
 <option>Other Expense</option>
+
 </select>
+
 </div>
 
 </div>
 
 <div class="card">
+
 <div class="table-wrap">
+
 <table>
+
 <thead>
 <tr>
 <th>Date</th>
@@ -926,15 +1024,20 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <th>Out</th>
 </tr>
 </thead>
+
 <tbody id="ledgerTable"></tbody>
+
 </table>
+
 </div>
+
 </div>
 
 </section>
 
 
-<!-- CASH BOOK -->
+<!-- ================= CASH BOOK ================= -->
+
 <section id="cashbook" class="page">
 
 <h1>Cash Book</h1>
@@ -966,7 +1069,9 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <div class="card">
 
 <div class="table-wrap">
+
 <table>
+
 <thead>
 <tr>
 <th>Date</th>
@@ -976,8 +1081,11 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <th>Balance</th>
 </tr>
 </thead>
+
 <tbody id="cashTable"></tbody>
+
 </table>
+
 </div>
 
 </div>
@@ -985,7 +1093,122 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 </section>
 
 
-<!-- REPORTS -->
+<!-- ================= EXPENSE ================= -->
+
+<section id="expense" class="page">
+
+<h1>Expense</h1>
+
+<div class="notice">
+Record office and operational expenses here. Saved expenses are automatically included in the General Ledger, Cash Book, Dashboard and Expense Reports.
+</div>
+
+<div class="card">
+
+<div class="form-grid">
+
+<div class="field">
+<label>Date</label>
+<input type="text"
+       id="expenseDate"
+       placeholder="dd/mm/yy"
+       autocomplete="off">
+</div>
+
+<div class="field">
+<label>Expense Head</label>
+
+<select id="expenseHead"></select>
+
+</div>
+
+<div class="field">
+<label>Amount</label>
+<input type="text"
+       id="expenseAmount"
+       autocomplete="off">
+</div>
+
+<div class="field">
+<label>Note</label>
+<input type="text"
+       id="expenseNote"
+       autocomplete="off">
+</div>
+
+</div>
+
+<div class="actions">
+
+<button class="btn-orange"
+        onclick="saveExpense()">
+Save Expense
+</button>
+
+<button class="btn-secondary"
+        onclick="clearExpenseForm()">
+Clear
+</button>
+
+<button class="btn-purple"
+        onclick="addExpenseForm()">
++ Add Expense Head
+</button>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Expense Records</h2>
+
+<div class="search-row">
+
+<input type="text"
+       id="expenseSearch"
+       placeholder="Search expense head or note"
+       oninput="renderExpenses()">
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Date</th>
+<th>Expense Head</th>
+<th>Amount</th>
+<th>Note</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="expenseTable"></tbody>
+
+</table>
+
+</div>
+
+<div class="summary-box">
+
+<div class="summary-line">
+<span>Total Expense</span>
+<strong id="expenseGrandTotal">0</strong>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= REPORTS ================= -->
+
 <section id="reports" class="page">
 
 <h1>Reports</h1>
@@ -996,41 +1219,80 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 
 <div class="field">
 <label>From Date</label>
-<input type="text" id="reportFrom" placeholder="dd/mm/yy" autocomplete="off">
+
+<input type="text"
+       id="reportFrom"
+       placeholder="dd/mm/yy"
+       autocomplete="off">
+
 </div>
 
 <div class="field">
 <label>To Date</label>
-<input type="text" id="reportTo" placeholder="dd/mm/yy" autocomplete="off">
+
+<input type="text"
+       id="reportTo"
+       placeholder="dd/mm/yy"
+       autocomplete="off">
+
 </div>
 
 <div class="field">
 <label>Member</label>
+
 <select id="reportMember"></select>
+
 </div>
 
 <div class="field">
 <label>Report Type</label>
+
 <select id="reportType">
-<option value="all">All Transactions</option>
-<option value="collection">Collection</option>
-<option value="loan">Loan</option>
-<option value="expense">Expense</option>
+
+<option value="all">
+All Transactions
+</option>
+
+<option value="collection">
+Collection
+</option>
+
+<option value="loan">
+Loan
+</option>
+
+<option value="expense">
+Expense
+</option>
+
 </select>
+
 </div>
 
 </div>
 
 <div class="actions">
-<button class="btn" onclick="renderReports()">Generate Report</button>
-<button class="btn-secondary" onclick="clearReport()">Clear</button>
+
+<button class="btn"
+        onclick="renderReports()">
+Generate Report
+</button>
+
+<button class="btn-secondary"
+        onclick="clearReport()">
+Clear
+</button>
+
 </div>
 
 </div>
 
 <div class="card">
+
 <div class="table-wrap">
+
 <table>
+
 <thead>
 <tr>
 <th>Date</th>
@@ -1040,15 +1302,20 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <th>Amount</th>
 </tr>
 </thead>
+
 <tbody id="reportTable"></tbody>
+
 </table>
+
 </div>
 
 <div class="summary-box">
+
 <div class="summary-line">
 <span>Grand Total</span>
 <strong id="reportTotal">0</strong>
 </div>
+
 </div>
 
 </div>
@@ -1056,7 +1323,8 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 </section>
 
 
-<!-- BACKUP -->
+<!-- ================= BACKUP ================= -->
+
 <section id="backup" class="page">
 
 <h1>Backup & Restore</h1>
@@ -1069,7 +1337,10 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 Create a complete backup file containing members, collections, loans, schedules, expenses and accounting data.
 </p>
 
-<button class="btn-green" onclick="backupData()">Download Backup</button>
+<button class="btn-green"
+        onclick="backupData()">
+Download Backup
+</button>
 
 </div>
 
@@ -1081,10 +1352,17 @@ Create a complete backup file containing members, collections, loans, schedules,
 Restoring a backup replaces the current application data with the selected backup.
 </p>
 
-<input type="file" id="restoreFile" accept=".json,application/json">
+<input type="file"
+       id="restoreFile"
+       accept=".json,application/json">
 
 <div class="actions">
-<button class="btn-orange" onclick="restoreData()">Restore Backup</button>
+
+<button class="btn-orange"
+        onclick="restoreData()">
+Restore Backup
+</button>
+
 </div>
 
 </div>
@@ -1097,7 +1375,10 @@ Restoring a backup replaces the current application data with the selected backu
 Always keep a recent backup before clearing or replacing important accounting data.
 </p>
 
-<button class="btn-red" onclick="clearAllData()">Clear All Data</button>
+<button class="btn-red"
+        onclick="clearAllData()">
+Clear All Data
+</button>
 
 </div>
 
@@ -1109,13 +1390,18 @@ Cooperative Accounts • Mobile Collection & Accounts
 </footer>
 
 </main>
+
 </div>
 
 
 <script>
-const STORAGE_KEY = "cooperativeAccountsDataV1";
+
+const STORAGE_KEY =
+"cooperativeAccountsDataV1";
+
 
 const defaultExpenseHeads = [
+
   "Office Expense",
   "Stationery",
   "Transport",
@@ -1126,125 +1412,206 @@ const defaultExpenseHeads = [
   "Bank Charges",
   "Meeting/Training",
   "Other Expense"
+
 ];
 
-let data = loadData();
+
+let data=loadData();
+
 
 function blankData(){
+
   return {
+
     members:[],
     collections:[],
     loans:[],
     expenses:[],
+
     customExpenseHeads:[],
+
     bankBalance:0,
     openingCash:0
+
   };
+
 }
+
 
 function loadData(){
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return blankData();
 
-    const parsed = JSON.parse(raw);
+  try{
+
+    const raw=
+      localStorage.getItem(STORAGE_KEY);
+
+    if(!raw){
+      return blankData();
+    }
+
+    const parsed=JSON.parse(raw);
 
     return {
+
       ...blankData(),
+
       ...parsed,
-      members: parsed.members || [],
-      collections: parsed.collections || [],
-      loans: parsed.loans || [],
-      expenses: parsed.expenses || [],
-      customExpenseHeads: parsed.customExpenseHeads || []
+
+      members:parsed.members||[],
+      collections:parsed.collections||[],
+      loans:parsed.loans||[],
+      expenses:parsed.expenses||[],
+      customExpenseHeads:
+        parsed.customExpenseHeads||[]
+
     };
+
   }catch(e){
+
     return blankData();
+
   }
+
 }
+
 
 function saveData(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(data)
+  );
+
 }
+
 
 function uid(prefix){
-  return prefix + Date.now() + Math.random().toString(36).slice(2,7);
+
+  return prefix+
+    Date.now()+
+    Math.random()
+      .toString(36)
+      .slice(2,7);
+
 }
+
 
 function money(value){
-  const n = Number(value) || 0;
-  return Math.round(n).toLocaleString("en-IN");
+
+  const n=Number(value)||0;
+
+  return Math.round(n)
+    .toLocaleString("en-IN");
+
 }
 
+
 function num(id){
-  const el = document.getElementById(id);
+
+  const el=document.getElementById(id);
+
   if(!el) return 0;
 
-  let value = el.value
+  let value=el.value
     .toString()
     .replace(/,/g,"")
     .replace(/[^\d.-]/g,"");
 
-  return Number(value) || 0;
+  return Number(value)||0;
+
 }
 
 
-/* ---------------- DATE FUNCTIONS ---------------- */
-
-/*
-  All dates are stored internally as YYYY-MM-DD.
-  User sees and enters dates as DD/MM/YY.
-*/
+/* ================= DATE ================= */
 
 function pad2(n){
+
   return String(n).padStart(2,"0");
+
 }
 
+
 function today(){
+
   const d=new Date();
-  return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
+
+  return d.getFullYear()+
+    "-"+
+    pad2(d.getMonth()+1)+
+    "-"+
+    pad2(d.getDate());
+
 }
+
 
 function displayDate(iso){
 
   if(!iso) return "";
 
-  const parts=String(iso).split("-");
+  const parts=
+    String(iso).split("-");
 
-  if(parts.length!==3) return iso;
+  if(parts.length!==3){
+    return iso;
+  }
 
-  return parts[2]+"/"+parts[1]+"/"+parts[0].slice(-2);
+  return parts[2]+"/"+
+    parts[1]+"/"+
+    parts[0].slice(-2);
+
 }
+
 
 function dateInputValue(iso){
 
   if(!iso) return "";
 
-  const parts=String(iso).split("-");
+  const parts=
+    String(iso).split("-");
 
-  if(parts.length!==3) return "";
+  if(parts.length!==3){
+    return "";
+  }
 
-  return parts[2]+"/"+parts[1]+"/"+parts[0].slice(-2);
+  return parts[2]+"/"+
+    parts[1]+"/"+
+    parts[0].slice(-2);
+
 }
+
 
 function parseDateInput(value){
 
-  let v=String(value||"").trim();
+  let v=
+    String(value||"").trim();
 
-  if(!v) return "";
+  if(!v){
+    return "";
+  }
 
-  v=v.replace(/[^\d/.-]/g,"");
+  v=v.replace(
+    /[^\d/.-]/g,
+    ""
+  );
 
-  const parts=v.split(/[\/.-]/);
+  const parts=
+    v.split(/[\/.-]/);
 
-  if(parts.length!==3) return "";
+  if(parts.length!==3){
+    return "";
+  }
 
   let day=parts[0];
   let month=parts[1];
   let year=parts[2];
 
-  if(day.length===1) day="0"+day;
-  if(month.length===1) month="0"+month;
+  if(day.length===1){
+    day="0"+day;
+  }
+
+  if(month.length===1){
+    month="0"+month;
+  }
 
   if(year.length===2){
     year="20"+year;
@@ -1254,232 +1621,496 @@ function parseDateInput(value){
   const m=Number(month);
   const y=Number(year);
 
-  if(!d || !m || !y) return "";
+  if(!d || !m || !y){
+    return "";
+  }
 
-  if(m<1 || m>12 || d<1 || d>31) return "";
+  if(m<1 || m>12 || d<1 || d>31){
+    return "";
+  }
+
+  const check=
+    new Date(y,m-1,d);
+
+  if(
+    check.getFullYear()!==y ||
+    check.getMonth()!==m-1 ||
+    check.getDate()!==d
+  ){
+    return "";
+  }
 
   return y+"-"+pad2(m)+"-"+pad2(d);
+
 }
 
+
 function setToday(id){
-  const el=document.getElementById(id);
-  if(el) el.value=dateInputValue(today());
+
+  const el=
+    document.getElementById(id);
+
+  if(el){
+    el.value=
+      dateInputValue(today());
+  }
+
 }
+
 
 function validDateOrToday(id){
 
-  const el=document.getElementById(id);
-  const parsed=parseDateInput(el ? el.value : "");
+  const el=
+    document.getElementById(id);
 
-  return parsed || today();
+  const parsed=
+    parseDateInput(
+      el ? el.value : ""
+    );
+
+  return parsed||today();
+
 }
+
 
 function formatDateWhileTyping(el){
 
-  let value=el.value.replace(/[^\d]/g,"").slice(0,6);
+  let value=
+    el.value
+      .replace(/[^\d]/g,"")
+      .slice(0,6);
 
   if(value.length>4){
-    value=value.slice(0,2)+"/"+value.slice(2,4)+"/"+value.slice(4);
+
+    value=
+      value.slice(0,2)+
+      "/"+
+      value.slice(2,4)+
+      "/"+
+      value.slice(4);
+
   }else if(value.length>2){
-    value=value.slice(0,2)+"/"+value.slice(2);
+
+    value=
+      value.slice(0,2)+
+      "/"+
+      value.slice(2);
+
   }
 
   el.value=value;
+
 }
 
 
-/* ---------------- PAGE ---------------- */
+/* ================= PAGE ================= */
 
 function showPage(id){
 
-  document.querySelectorAll(".page").forEach(p=>{
-    p.classList.remove("active");
+  document
+    .querySelectorAll(".page")
+    .forEach(p=>{
+      p.classList.remove("active");
+    });
+
+  const page=
+    document.getElementById(id);
+
+  if(page){
+    page.classList.add("active");
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
   });
 
-  const page=document.getElementById(id);
-
-  if(page) page.classList.add("active");
-
-  window.scrollTo({top:0,behavior:"smooth"});
-
   refreshPage(id);
+
 }
+
 
 function refreshPage(id){
 
   populateMemberSelects();
   populateExpenseHeads();
 
-  if(id==="dashboard") renderDashboard();
-  if(id==="members") renderMembers();
-
-  if(id==="loan"){
-    calculateLoan();
-    renderLoans();
+  if(id==="dashboard"){
+    renderDashboard();
   }
 
-  if(id==="accounts") renderAccount();
-  if(id==="ledger") renderLedger();
-  if(id==="cashbook") renderCashBook();
-  if(id==="reports") renderReports();
+  if(id==="members"){
+    renderMembers();
+  }
+
+  if(id==="collection"){
+    updateCollectionTotal();
+  }
+
+  if(id==="loan"){
+
+    calculateLoan();
+    renderLoans();
+
+  }
+
+  if(id==="accounts"){
+    renderAccount();
+  }
+
+  if(id==="ledger"){
+    renderLedger();
+  }
+
+  if(id==="cashbook"){
+    renderCashBook();
+  }
+
+  if(id==="expense"){
+    renderExpenses();
+  }
+
+  if(id==="reports"){
+    renderReports();
+  }
+
 }
+
 
 function memberName(id){
-  const m=data.members.find(x=>x.id===id);
-  return m ? m.name : "";
+
+  const m=
+    data.members.find(
+      x=>x.id===id
+    );
+
+  return m?m.name:"";
+
 }
+
 
 function memberCode(id){
-  const m=data.members.find(x=>x.id===id);
-  return m ? m.code : "";
+
+  const m=
+    data.members.find(
+      x=>x.id===id
+    );
+
+  return m?m.code:"";
+
 }
 
 
-/* ---------------- MEMBER ---------------- */
+/* ================= MEMBERS ================= */
 
 function saveMember(){
 
-  const code=document.getElementById("memberCode").value.trim();
-  const name=document.getElementById("memberName").value.trim();
-  const mobile=document.getElementById("memberMobile").value.trim();
+  const code=
+    document.getElementById(
+      "memberCode"
+    ).value.trim();
 
-  if(!code || !name){
-    alert("Member Code and Member Name are required.");
+  const name=
+    document.getElementById(
+      "memberName"
+    ).value.trim();
+
+  const mobile=
+    document.getElementById(
+      "memberMobile"
+    ).value.trim();
+
+  if(!code||!name){
+
+    alert(
+      "Member Code and Member Name are required."
+    );
+
     return;
+
   }
 
-  const duplicate=data.members.some(
-    m=>m.code.toLowerCase()===code.toLowerCase()
-  );
+  const duplicate=
+    data.members.some(
+      m=>
+        m.code.toLowerCase()===
+        code.toLowerCase()
+    );
 
   if(duplicate){
-    alert("This Member Code already exists.");
+
+    alert(
+      "This Member Code already exists."
+    );
+
     return;
+
   }
 
   data.members.push({
+
     id:uid("M"),
     code,
     name,
     mobile,
-    createdAt:new Date().toISOString()
+
+    createdAt:
+      new Date().toISOString()
+
   });
 
   saveData();
 
   clearMemberForm();
+
   refreshAll();
 
-  alert("Member saved successfully.");
+  alert(
+    "Member saved successfully."
+  );
+
 }
+
 
 function clearMemberForm(){
 
-  document.getElementById("memberCode").value="";
-  document.getElementById("memberName").value="";
-  document.getElementById("memberMobile").value="";
+  document.getElementById(
+    "memberCode"
+  ).value="";
 
-  document.getElementById("memberCode").focus();
+  document.getElementById(
+    "memberName"
+  ).value="";
+
+  document.getElementById(
+    "memberMobile"
+  ).value="";
+
+  document.getElementById(
+    "memberCode"
+  ).focus();
+
 }
+
 
 function renderMembers(){
 
-  const search=document.getElementById("memberSearch").value
-    .trim()
-    .toLowerCase();
+  const search=
+    document.getElementById(
+      "memberSearch"
+    ).value
+      .trim()
+      .toLowerCase();
 
-  const list=data.members.filter(m=>{
-    return !search ||
-      m.code.toLowerCase().includes(search) ||
-      m.name.toLowerCase().includes(search);
-  });
+  const list=
+    data.members.filter(m=>{
 
-  const body=document.getElementById("memberTable");
+      return !search||
+
+        m.code
+          .toLowerCase()
+          .includes(search)||
+
+        m.name
+          .toLowerCase()
+          .includes(search);
+
+    });
+
+  const body=
+    document.getElementById(
+      "memberTable"
+    );
 
   if(!list.length){
+
     body.innerHTML=
-      `<tr><td colspan="4" class="empty">No members found.</td></tr>`;
+      `<tr>
+        <td colspan="4"
+            class="empty">
+          No members found.
+        </td>
+      </tr>`;
+
     return;
+
   }
 
-  body.innerHTML=list.map(m=>`
-    <tr>
-      <td>${escapeHtml(m.code)}</td>
-      <td>${escapeHtml(m.name)}</td>
-      <td>${escapeHtml(m.mobile||"")}</td>
-      <td>
-        <button class="btn-small btn-blue"
-          onclick="openMemberAccount('${m.id}')">
-          Account
-        </button>
-      </td>
-    </tr>
-  `).join("");
+  body.innerHTML=
+    list.map(m=>`
+
+      <tr>
+
+        <td>
+          ${escapeHtml(m.code)}
+        </td>
+
+        <td>
+          ${escapeHtml(m.name)}
+        </td>
+
+        <td>
+          ${escapeHtml(m.mobile||"")}
+        </td>
+
+        <td>
+
+          <button
+            class="btn-small btn-blue"
+            onclick="openMemberAccount('${m.id}')">
+
+            Account
+
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("");
+
 }
+
 
 function openMemberAccount(id){
 
   populateMemberSelects();
 
-  document.getElementById("accountMember").value=id;
+  document.getElementById(
+    "accountMember"
+  ).value=id;
 
   showPage("accounts");
+
 }
 
 
-/* ---------------- SELECTS ---------------- */
+/* ================= SELECTS ================= */
 
-function fillSelect(id,options,placeholder){
+function fillSelect(
+  id,
+  options,
+  placeholder
+){
 
-  const select=document.getElementById(id);
+  const select=
+    document.getElementById(id);
 
-  if(!select) return;
+  if(!select){
+    return;
+  }
 
-  const current=select.value;
+  const current=
+    select.value;
 
   select.innerHTML=
-    `<option value="">${placeholder}</option>`+
+    `<option value="">
+      ${placeholder}
+    </option>`+
+
     options.map(x=>
-      `<option value="${x.id}">${escapeHtml(x.label)}</option>`
+      `<option value="${x.id}">
+        ${escapeHtml(x.label)}
+      </option>`
     ).join("");
 
-  if(options.some(x=>x.id===current)){
+  if(
+    options.some(
+      x=>x.id===current
+    )
+  ){
+
     select.value=current;
+
   }
+
 }
+
 
 function populateMemberSelects(){
 
-  const options=data.members.map(m=>({
-    id:m.id,
-    label:`${m.code} - ${m.name}`
-  }));
+  const options=
+    data.members.map(m=>({
 
-  fillSelect("collectionMember",options,"Select Member");
-  fillSelect("loanMember",options,"Select Member");
-  fillSelect("accountMember",options,"Select Member");
-  fillSelect("reportMember",options,"All Members");
+      id:m.id,
+
+      label:
+        `${m.code} - ${m.name}`
+
+    }));
+
+  fillSelect(
+    "collectionMember",
+    options,
+    "Select Member"
+  );
+
+  fillSelect(
+    "loanMember",
+    options,
+    "Select Member"
+  );
+
+  fillSelect(
+    "accountMember",
+    options,
+    "Select Member"
+  );
+
+  fillSelect(
+    "reportMember",
+    options,
+    "All Members"
+  );
+
 }
+
 
 function populateExpenseHeads(){
 
-  const select=document.getElementById("expenseHead");
+  const select=
+    document.getElementById(
+      "expenseHead"
+    );
 
-  if(!select) return;
+  if(!select){
+    return;
+  }
 
-  const heads=[...defaultExpenseHeads,...data.customExpenseHeads];
+  const heads=[
+    ...defaultExpenseHeads,
+    ...data.customExpenseHeads
+  ];
+
+  const current=
+    select.value;
 
   select.innerHTML=
-    `<option value="">Select Expense Head</option>`+
-    heads.map(h=>`<option>${escapeHtml(h)}</option>`).join("");
+    `<option value="">
+      Select Expense Head
+    </option>`+
+
+    heads.map(h=>
+      `<option value="${escapeHtml(h)}">
+        ${escapeHtml(h)}
+      </option>`
+    ).join("");
+
+  if(
+    heads.includes(current)
+  ){
+    select.value=current;
+  }
+
 }
 
 
-/* ---------------- COLLECTION ---------------- */
+/* ================= COLLECTION ================= */
 
 function collectionFields(){
 
   return [
+
     ["Share","colShare"],
     ["Savings","colSavings"],
     ["Loan Installment","colInstallment"],
@@ -1488,25 +2119,38 @@ function collectionFields(){
     ["Insurance","colInsurance"],
     ["Loan Form Sales","colLoanForm"],
     ["Other","colOther"]
+
   ];
+
 }
+
 
 function collectionTotal(){
 
-  return collectionFields().reduce(
-    (sum,x)=>sum+num(x[1]),0
-  );
+  return collectionFields()
+    .reduce(
+      (sum,x)=>
+        sum+num(x[1]),
+      0
+    );
+
 }
+
 
 function updateCollectionTotal(){
 
-  document.getElementById("collectionTotal").textContent=
+  document.getElementById(
+    "collectionTotal"
+  ).textContent=
     money(collectionTotal());
+
 }
+
 
 function clearCollectionForm(){
 
   const ids=[
+
     "colShare",
     "colSavings",
     "colInstallment",
@@ -1515,39 +2159,66 @@ function clearCollectionForm(){
     "colInsurance",
     "colLoanForm",
     "colOther"
+
   ];
 
   ids.forEach(id=>{
-    document.getElementById(id).value="";
+
+    document.getElementById(id)
+      .value="";
+
   });
 
   setToday("collectionDate");
 
   updateCollectionTotal();
+
 }
+
 
 function saveCollection(){
 
-  const memberId=document.getElementById("collectionMember").value;
+  const memberId=
+    document.getElementById(
+      "collectionMember"
+    ).value;
 
-  const date=validDateOrToday("collectionDate");
+  const date=
+    validDateOrToday(
+      "collectionDate"
+    );
 
   if(!memberId){
-    alert("Please select a member.");
+
+    alert(
+      "Please select a member."
+    );
+
     return;
+
   }
 
-  const total=collectionTotal();
+  const total=
+    collectionTotal();
 
   if(total<=0){
-    alert("Enter at least one collection amount.");
+
+    alert(
+      "Enter at least one collection amount."
+    );
+
     return;
+
   }
 
   const item={
+
     id:uid("C"),
+
     memberId,
+
     date,
+
     share:num("colShare"),
     savings:num("colSavings"),
     installment:num("colInstallment"),
@@ -1556,62 +2227,111 @@ function saveCollection(){
     insurance:num("colInsurance"),
     loanForm:num("colLoanForm"),
     other:num("colOther"),
+
     total,
-    createdAt:new Date().toISOString()
+
+    createdAt:
+      new Date().toISOString()
+
   };
 
   if(item.installment>0){
 
-    const activeLoans=data.loans
-      .filter(l=>l.memberId===memberId)
-      .filter(l=>loanOutstanding(l)>0)
-      .sort((a,b)=>a.date.localeCompare(b.date));
+    const activeLoans=
+      data.loans
+
+        .filter(
+          l=>l.memberId===memberId
+        )
+
+        .filter(
+          l=>loanOutstanding(l)>0
+        )
+
+        .sort(
+          (a,b)=>
+            a.date.localeCompare(b.date)
+        );
 
     if(!activeLoans.length){
-      alert("No outstanding loan found for this member.");
+
+      alert(
+        "No outstanding loan found for this member."
+      );
+
       return;
+
     }
 
-    const totalOutstanding=activeLoans.reduce(
-      (s,l)=>s+loanOutstanding(l),0
-    );
+    const totalOutstanding=
+      activeLoans.reduce(
+        (s,l)=>
+          s+loanOutstanding(l),
+        0
+      );
 
-    if(item.installment>totalOutstanding+0.01){
-      alert("The installment amount is greater than the member's loan outstanding.");
+    if(
+      item.installment>
+      totalOutstanding+0.01
+    ){
+
+      alert(
+        "The installment amount is greater than the member's loan outstanding."
+      );
+
       return;
+
     }
 
-    let remaining=item.installment;
+    let remaining=
+      item.installment;
 
-    for(const loan of activeLoans){
+    for(
+      const loan of activeLoans
+    ){
 
-      if(remaining<=0) break;
+      if(remaining<=0){
+        break;
+      }
 
-      const outstanding=loanOutstanding(loan);
-      const pay=Math.min(remaining,outstanding);
+      const outstanding=
+        loanOutstanding(loan);
 
-      allocateInstallment(loan,pay,date);
+      const pay=
+        Math.min(
+          remaining,
+          outstanding
+        );
+
+      allocateInstallment(
+        loan,
+        pay,
+        date
+      );
 
       remaining-=pay;
+
     }
+
   }
 
   data.collections.push(item);
 
   saveData();
+
   refreshAll();
 
-  alert("Collection saved successfully.");
+  alert(
+    "Collection saved successfully."
+  );
 
-  /*
-    Keep selected member and selected date.
-    Only collection amounts are cleared.
-  */
-
-  document.getElementById("collectionDate").value=
+  document.getElementById(
+    "collectionDate"
+  ).value=
     dateInputValue(date);
 
   [
+
     "colShare",
     "colSavings",
     "colInstallment",
@@ -1620,293 +2340,558 @@ function saveCollection(){
     "colInsurance",
     "colLoanForm",
     "colOther"
+
   ].forEach(id=>{
-    document.getElementById(id).value="";
+
+    document.getElementById(id)
+      .value="";
+
   });
 
   updateCollectionTotal();
+
 }
 
-function allocateInstallment(loan,payment,paymentDate){
 
-  if(!loan.payments) loan.payments=[];
+function allocateInstallment(
+  loan,
+  payment,
+  paymentDate
+){
 
-  const totalInstallments=Number(loan.installments)||1;
-  const serviceTotal=Number(loan.service)||0;
-
-  let servicePaid=loan.payments.reduce(
-    (s,p)=>s+Number(p.service||0),0
-  );
-
-  let principalPaid=loan.payments.reduce(
-    (s,p)=>s+Number(p.principal||0),0
-  );
-
-  let remainingService=Math.max(
-    0,
-    serviceTotal-servicePaid
-  );
-
-  let remainingPrincipal=Math.max(
-    0,
-    loan.principal-principalPaid
-  );
-
-  let servicePart=Math.min(
-    remainingService,
-    Math.round((serviceTotal/totalInstallments)*100)/100
-  );
-
-  if(payment>=remainingService){
-    servicePart=remainingService;
+  if(!loan.payments){
+    loan.payments=[];
   }
 
-  let principalPart=payment-servicePart;
+  const totalInstallments=
+    Number(loan.installments)||1;
 
-  if(principalPart>remainingPrincipal){
-    principalPart=remainingPrincipal;
-    servicePart=payment-principalPart;
+  const serviceTotal=
+    Number(loan.service)||0;
+
+  let servicePaid=
+    loan.payments.reduce(
+      (s,p)=>
+        s+Number(p.service||0),
+      0
+    );
+
+  let principalPaid=
+    loan.payments.reduce(
+      (s,p)=>
+        s+Number(p.principal||0),
+      0
+    );
+
+  let remainingService=
+    Math.max(
+      0,
+      serviceTotal-servicePaid
+    );
+
+  let remainingPrincipal=
+    Math.max(
+      0,
+      loan.principal-principalPaid
+    );
+
+  let servicePart=
+    Math.min(
+      remainingService,
+      Math.round(
+        (serviceTotal/
+        totalInstallments)*100
+      )/100
+    );
+
+  if(payment>=remainingService){
+
+    servicePart=
+      remainingService;
+
+  }
+
+  let principalPart=
+    payment-servicePart;
+
+  if(
+    principalPart>
+    remainingPrincipal
+  ){
+
+    principalPart=
+      remainingPrincipal;
+
+    servicePart=
+      payment-principalPart;
+
   }
 
   loan.payments.push({
+
     id:uid("P"),
+
     amount:payment,
+
     principal:principalPart,
+
     service:servicePart,
+
     date:paymentDate
+
   });
+
 }
 
 
-/* ---------------- LOAN ---------------- */
+/* ================= LOAN ================= */
 
 function calculateLoan(){
 
-  const principal=num("loanPrincipal");
+  const principal=
+    num("loanPrincipal");
 
-  let rate=Number(
-    document.getElementById("loanRate").value
-      .toString()
-      .replace(/,/g,"")
-  )||0;
+  let rate=
+    Number(
+      document.getElementById(
+        "loanRate"
+      ).value
+        .toString()
+        .replace(/,/g,"")
+    )||0;
 
   const installments=
-    Number(document.getElementById("loanInstallments").value)||0;
+    Number(
+      document.getElementById(
+        "loanInstallments"
+      ).value
+    )||0;
 
-  const service=principal*rate/100;
-  const total=principal+service;
+  const service=
+    principal*rate/100;
+
+  const total=
+    principal+service;
+
   const installment=
-    installments>0 ? total/installments : 0;
+    installments>0
+      ?total/installments
+      :0;
 
-  document.getElementById("loanService").value=
-    service ? money(service) : "";
+  document.getElementById(
+    "loanService"
+  ).value=
+    service?money(service):"";
 
-  document.getElementById("loanTotal").value=
-    total ? money(total) : "";
+  document.getElementById(
+    "loanTotal"
+  ).value=
+    total?money(total):"";
 
-  document.getElementById("loanInstallmentAmount").value=
-    installment ? money(installment) : "";
+  document.getElementById(
+    "loanInstallmentAmount"
+  ).value=
+    installment
+      ?money(installment)
+      :"";
 
-  document.getElementById("loanPreviewPrincipal").textContent=
+  document.getElementById(
+    "loanPreviewPrincipal"
+  ).textContent=
     money(principal);
 
-  document.getElementById("loanPreviewService").textContent=
+  document.getElementById(
+    "loanPreviewService"
+  ).textContent=
     money(service);
 
-  document.getElementById("loanPreviewTotal").textContent=
+  document.getElementById(
+    "loanPreviewTotal"
+  ).textContent=
     money(total);
 
-  document.getElementById("loanPreviewInstallment").textContent=
+  document.getElementById(
+    "loanPreviewInstallment"
+  ).textContent=
     money(installment);
+
 }
+
 
 function saveLoan(){
 
-  const memberId=document.getElementById("loanMember").value;
+  const memberId=
+    document.getElementById(
+      "loanMember"
+    ).value;
 
-  const date=validDateOrToday("loanDate");
+  const date=
+    validDateOrToday(
+      "loanDate"
+    );
 
-  const principal=num("loanPrincipal");
+  const principal=
+    num("loanPrincipal");
 
-  const rate=Number(
-    document.getElementById("loanRate").value
-      .toString()
-      .replace(/,/g,"")
-  )||0;
+  const rate=
+    Number(
+      document.getElementById(
+        "loanRate"
+      ).value
+        .toString()
+        .replace(/,/g,"")
+    )||0;
 
   const installments=
-    Number(document.getElementById("loanInstallments").value)||0;
+    Number(
+      document.getElementById(
+        "loanInstallments"
+      ).value
+    )||0;
 
   const firstDate=
-    validDateOrToday("loanFirstDate");
+    validDateOrToday(
+      "loanFirstDate"
+    );
 
   const note=
-    document.getElementById("loanNote").value.trim();
+    document.getElementById(
+      "loanNote"
+    ).value.trim();
 
-  if(!memberId || principal<=0 || installments<=0){
-    alert("Please complete Member, Loan Principal and Number of Installments.");
+  if(
+    !memberId||
+    principal<=0||
+    installments<=0
+  ){
+
+    alert(
+      "Please complete Member, Loan Principal and Number of Installments."
+    );
+
     return;
+
   }
 
-  const service=principal*rate/100;
-  const total=principal+service;
+  const service=
+    principal*rate/100;
+
+  const total=
+    principal+service;
 
   const loan={
+
     id:uid("L"),
+
     memberId,
+
     date,
+
     principal,
+
     rate,
+
     service,
+
     total,
+
     installments,
-    installmentAmount:total/installments,
+
+    installmentAmount:
+      total/installments,
+
     firstDate,
+
     note,
+
     payments:[],
-    createdAt:new Date().toISOString()
+
+    createdAt:
+      new Date().toISOString()
+
   };
 
   data.loans.push(loan);
 
   saveData();
+
   refreshAll();
 
-  alert("Loan saved successfully.");
+  alert(
+    "Loan saved successfully."
+  );
 
   clearLoanForm();
+
 }
+
 
 function clearLoanForm(){
 
-  document.getElementById("loanPrincipal").value="";
-  document.getElementById("loanRate").value="10";
-  document.getElementById("loanInstallments").value="";
-  document.getElementById("loanService").value="";
-  document.getElementById("loanTotal").value="";
-  document.getElementById("loanInstallmentAmount").value="";
-  document.getElementById("loanNote").value="";
+  document.getElementById(
+    "loanPrincipal"
+  ).value="";
+
+  document.getElementById(
+    "loanRate"
+  ).value="10";
+
+  document.getElementById(
+    "loanInstallments"
+  ).value="";
+
+  document.getElementById(
+    "loanService"
+  ).value="";
+
+  document.getElementById(
+    "loanTotal"
+  ).value="";
+
+  document.getElementById(
+    "loanInstallmentAmount"
+  ).value="";
+
+  document.getElementById(
+    "loanNote"
+  ).value="";
 
   setToday("loanDate");
+
   setToday("loanFirstDate");
 
   calculateLoan();
+
 }
+
 
 function loanPaid(loan){
 
-  return (loan.payments||[]).reduce(
-    (s,p)=>s+Number(p.amount||0),0
-  );
+  return (loan.payments||[])
+    .reduce(
+      (s,p)=>
+        s+Number(p.amount||0),
+      0
+    );
+
 }
+
 
 function loanOutstanding(loan){
 
   return Math.max(
     0,
-    Number(loan.total||0)-loanPaid(loan)
+    Number(loan.total||0)-
+    loanPaid(loan)
   );
+
 }
+
 
 function loanServicePaid(loan){
 
-  return (loan.payments||[]).reduce(
-    (s,p)=>s+Number(p.service||0),0
-  );
+  return (loan.payments||[])
+    .reduce(
+      (s,p)=>
+        s+Number(p.service||0),
+      0
+    );
+
 }
+
 
 function renderLoans(){
 
-  const body=document.getElementById("loanTable");
+  const body=
+    document.getElementById(
+      "loanTable"
+    );
 
   if(!data.loans.length){
+
     body.innerHTML=
-      `<tr><td colspan="8" class="empty">No loans found.</td></tr>`;
+      `<tr>
+        <td colspan="8"
+            class="empty">
+          No loans found.
+        </td>
+      </tr>`;
+
     return;
+
   }
 
-  body.innerHTML=data.loans.map(l=>`
-    <tr>
-      <td>${escapeHtml(l.id)}</td>
-      <td>${escapeHtml(memberName(l.memberId))}</td>
-      <td>${escapeHtml(displayDate(l.date))}</td>
-      <td>${money(l.principal)}</td>
-      <td>${money(l.service)}</td>
-      <td>${money(l.total)}</td>
-      <td>${money(loanPaid(l))}</td>
-      <td>${money(loanOutstanding(l))}</td>
-    </tr>
-  `).join("");
+  body.innerHTML=
+    data.loans.map(l=>`
+
+      <tr>
+
+        <td>
+          ${escapeHtml(l.id)}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            memberName(l.memberId)
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            displayDate(l.date)
+          )}
+        </td>
+
+        <td>${money(l.principal)}</td>
+
+        <td>${money(l.service)}</td>
+
+        <td>${money(l.total)}</td>
+
+        <td>${money(loanPaid(l))}</td>
+
+        <td>${money(
+          loanOutstanding(l)
+        )}</td>
+
+      </tr>
+
+    `).join("");
+
 }
 
 
-/* ---------------- ACCOUNTS ---------------- */
+/* ================= ACCOUNTS ================= */
 
 function renderAccount(){
 
-  const memberId=document.getElementById("accountMember").value;
+  const memberId=
+    document.getElementById(
+      "accountMember"
+    ).value;
 
-  const summary=document.getElementById("accountSummary");
-  const body=document.getElementById("accountTransactions");
+  const summary=
+    document.getElementById(
+      "accountSummary"
+    );
+
+  const body=
+    document.getElementById(
+      "accountTransactions"
+    );
 
   if(!memberId){
 
     summary.innerHTML=
-      `<div class="empty">Select a member to view account.</div>`;
+      `<div class="empty">
+        Select a member to view account.
+      </div>`;
 
     body.innerHTML="";
 
     return;
+
   }
 
-  const member=data.members.find(m=>m.id===memberId);
+  const member=
+    data.members.find(
+      m=>m.id===memberId
+    );
 
   if(!member){
+
     summary.innerHTML=
-      `<div class="empty">Member not found.</div>`;
+      `<div class="empty">
+        Member not found.
+      </div>`;
+
     body.innerHTML="";
+
     return;
+
   }
 
-  const share=data.collections
-    .filter(c=>c.memberId===memberId)
-    .reduce((s,c)=>s+Number(c.share||0),0);
+  const share=
+    data.collections
+      .filter(
+        c=>c.memberId===memberId
+      )
+      .reduce(
+        (s,c)=>
+          s+Number(c.share||0),
+        0
+      );
 
-  const savings=data.collections
-    .filter(c=>c.memberId===memberId)
-    .reduce((s,c)=>s+Number(c.savings||0),0);
+  const savings=
+    data.collections
+      .filter(
+        c=>c.memberId===memberId
+      )
+      .reduce(
+        (s,c)=>
+          s+Number(c.savings||0),
+        0
+      );
 
-  const installments=data.collections
-    .filter(c=>c.memberId===memberId)
-    .reduce((s,c)=>s+Number(c.installment||0),0);
+  const installments=
+    data.collections
+      .filter(
+        c=>c.memberId===memberId
+      )
+      .reduce(
+        (s,c)=>
+          s+Number(c.installment||0),
+        0
+      );
 
-  const service=data.loans
-    .filter(l=>l.memberId===memberId)
-    .reduce((s,l)=>s+loanServicePaid(l),0);
+  const service=
+    data.loans
+      .filter(
+        l=>l.memberId===memberId
+      )
+      .reduce(
+        (s,l)=>
+          s+loanServicePaid(l),
+        0
+      );
 
-  const loans=data.loans
-    .filter(l=>l.memberId===memberId);
+  const loans=
+    data.loans.filter(
+      l=>l.memberId===memberId
+    );
 
-  const loanOutstandingTotal=loans.reduce(
-    (s,l)=>s+loanOutstanding(l),0
-  );
+  const loanOutstandingTotal=
+    loans.reduce(
+      (s,l)=>
+        s+loanOutstanding(l),
+      0
+    );
 
   summary.innerHTML=`
+
     <div class="summary-box">
 
       <div class="summary-line">
         <span>Member Code</span>
-        <strong>${escapeHtml(member.code)}</strong>
+        <strong>
+          ${escapeHtml(member.code)}
+        </strong>
       </div>
 
       <div class="summary-line">
         <span>Member Name</span>
-        <strong>${escapeHtml(member.name)}</strong>
+        <strong>
+          ${escapeHtml(member.name)}
+        </strong>
       </div>
 
       <div class="summary-line">
         <span>Mobile</span>
-        <strong>${escapeHtml(member.mobile||"")}</strong>
+        <strong>
+          ${escapeHtml(
+            member.mobile||""
+          )}
+        </strong>
       </div>
 
       <div class="summary-line">
@@ -1931,87 +2916,159 @@ function renderAccount(){
 
       <div class="summary-line">
         <span>Loan Outstanding</span>
-        <strong>${money(loanOutstandingTotal)}</strong>
+        <strong>
+          ${money(loanOutstandingTotal)}
+        </strong>
       </div>
 
     </div>
+
   `;
 
   const transactions=[];
 
   data.collections
-    .filter(c=>c.memberId===memberId)
+    .filter(
+      c=>c.memberId===memberId
+    )
     .forEach(c=>{
 
       transactions.push({
+
         date:c.date,
+
         description:"Collection",
+
         amount:c.total,
+
         details:[
-          c.share?`Share ${money(c.share)}`:"",
-          c.savings?`Savings ${money(c.savings)}`:"",
-          c.installment?`Installment ${money(c.installment)}`:"",
-          c.admission?`Admission ${money(c.admission)}`:"",
-          c.passbook?`Pass Book ${money(c.passbook)}`:"",
-          c.insurance?`Insurance ${money(c.insurance)}`:"",
-          c.loanForm?`Loan Form ${money(c.loanForm)}`:"",
-          c.other?`Other ${money(c.other)}`:""
-        ].filter(Boolean).join(" • ")
+
+          c.share?
+            `Share ${money(c.share)}`:"",
+
+          c.savings?
+            `Savings ${money(c.savings)}`:"",
+
+          c.installment?
+            `Installment ${money(c.installment)}`:"",
+
+          c.admission?
+            `Admission ${money(c.admission)}`:"",
+
+          c.passbook?
+            `Pass Book ${money(c.passbook)}`:"",
+
+          c.insurance?
+            `Insurance ${money(c.insurance)}`:"",
+
+          c.loanForm?
+            `Loan Form ${money(c.loanForm)}`:"",
+
+          c.other?
+            `Other ${money(c.other)}`:""
+
+        ]
+        .filter(Boolean)
+        .join(" • ")
+
       });
 
     });
 
   data.loans
-    .filter(l=>l.memberId===memberId)
+    .filter(
+      l=>l.memberId===memberId
+    )
     .forEach(l=>{
 
       transactions.push({
+
         date:l.date,
-        description:"Loan Disbursement",
+
+        description:
+          "Loan Disbursement",
+
         amount:l.principal,
+
         details:
           `Principal ${money(l.principal)} • `+
           `Service ${money(l.service)} • `+
           `Total ${money(l.total)}`
+
       });
 
-      (l.payments||[]).forEach(p=>{
+      (l.payments||[])
+        .forEach(p=>{
 
-        transactions.push({
-          date:p.date,
-          description:"Loan Installment",
-          amount:p.amount,
-          details:
-            `Principal ${money(p.principal)} • `+
-            `Service ${money(p.service)}`
+          transactions.push({
+
+            date:p.date,
+
+            description:
+              "Loan Installment",
+
+            amount:p.amount,
+
+            details:
+              `Principal ${money(p.principal)} • `+
+              `Service ${money(p.service)}`
+
+          });
+
         });
-
-      });
 
     });
 
-  transactions.sort((a,b)=>a.date.localeCompare(b.date));
+  transactions.sort(
+    (a,b)=>
+      a.date.localeCompare(b.date)
+  );
 
   if(!transactions.length){
 
     body.innerHTML=
-      `<tr><td colspan="4" class="empty">No transactions found.</td></tr>`;
+      `<tr>
+        <td colspan="4"
+            class="empty">
+          No transactions found.
+        </td>
+      </tr>`;
 
     return;
+
   }
 
-  body.innerHTML=transactions.map(t=>`
-    <tr>
-      <td>${escapeHtml(displayDate(t.date))}</td>
-      <td>${escapeHtml(t.description)}</td>
-      <td>${money(t.amount)}</td>
-      <td>${escapeHtml(t.details)}</td>
-    </tr>
-  `).join("");
+  body.innerHTML=
+    transactions.map(t=>`
+
+      <tr>
+
+        <td>
+          ${escapeHtml(
+            displayDate(t.date)
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            t.description
+          )}
+        </td>
+
+        <td>${money(t.amount)}</td>
+
+        <td>
+          ${escapeHtml(t.details)}
+        </td>
+
+      </tr>
+
+    `).join("");
+
 }
 
 
-/* ---------------- LEDGER ---------------- */
+/* ================= LEDGER ================= */
 
 function ledgerRows(){
 
@@ -2019,9 +3076,11 @@ function ledgerRows(){
 
   data.collections.forEach(c=>{
 
-    const name=memberName(c.memberId);
+    const name=
+      memberName(c.memberId);
 
     const heads=[
+
       ["Share",c.share],
       ["Savings",c.savings],
       ["Loan Installment",c.installment],
@@ -2030,102 +3089,168 @@ function ledgerRows(){
       ["Insurance",c.insurance],
       ["Loan Form Sales",c.loanForm],
       ["Other Income",c.other]
+
     ];
 
-    heads.forEach(([head,amount])=>{
+    heads.forEach(
+      ([head,amount])=>{
 
-      if(Number(amount)>0){
+        if(Number(amount)>0){
 
-        rows.push({
-          date:c.date,
-          head,
-          member:name,
-          in:Number(amount),
-          out:0
-        });
+          rows.push({
+
+            date:c.date,
+            head,
+            member:name,
+            in:Number(amount),
+            out:0
+
+          });
+
+        }
 
       }
-
-    });
+    );
 
   });
 
   data.loans.forEach(l=>{
 
     rows.push({
+
       date:l.date,
+
       head:"Loan Disbursement",
-      member:memberName(l.memberId),
+
+      member:
+        memberName(l.memberId),
+
       in:0,
+
       out:l.principal
-    });
-
-    (l.payments||[]).forEach(p=>{
-
-      if(Number(p.service)>0){
-
-        rows.push({
-          date:p.date,
-          head:"Service Charge",
-          member:memberName(l.memberId),
-          in:p.service,
-          out:0
-        });
-
-      }
 
     });
+
+    (l.payments||[])
+      .forEach(p=>{
+
+        if(Number(p.service)>0){
+
+          rows.push({
+
+            date:p.date,
+
+            head:"Service Charge",
+
+            member:
+              memberName(l.memberId),
+
+            in:p.service,
+
+            out:0
+
+          });
+
+        }
+
+      });
 
   });
 
   data.expenses.forEach(e=>{
 
     rows.push({
+
       date:e.date,
+
       head:e.head,
+
       member:"",
+
       in:0,
+
       out:e.amount
+
     });
 
   });
 
   return rows.sort(
-    (a,b)=>a.date.localeCompare(b.date)
+    (a,b)=>
+      a.date.localeCompare(b.date)
   );
+
 }
+
 
 function renderLedger(){
 
-  const selected=document.getElementById("ledgerHead").value;
+  const selected=
+    document.getElementById(
+      "ledgerHead"
+    ).value;
 
-  const rows=ledgerRows().filter(r=>
-    !selected || r.head===selected
-  );
+  const rows=
+    ledgerRows()
+      .filter(
+        r=>!selected||
+        r.head===selected
+      );
 
-  const body=document.getElementById("ledgerTable");
+  const body=
+    document.getElementById(
+      "ledgerTable"
+    );
 
   if(!rows.length){
 
     body.innerHTML=
-      `<tr><td colspan="5" class="empty">No ledger entries found.</td></tr>`;
+      `<tr>
+        <td colspan="5"
+            class="empty">
+          No ledger entries found.
+        </td>
+      </tr>`;
 
     return;
+
   }
 
-  body.innerHTML=rows.map(r=>`
-    <tr>
-      <td>${escapeHtml(displayDate(r.date))}</td>
-      <td>${escapeHtml(r.head)}</td>
-      <td>${escapeHtml(r.member)}</td>
-      <td>${r.in?money(r.in):""}</td>
-      <td>${r.out?money(r.out):""}</td>
-    </tr>
-  `).join("");
+  body.innerHTML=
+    rows.map(r=>`
+
+      <tr>
+
+        <td>
+          ${escapeHtml(
+            displayDate(r.date)
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(r.head)}
+        </td>
+
+        <td>
+          ${escapeHtml(r.member)}
+        </td>
+
+        <td>
+          ${r.in?money(r.in):""}
+        </td>
+
+        <td>
+          ${r.out?money(r.out):""}
+        </td>
+
+      </tr>
+
+    `).join("");
+
 }
 
 
-/* ---------------- CASH BOOK ---------------- */
+/* ================= CASH BOOK ================= */
 
 function cashRows(){
 
@@ -2134,11 +3259,18 @@ function cashRows(){
   data.collections.forEach(c=>{
 
     rows.push({
+
       date:c.date,
+
       description:
-        `Collection - ${memberName(c.memberId)}`,
+        `Collection - ${
+          memberName(c.memberId)
+        }`,
+
       in:c.total,
+
       out:0
+
     });
 
   });
@@ -2146,11 +3278,18 @@ function cashRows(){
   data.loans.forEach(l=>{
 
     rows.push({
+
       date:l.date,
+
       description:
-        `Loan Disbursement - ${memberName(l.memberId)}`,
+        `Loan Disbursement - ${
+          memberName(l.memberId)
+        }`,
+
       in:0,
+
       out:l.principal
+
     });
 
   });
@@ -2160,10 +3299,16 @@ function cashRows(){
     if(e.payment==="Cash"){
 
       rows.push({
+
         date:e.date,
-        description:`Expense - ${e.head}`,
+
+        description:
+          `Expense - ${e.head}`,
+
         in:0,
+
         out:e.amount
+
       });
 
     }
@@ -2171,80 +3316,598 @@ function cashRows(){
   });
 
   return rows.sort(
-    (a,b)=>a.date.localeCompare(b.date)
+    (a,b)=>
+      a.date.localeCompare(b.date)
   );
+
 }
+
 
 function cashBalance(){
 
-  let balance=Number(data.openingCash)||0;
+  let balance=
+    Number(data.openingCash)||0;
 
   cashRows().forEach(r=>{
 
-    balance+=Number(r.in||0);
-    balance-=Number(r.out||0);
+    balance+=
+      Number(r.in||0);
+
+    balance-=
+      Number(r.out||0);
 
   });
 
   return balance;
+
 }
+
 
 function renderCashBook(){
 
-  const rows=cashRows();
+  const rows=
+    cashRows();
 
-  let balance=Number(data.openingCash)||0;
+  let balance=
+    Number(data.openingCash)||0;
 
-  document.getElementById("cashOpening").textContent=
+  document.getElementById(
+    "cashOpening"
+  ).textContent=
     money(data.openingCash);
 
-  const totalIn=rows.reduce(
-    (s,r)=>s+Number(r.in||0),0
-  );
+  const totalIn=
+    rows.reduce(
+      (s,r)=>
+        s+Number(r.in||0),
+      0
+    );
 
-  const totalOut=rows.reduce(
-    (s,r)=>s+Number(r.out||0),0
-  );
+  const totalOut=
+    rows.reduce(
+      (s,r)=>
+        s+Number(r.out||0),
+      0
+    );
 
-  document.getElementById("cashIn").textContent=
+  document.getElementById(
+    "cashIn"
+  ).textContent=
     money(totalIn);
 
-  document.getElementById("cashOut").textContent=
+  document.getElementById(
+    "cashOut"
+  ).textContent=
     money(totalOut);
 
-  document.getElementById("cashBalance").textContent=
+  document.getElementById(
+    "cashBalance"
+  ).textContent=
     money(cashBalance());
 
-  const body=document.getElementById("cashTable");
+  const body=
+    document.getElementById(
+      "cashTable"
+    );
 
   if(!rows.length){
 
     body.innerHTML=
-      `<tr><td colspan="5" class="empty">No cash transactions found.</td></tr>`;
+      `<tr>
+        <td colspan="5"
+            class="empty">
+          No cash transactions found.
+        </td>
+      </tr>`;
 
     return;
+
   }
 
-  body.innerHTML=rows.map(r=>{
+  body.innerHTML=
+    rows.map(r=>{
 
-    balance+=Number(r.in||0);
-    balance-=Number(r.out||0);
+      balance+=
+        Number(r.in||0);
 
-    return `
-      <tr>
-        <td>${escapeHtml(displayDate(r.date))}</td>
-        <td>${escapeHtml(r.description)}</td>
-        <td>${r.in?money(r.in):""}</td>
-        <td>${r.out?money(r.out):""}</td>
-        <td>${money(balance)}</td>
-      </tr>
-    `;
+      balance-=
+        Number(r.out||0);
 
-  }).join("");
+      return `
+
+        <tr>
+
+          <td>
+            ${escapeHtml(
+              displayDate(r.date)
+            )}
+          </td>
+
+          <td>
+            ${escapeHtml(
+              r.description
+            )}
+          </td>
+
+          <td>
+            ${r.in?
+              money(r.in):""}
+          </td>
+
+          <td>
+            ${r.out?
+              money(r.out):""}
+          </td>
+
+          <td>
+            ${money(balance)}
+          </td>
+
+        </tr>
+
+      `;
+
+    }).join("");
+
 }
 
 
-/* ---------------- REPORTS ---------------- */
+/* ================= EXPENSE ================= */
+
+function saveExpense(){
+
+  const date=
+    validDateOrToday(
+      "expenseDate"
+    );
+
+  const head=
+    document.getElementById(
+      "expenseHead"
+    ).value.trim();
+
+  const amount=
+    num("expenseAmount");
+
+  const note=
+    document.getElementById(
+      "expenseNote"
+    ).value.trim();
+
+  if(!head){
+
+    alert(
+      "Please select an Expense Head."
+    );
+
+    return;
+
+  }
+
+  if(amount<=0){
+
+    alert(
+      "Please enter a valid expense amount."
+    );
+
+    return;
+
+  }
+
+  const expense={
+
+    id:uid("E"),
+
+    date,
+
+    head,
+
+    amount,
+
+    note,
+
+    payment:"Cash",
+
+    createdAt:
+      new Date().toISOString()
+
+  };
+
+  data.expenses.push(expense);
+
+  saveData();
+
+  refreshAll();
+
+  alert(
+    "Expense saved successfully."
+  );
+
+  clearExpenseForm();
+
+}
+
+
+function clearExpenseForm(){
+
+  setToday("expenseDate");
+
+  document.getElementById(
+    "expenseHead"
+  ).value="";
+
+  document.getElementById(
+    "expenseAmount"
+  ).value="";
+
+  document.getElementById(
+    "expenseNote"
+  ).value="";
+
+}
+
+
+function addExpenseForm(){
+
+  const head=
+    prompt(
+      "Enter new expense head:"
+    );
+
+  if(!head||!head.trim()){
+    return;
+  }
+
+  const clean=
+    head.trim();
+
+  const exists=[
+
+    ...defaultExpenseHeads,
+    ...data.customExpenseHeads
+
+  ].some(
+    h=>
+      h.toLowerCase()===
+      clean.toLowerCase()
+  );
+
+  if(exists){
+
+    alert(
+      "This expense head already exists."
+    );
+
+    return;
+
+  }
+
+  data.customExpenseHeads.push(
+    clean
+  );
+
+  saveData();
+
+  populateExpenseHeads();
+
+  document.getElementById(
+    "expenseHead"
+  ).value=clean;
+
+}
+
+
+function renderExpenses(){
+
+  const body=
+    document.getElementById(
+      "expenseTable"
+    );
+
+  if(!body){
+    return;
+  }
+
+  const search=
+    (
+      document.getElementById(
+        "expenseSearch"
+      )?.value||""
+    )
+    .trim()
+    .toLowerCase();
+
+  const rows=
+    data.expenses
+      .filter(e=>{
+
+        if(!search){
+          return true;
+        }
+
+        return (
+
+          String(e.head||"")
+            .toLowerCase()
+            .includes(search)
+
+          ||
+
+          String(e.note||"")
+            .toLowerCase()
+            .includes(search)
+
+        );
+
+      })
+      .sort(
+        (a,b)=>
+          b.date.localeCompare(a.date)
+      );
+
+  const total=
+    data.expenses.reduce(
+      (s,e)=>
+        s+Number(e.amount||0),
+      0
+    );
+
+  document.getElementById(
+    "expenseGrandTotal"
+  ).textContent=
+    money(total);
+
+  if(!rows.length){
+
+    body.innerHTML=
+      `<tr>
+        <td colspan="5"
+            class="empty">
+          No expense records found.
+        </td>
+      </tr>`;
+
+    return;
+
+  }
+
+  body.innerHTML=
+    rows.map(e=>`
+
+      <tr>
+
+        <td>
+          ${escapeHtml(
+            displayDate(e.date)
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(e.head)}
+        </td>
+
+        <td>
+          ${money(e.amount)}
+        </td>
+
+        <td>
+          ${escapeHtml(e.note||"")}
+        </td>
+
+        <td>
+
+          <button
+            class="btn-small btn-blue"
+            onclick="editExpense('${e.id}')">
+
+            Edit
+
+          </button>
+
+          <button
+            class="btn-small btn-red"
+            onclick="deleteExpense('${e.id}')">
+
+            Delete
+
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("");
+
+}
+
+
+function editExpense(id){
+
+  const expense=
+    data.expenses.find(
+      e=>e.id===id
+    );
+
+  if(!expense){
+    return;
+  }
+
+  document.getElementById(
+    "expenseDate"
+  ).value=
+    dateInputValue(
+      expense.date
+    );
+
+  document.getElementById(
+    "expenseHead"
+  ).value=
+    expense.head;
+
+  document.getElementById(
+    "expenseAmount"
+  ).value=
+    expense.amount;
+
+  document.getElementById(
+    "expenseNote"
+  ).value=
+    expense.note||"";
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+  const saveButton=
+    document.querySelector(
+      "#expense .btn-orange"
+    );
+
+  if(saveButton){
+
+    saveButton.textContent=
+      "Update Expense";
+
+    saveButton.onclick=
+      function(){
+
+        updateExpense(id);
+
+      };
+
+  }
+
+}
+
+
+function updateExpense(id){
+
+  const expense=
+    data.expenses.find(
+      e=>e.id===id
+    );
+
+  if(!expense){
+    return;
+  }
+
+  const date=
+    validDateOrToday(
+      "expenseDate"
+    );
+
+  const head=
+    document.getElementById(
+      "expenseHead"
+    ).value.trim();
+
+  const amount=
+    num("expenseAmount");
+
+  const note=
+    document.getElementById(
+      "expenseNote"
+    ).value.trim();
+
+  if(!head){
+
+    alert(
+      "Please select an Expense Head."
+    );
+
+    return;
+
+  }
+
+  if(amount<=0){
+
+    alert(
+      "Please enter a valid expense amount."
+    );
+
+    return;
+
+  }
+
+  expense.date=date;
+  expense.head=head;
+  expense.amount=amount;
+  expense.note=note;
+
+  saveData();
+
+  refreshAll();
+
+  resetExpenseSaveButton();
+
+  alert(
+    "Expense updated successfully."
+  );
+
+  clearExpenseForm();
+
+}
+
+
+function resetExpenseSaveButton(){
+
+  const saveButton=
+    document.querySelector(
+      "#expense .btn-orange"
+    );
+
+  if(!saveButton){
+    return;
+  }
+
+  saveButton.textContent=
+    "Save Expense";
+
+  saveButton.onclick=
+    function(){
+
+      saveExpense();
+
+    };
+
+}
+
+
+function deleteExpense(id){
+
+  const expense=
+    data.expenses.find(
+      e=>e.id===id
+    );
+
+  if(!expense){
+    return;
+  }
+
+  if(!confirm(
+    `Delete this expense?\n\n${expense.head} - ${money(expense.amount)}`
+  )){
+    return;
+  }
+
+  data.expenses=
+    data.expenses.filter(
+      e=>e.id!==id
+    );
+
+  saveData();
+
+  refreshAll();
+
+  alert(
+    "Expense deleted successfully."
+  );
+
+}
+
+
+/* ================= REPORTS ================= */
 
 function allReportRows(){
 
@@ -2253,12 +3916,20 @@ function allReportRows(){
   data.collections.forEach(c=>{
 
     rows.push({
+
       date:c.date,
-      member:memberName(c.memberId),
+
+      member:
+        memberName(c.memberId),
+
       memberId:c.memberId,
+
       type:"Collection",
+
       description:"Collection",
+
       amount:c.total
+
     });
 
   });
@@ -2266,238 +3937,421 @@ function allReportRows(){
   data.loans.forEach(l=>{
 
     rows.push({
+
       date:l.date,
-      member:memberName(l.memberId),
+
+      member:
+        memberName(l.memberId),
+
       memberId:l.memberId,
+
       type:"Loan",
-      description:"Loan Disbursement",
+
+      description:
+        "Loan Disbursement",
+
       amount:l.principal
+
     });
 
-    (l.payments||[]).forEach(p=>{
+    (l.payments||[])
+      .forEach(p=>{
 
-      rows.push({
-        date:p.date,
-        member:memberName(l.memberId),
-        memberId:l.memberId,
-        type:"Loan",
-        description:"Loan Installment",
-        amount:p.amount
+        rows.push({
+
+          date:p.date,
+
+          member:
+            memberName(l.memberId),
+
+          memberId:l.memberId,
+
+          type:"Loan",
+
+          description:
+            "Loan Installment",
+
+          amount:p.amount
+
+        });
+
       });
-
-    });
 
   });
 
   data.expenses.forEach(e=>{
 
     rows.push({
+
       date:e.date,
+
       member:"",
+
       memberId:"",
+
       type:"Expense",
+
       description:e.head,
+
       amount:e.amount
+
     });
 
   });
 
   return rows.sort(
-    (a,b)=>a.date.localeCompare(b.date)
+    (a,b)=>
+      a.date.localeCompare(b.date)
   );
+
 }
+
 
 function renderReports(){
 
-  const fromInput=document.getElementById("reportFrom").value;
-  const toInput=document.getElementById("reportTo").value;
+  const fromInput=
+    document.getElementById(
+      "reportFrom"
+    ).value;
 
-  const from=parseDateInput(fromInput);
-  const to=parseDateInput(toInput);
+  const toInput=
+    document.getElementById(
+      "reportTo"
+    ).value;
 
-  const member=document.getElementById("reportMember").value;
-  const type=document.getElementById("reportType").value;
+  const from=
+    parseDateInput(fromInput);
 
-  const rows=allReportRows().filter(r=>{
+  const to=
+    parseDateInput(toInput);
 
-    if(from && r.date<from) return false;
+  if(
+    fromInput.trim()&&!from
+  ){
 
-    if(to && r.date>to) return false;
+    alert(
+      "Please enter From Date as dd/mm/yy."
+    );
 
-    if(member && r.memberId!==member) return false;
+    return;
 
-    if(type!=="all" &&
-       r.type.toLowerCase()!==type) return false;
+  }
 
-    return true;
-  });
+  if(
+    toInput.trim()&&!to
+  ){
 
-  const body=document.getElementById("reportTable");
+    alert(
+      "Please enter To Date as dd/mm/yy."
+    );
 
-  const total=rows.reduce(
-    (s,r)=>s+Number(r.amount||0),0
-  );
+    return;
 
-  document.getElementById("reportTotal").textContent=
+  }
+
+  const member=
+    document.getElementById(
+      "reportMember"
+    ).value;
+
+  const type=
+    document.getElementById(
+      "reportType"
+    ).value;
+
+  const rows=
+    allReportRows()
+      .filter(r=>{
+
+        if(from&&r.date<from){
+          return false;
+        }
+
+        if(to&&r.date>to){
+          return false;
+        }
+
+        if(
+          member&&
+          r.memberId!==member
+        ){
+
+          return false;
+
+        }
+
+        if(
+          type!=="all"&&
+          r.type.toLowerCase()!==type
+        ){
+
+          return false;
+
+        }
+
+        return true;
+
+      });
+
+  const body=
+    document.getElementById(
+      "reportTable"
+    );
+
+  const total=
+    rows.reduce(
+      (s,r)=>
+        s+Number(r.amount||0),
+      0
+    );
+
+  document.getElementById(
+    "reportTotal"
+  ).textContent=
     money(total);
 
   if(!rows.length){
 
     body.innerHTML=
-      `<tr><td colspan="5" class="empty">No report data found.</td></tr>`;
+      `<tr>
+        <td colspan="5"
+            class="empty">
+          No report data found.
+        </td>
+      </tr>`;
 
     return;
+
   }
 
-  body.innerHTML=rows.map(r=>`
-    <tr>
-      <td>${escapeHtml(displayDate(r.date))}</td>
-      <td>${escapeHtml(r.member)}</td>
-      <td>${escapeHtml(r.type)}</td>
-      <td>${escapeHtml(r.description)}</td>
-      <td>${money(r.amount)}</td>
-    </tr>
-  `).join("");
+  body.innerHTML=
+    rows.map(r=>`
+
+      <tr>
+
+        <td>
+          ${escapeHtml(
+            displayDate(r.date)
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(r.member)}
+        </td>
+
+        <td>
+          ${escapeHtml(r.type)}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            r.description
+          )}
+        </td>
+
+        <td>
+          ${money(r.amount)}
+        </td>
+
+      </tr>
+
+    `).join("");
+
 }
+
 
 function clearReport(){
 
-  document.getElementById("reportFrom").value="";
-  document.getElementById("reportTo").value="";
-  document.getElementById("reportMember").value="";
-  document.getElementById("reportType").value="all";
+  document.getElementById(
+    "reportFrom"
+  ).value="";
+
+  document.getElementById(
+    "reportTo"
+  ).value="";
+
+  document.getElementById(
+    "reportMember"
+  ).value="";
+
+  document.getElementById(
+    "reportType"
+  ).value="all";
 
   renderReports();
+
 }
 
 
-/* ---------------- EXPENSE ---------------- */
-
-function addExpenseForm(){
-
-  const head=prompt("Enter new expense head:");
-
-  if(!head || !head.trim()) return;
-
-  const clean=head.trim();
-
-  const exists=[
-    ...defaultExpenseHeads,
-    ...data.customExpenseHeads
-  ].some(h=>h.toLowerCase()===clean.toLowerCase());
-
-  if(exists){
-
-    alert("This expense head already exists.");
-
-    return;
-  }
-
-  data.customExpenseHeads.push(clean);
-
-  saveData();
-
-  populateExpenseHeads();
-}
-
-
-/* ---------------- DASHBOARD ---------------- */
+/* ================= DASHBOARD ================= */
 
 function renderDashboard(){
 
-  const share=data.collections.reduce(
-    (s,c)=>s+Number(c.share||0),0
-  );
+  const share=
+    data.collections.reduce(
+      (s,c)=>
+        s+Number(c.share||0),
+      0
+    );
 
-  const savings=data.collections.reduce(
-    (s,c)=>s+Number(c.savings||0),0
-  );
+  const savings=
+    data.collections.reduce(
+      (s,c)=>
+        s+Number(c.savings||0),
+      0
+    );
 
-  const loan=data.loans.reduce(
-    (s,l)=>s+Number(l.principal||0),0
-  );
+  const loan=
+    data.loans.reduce(
+      (s,l)=>
+        s+Number(l.principal||0),
+      0
+    );
 
-  const installment=data.collections.reduce(
-    (s,c)=>s+Number(c.installment||0),0
-  );
+  const installment=
+    data.collections.reduce(
+      (s,c)=>
+        s+Number(c.installment||0),
+      0
+    );
 
-  const service=data.loans.reduce(
-    (s,l)=>s+loanServicePaid(l),0
-  );
+  const service=
+    data.loans.reduce(
+      (s,l)=>
+        s+loanServicePaid(l),
+      0
+    );
 
-  const outstanding=data.loans.reduce(
-    (s,l)=>s+loanOutstanding(l),0
-  );
+  const outstanding=
+    data.loans.reduce(
+      (s,l)=>
+        s+loanOutstanding(l),
+      0
+    );
 
   const t=today();
 
-  const todayCollection=data.collections
-    .filter(c=>c.date===t)
-    .reduce((s,c)=>s+Number(c.total||0),0);
+  const todayCollection=
+    data.collections
+      .filter(c=>c.date===t)
+      .reduce(
+        (s,c)=>
+          s+Number(c.total||0),
+        0
+      );
 
-  const todayExpense=data.expenses
-    .filter(e=>e.date===t)
-    .reduce((s,e)=>s+Number(e.amount||0),0);
+  const todayExpense=
+    data.expenses
+      .filter(e=>e.date===t)
+      .reduce(
+        (s,e)=>
+          s+Number(e.amount||0),
+        0
+      );
 
-  document.getElementById("dMembers").textContent=
+  document.getElementById(
+    "dMembers"
+  ).textContent=
     money(data.members.length);
 
-  document.getElementById("dShare").textContent=
+  document.getElementById(
+    "dShare"
+  ).textContent=
     money(share);
 
-  document.getElementById("dSavings").textContent=
+  document.getElementById(
+    "dSavings"
+  ).textContent=
     money(savings);
 
-  document.getElementById("dLoan").textContent=
+  document.getElementById(
+    "dLoan"
+  ).textContent=
     money(loan);
 
-  document.getElementById("dInstallment").textContent=
+  document.getElementById(
+    "dInstallment"
+  ).textContent=
     money(installment);
 
-  document.getElementById("dService").textContent=
+  document.getElementById(
+    "dService"
+  ).textContent=
     money(service);
 
-  document.getElementById("dOutstanding").textContent=
+  document.getElementById(
+    "dOutstanding"
+  ).textContent=
     money(outstanding);
 
-  document.getElementById("dCash").textContent=
+  document.getElementById(
+    "dCash"
+  ).textContent=
     money(cashBalance());
 
-  document.getElementById("dTodayCollection").textContent=
+  document.getElementById(
+    "dTodayCollection"
+  ).textContent=
     money(todayCollection);
 
-  document.getElementById("dTodayExpense").textContent=
+  document.getElementById(
+    "dTodayExpense"
+  ).textContent=
     money(todayExpense);
 
-  document.getElementById("dBank").textContent=
+  document.getElementById(
+    "dBank"
+  ).textContent=
     money(data.bankBalance);
+
 }
 
 
-/* ---------------- BACKUP ---------------- */
+/* ================= BACKUP ================= */
 
 function backupData(){
 
   const payload={
-    app:"Cooperative Accounts",
-    version:1,
-    exportedAt:new Date().toISOString(),
+
+    app:
+      "Cooperative Accounts",
+
+    version:2,
+
+    exportedAt:
+      new Date().toISOString(),
+
     data
+
   };
 
-  const blob=new Blob(
-    [JSON.stringify(payload,null,2)],
-    {type:"application/json"}
-  );
+  const blob=
+    new Blob(
+      [
+        JSON.stringify(
+          payload,
+          null,
+          2
+        )
+      ],
+      {
+        type:
+          "application/json"
+      }
+    );
 
-  const url=URL.createObjectURL(blob);
+  const url=
+    URL.createObjectURL(blob);
 
-  const a=document.createElement("a");
+  const a=
+    document.createElement("a");
 
   a.href=url;
 
   a.download=
-    "Cooperative-Backup-"+today()+".json";
+    "Cooperative-Backup-"+
+    today()+
+    ".json";
 
   document.body.appendChild(a);
 
@@ -2506,129 +4360,219 @@ function backupData(){
   a.remove();
 
   URL.revokeObjectURL(url);
+
 }
+
 
 function restoreData(){
 
-  const input=document.getElementById("restoreFile");
+  const input=
+    document.getElementById(
+      "restoreFile"
+    );
 
   if(!input.files.length){
 
-    alert("Please select a backup file.");
+    alert(
+      "Please select a backup file."
+    );
 
     return;
+
   }
 
   if(!confirm(
     "Restoring a backup will replace the current data. Continue?"
   )){
+
     return;
+
   }
 
-  const file=input.files[0];
+  const file=
+    input.files[0];
 
-  const reader=new FileReader();
+  const reader=
+    new FileReader();
 
   reader.onload=function(){
 
     try{
 
-      const parsed=JSON.parse(reader.result);
+      const parsed=
+        JSON.parse(
+          reader.result
+        );
 
       if(!parsed.data){
-        throw new Error("Invalid backup");
+
+        throw new Error(
+          "Invalid backup"
+        );
+
       }
 
       data={
+
         ...blankData(),
-        ...parsed.data
+
+        ...parsed.data,
+
+        members:
+          parsed.data.members||[],
+
+        collections:
+          parsed.data.collections||[],
+
+        loans:
+          parsed.data.loans||[],
+
+        expenses:
+          parsed.data.expenses||[],
+
+        customExpenseHeads:
+          parsed.data.customExpenseHeads||[]
+
       };
 
       saveData();
 
       refreshAll();
 
-      alert("Backup restored successfully.");
+      alert(
+        "Backup restored successfully."
+      );
 
     }catch(e){
 
-      alert("Invalid backup file.");
+      alert(
+        "Invalid backup file."
+      );
 
     }
 
   };
 
   reader.readAsText(file);
+
 }
+
 
 function clearAllData(){
 
   if(!confirm(
     "This will permanently delete all accounting data. Make sure you have a backup. Continue?"
   )){
+
     return;
+
   }
 
   if(!confirm(
     "Final confirmation: delete all current data?"
   )){
+
     return;
+
   }
 
+  /*
+    Keep custom Expense Heads.
+    They are master/setup data and should
+    not be removed by transaction clearing.
+  */
+
+  const savedCustomExpenseHeads=
+    Array.isArray(
+      data.customExpenseHeads
+    )
+      ?[...data.customExpenseHeads]
+      :[];
+
   data=blankData();
+
+  data.customExpenseHeads=
+    savedCustomExpenseHeads;
 
   saveData();
 
   refreshAll();
 
-  alert("All data has been cleared.");
+  alert(
+    "All accounting data has been cleared. Custom Expense Heads were kept."
+  );
+
 }
 
 
-/* ---------------- UTILITIES ---------------- */
+/* ================= UTILITIES ================= */
 
 function refreshAll(){
 
   populateMemberSelects();
+
   populateExpenseHeads();
 
   renderDashboard();
+
   renderMembers();
+
   renderLoans();
+
   renderAccount();
+
   renderLedger();
+
   renderCashBook();
+
+  renderExpenses();
+
   renderReports();
+
 }
+
 
 function escapeHtml(value){
 
   return String(value??"")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
 }
 
 
-/* ---------------- ENTER NAVIGATION ---------------- */
+/* ================= ENTER NAVIGATION ================= */
 
 const focusOrder={
 
-  /*
-    IMPORTANT:
-    Member sequence is now:
-    Member Code -> Member Name -> Mobile Number -> Save
-  */
-
   members:[
+
     "memberCode",
-    "memberName",
-    "memberMobile"
+    "memberMobile",
+    "memberName"
+
   ],
 
   collection:[
+
     "collectionMember",
     "collectionDate",
     "colShare",
@@ -2639,9 +4583,11 @@ const focusOrder={
     "colInsurance",
     "colLoanForm",
     "colOther"
+
   ],
 
   loan:[
+
     "loanMember",
     "loanDate",
     "loanPrincipal",
@@ -2649,69 +4595,102 @@ const focusOrder={
     "loanInstallments",
     "loanFirstDate",
     "loanNote"
+
+  ],
+
+  expense:[
+
+    "expenseDate",
+    "expenseHead",
+    "expenseAmount",
+    "expenseNote"
+
   ]
+
 };
+
 
 function setupEnterNavigation(){
 
-  Object.values(focusOrder).forEach(order=>{
+  Object.values(
+    focusOrder
+  ).forEach(order=>{
 
-    order.forEach((id,index)=>{
+    order.forEach(
+      (id,index)=>{
 
-      const el=document.getElementById(id);
+        const el=
+          document.getElementById(id);
 
-      if(!el) return;
+        if(!el){
+          return;
+        }
 
-      el.addEventListener("keydown",function(e){
+        el.addEventListener(
+          "keydown",
+          function(e){
 
-        if(e.key!=="Enter") return;
+            if(e.key!=="Enter"){
+              return;
+            }
 
-        e.preventDefault();
+            e.preventDefault();
 
-        const nextId=order[index+1];
+            const nextId=
+              order[index+1];
 
-        if(nextId){
+            if(nextId){
 
-          const next=document.getElementById(nextId);
+              const next=
+                document.getElementById(
+                  nextId
+                );
 
-          if(next){
+              if(next){
 
-            next.focus();
+                next.focus();
 
-            if(next.select){
+                if(next.select){
 
-              try{
-                next.select();
-              }catch(_){}
+                  try{
+                    next.select();
+                  }catch(_){}
+
+                }
+
+              }
+
+            }else{
+
+              const saveButton=
+                el.closest(".card")
+                  ?.querySelector(
+                    ".btn-green,.btn-blue,.btn-orange"
+                  );
+
+              if(saveButton){
+
+                saveButton.focus();
+
+              }
 
             }
 
           }
 
-        }else{
+        );
 
-          const saveButton=el
-            .closest(".card")
-            ?.querySelector(
-              ".btn-green,.btn-blue"
-            );
+      }
 
-          if(saveButton){
-            saveButton.focus();
-          }
-
-        }
-
-      });
-
-    });
+    );
 
   });
 
 
-  /* Collection amount calculation */
+  /* Collection calculation */
 
   [
+
     "colShare",
     "colSavings",
     "colInstallment",
@@ -2720,15 +4699,19 @@ function setupEnterNavigation(){
     "colInsurance",
     "colLoanForm",
     "colOther"
+
   ].forEach(id=>{
 
-    const el=document.getElementById(id);
+    const el=
+      document.getElementById(id);
 
     if(el){
+
       el.addEventListener(
         "input",
         updateCollectionTotal
       );
+
     }
 
   });
@@ -2737,18 +4720,23 @@ function setupEnterNavigation(){
   /* Loan calculation */
 
   [
+
     "loanPrincipal",
     "loanRate",
     "loanInstallments"
+
   ].forEach(id=>{
 
-    const el=document.getElementById(id);
+    const el=
+      document.getElementById(id);
 
     if(el){
+
       el.addEventListener(
         "input",
         calculateLoan
       );
+
     }
 
   });
@@ -2757,52 +4745,118 @@ function setupEnterNavigation(){
   /* Date formatting */
 
   [
+
     "collectionDate",
     "loanDate",
     "loanFirstDate",
+    "expenseDate",
     "reportFrom",
     "reportTo"
+
   ].forEach(id=>{
 
-    const el=document.getElementById(id);
+    const el=
+      document.getElementById(id);
 
-    if(!el) return;
+    if(!el){
+      return;
+    }
 
-    el.addEventListener("input",function(){
+    el.addEventListener(
+      "input",
+      function(){
 
-      formatDateWhileTyping(this);
+        formatDateWhileTyping(
+          this
+        );
 
-    });
-
-    el.addEventListener("blur",function(){
-
-      const parsed=parseDateInput(this.value);
-
-      if(parsed){
-        this.value=dateInputValue(parsed);
       }
+    );
 
-    });
+    el.addEventListener(
+      "blur",
+      function(){
+
+        const parsed=
+          parseDateInput(
+            this.value
+          );
+
+        if(parsed){
+
+          this.value=
+            dateInputValue(
+              parsed
+            );
+
+        }
+
+      }
+    );
 
   });
+
+
+  /* Expense amount */
+
+  const expenseAmount=
+    document.getElementById(
+      "expenseAmount"
+    );
+
+  if(expenseAmount){
+
+    expenseAmount.addEventListener(
+      "input",
+      function(){
+
+        this.value=
+          this.value.replace(
+            /[^\d]/g,
+            ""
+          );
+
+      }
+    );
+
+  }
+
 }
 
 
-/* ---------------- INITIALIZATION ---------------- */
+/* ================= INITIALIZATION ================= */
 
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener(
+  "DOMContentLoaded",
+  ()=>{
 
-  setToday("collectionDate");
-  setToday("loanDate");
-  setToday("loanFirstDate");
+    setToday(
+      "collectionDate"
+    );
 
-  populateMemberSelects();
-  populateExpenseHeads();
+    setToday(
+      "loanDate"
+    );
 
-  setupEnterNavigation();
+    setToday(
+      "loanFirstDate"
+    );
 
-  refreshAll();
-});
+    setToday(
+      "expenseDate"
+    );
+
+    populateMemberSelects();
+
+    populateExpenseHeads();
+
+    setupEnterNavigation();
+
+    refreshAll();
+
+  }
+);
+
 </script>
 
 </body>
