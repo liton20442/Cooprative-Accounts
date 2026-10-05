@@ -405,6 +405,10 @@ Record office and operational expenses here. Saved expenses are automatically in
 <div class="field"><label>From Date</label><input type="text" id="reportFrom" placeholder="dd/mm/yy" autocomplete="off"></div>
 <div class="field"><label>To Date</label><input type="text" id="reportTo" placeholder="dd/mm/yy" autocomplete="off"></div>
 <div class="field"><label>Member</label><select id="reportMember"></select></div>
+
+<!-- Collector added to Reports -->
+<div class="field"><label>Collector</label><select id="reportCollector"></select></div>
+
 <div class="field">
 <label>Report Type</label>
 <select id="reportType">
@@ -425,7 +429,7 @@ Record office and operational expenses here. Saved expenses are automatically in
 <div class="card">
 <div class="table-wrap">
 <table>
-<thead><tr><th>Date</th><th>Member</th><th>Type</th><th>Description</th><th>Amount</th></tr></thead>
+<thead><tr><th>Date</th><th>Member</th><th>Collector</th><th>Type</th><th>Description</th><th>Amount</th></tr></thead>
 <tbody id="reportTable"></tbody>
 </table>
 </div>
@@ -620,6 +624,11 @@ const m=data.members.find(x=>x.id===id);
 return m?m.code:"";
 }
 
+function collectorName(id){
+const c=data.collectors.find(x=>x.id===id);
+return c?c.name:"";
+}
+
 function saveMember(){
 const code=document.getElementById("memberCode").value.trim();
 const name=document.getElementById("memberName").value.trim();
@@ -718,6 +727,7 @@ label:c.name+(c.mobile?" - "+c.mobile:"")
 }));
 
 fillSelect("collectionCollector",options,"Select Collector");
+fillSelect("reportCollector",options,"All Collectors");
 }
 
 function populateExpenseHeads(){
@@ -1546,6 +1556,8 @@ rows.push({
 date:c.date,
 member:memberName(c.memberId),
 memberId:c.memberId,
+collector:collectorName(c.collectorId),
+collectorId:c.collectorId||"",
 type:"Collection",
 description:"Collection",
 amount:c.total
@@ -1558,6 +1570,8 @@ rows.push({
 date:l.date,
 member:memberName(l.memberId),
 memberId:l.memberId,
+collector:"",
+collectorId:"",
 type:"Loan",
 description:"Loan Disbursement",
 amount:l.principal
@@ -1568,6 +1582,8 @@ rows.push({
 date:p.date,
 member:memberName(l.memberId),
 memberId:l.memberId,
+collector:"",
+collectorId:"",
 type:"Loan",
 description:"Loan Installment",
 amount:p.amount
@@ -1581,6 +1597,8 @@ rows.push({
 date:e.date,
 member:"",
 memberId:"",
+collector:"",
+collectorId:"",
 type:"Expense",
 description:e.head,
 amount:e.amount
@@ -1609,6 +1627,7 @@ return;
 }
 
 const member=document.getElementById("reportMember").value;
+const collector=document.getElementById("reportCollector").value;
 const type=document.getElementById("reportType").value;
 
 const rows=allReportRows().filter(r=>{
@@ -1617,6 +1636,8 @@ if(from&&r.date<from)return false;
 if(to&&r.date>to)return false;
 
 if(member&&r.memberId!==member)return false;
+
+if(collector&&r.collectorId!==collector)return false;
 
 if(type!=="all"&&r.type.toLowerCase()!==type)return false;
 
@@ -1630,7 +1651,7 @@ const total=rows.reduce((s,r)=>s+Number(r.amount||0),0);
 document.getElementById("reportTotal").textContent=money(total);
 
 if(!rows.length){
-body.innerHTML=`<tr><td colspan="5" class="empty">No report data found.</td></tr>`;
+body.innerHTML=`<tr><td colspan="6" class="empty">No report data found.</td></tr>`;
 return;
 }
 
@@ -1638,6 +1659,7 @@ body.innerHTML=rows.map(r=>`
 <tr>
 <td>${escapeHtml(displayDate(r.date))}</td>
 <td>${escapeHtml(r.member)}</td>
+<td>${escapeHtml(r.collector)}</td>
 <td>${escapeHtml(r.type)}</td>
 <td>${escapeHtml(r.description)}</td>
 <td>${money(r.amount)}</td>
@@ -1650,6 +1672,7 @@ function clearReport(){
 document.getElementById("reportFrom").value="";
 document.getElementById("reportTo").value="";
 document.getElementById("reportMember").value="";
+document.getElementById("reportCollector").value="";
 document.getElementById("reportType").value="all";
 
 renderReports();
