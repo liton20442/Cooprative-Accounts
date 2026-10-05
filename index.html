@@ -20,8 +20,6 @@
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:17px}
 body{min-height:100vh}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
 .app{max-width:900px;margin:auto;min-height:100vh}
 header{background:linear-gradient(135deg,#0f766e,#0e7490);color:#fff;padding:18px 16px 20px;
 position:sticky;top:0;z-index:20;box-shadow:0 3px 12px rgba(0,0,0,.15)}
@@ -138,7 +136,6 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <button class="quick-btn q9" onclick="showPage('expense')"><span class="quick-icon">💸</span>Expense</button>
 <button class="quick-btn q8" onclick="showPage('backup')"><span class="quick-icon">💾</span>Backup</button>
 
-<!-- Collector button -->
 <button class="quick-btn q8" onclick="showPage('collectors')">
 <span class="quick-icon">🧑‍💼</span>Collectors
 </button>
@@ -218,8 +215,24 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 
 <div class="card">
 <div class="form-grid">
-<div class="field full"><label>Member</label><select id="collectionMember"></select></div>
-<div class="field"><label>Date</label><input type="text" id="collectionDate" placeholder="dd/mm/yy" autocomplete="off"></div>
+
+<div class="field full">
+<label>Member</label>
+<select id="collectionMember"></select>
+</div>
+
+<div class="field full">
+<label>Collector</label>
+<select id="collectionCollector">
+<option value="">Select Collector</option>
+</select>
+</div>
+
+<div class="field">
+<label>Date</label>
+<input type="text" id="collectionDate" placeholder="dd/mm/yy" autocomplete="off">
+</div>
+
 <div class="field"><label>Share</label><input type="text" id="colShare" value=""></div>
 <div class="field"><label>Savings</label><input type="text" id="colSavings" value=""></div>
 <div class="field"><label>Loan Installment</label><input type="text" id="colInstallment" value=""></div>
@@ -596,6 +609,7 @@ refreshPage(id);
 
 function refreshPage(id){
 populateMemberSelects();
+populateCollectorSelect();
 populateExpenseHeads();
 
 if(id==="dashboard")renderDashboard();
@@ -714,6 +728,16 @@ fillSelect("accountMember",options,"Select Member");
 fillSelect("reportMember",options,"All Members");
 }
 
+function populateCollectorSelect(){
+
+const options=data.collectors.map(c=>({
+id:c.id,
+label:c.name+(c.mobile?" - "+c.mobile:"")
+}));
+
+fillSelect("collectionCollector",options,"Select Collector");
+}
+
 function populateExpenseHeads(){
 const select=document.getElementById("expenseHead");
 if(!select)return;
@@ -758,6 +782,7 @@ createdAt:new Date().toISOString()
 saveData();
 clearCollectorForm();
 renderCollectors();
+populateCollectorSelect();
 
 alert("Collector saved successfully.");
 }
@@ -805,6 +830,7 @@ data.collectors=data.collectors.filter(c=>c.id!==id);
 
 saveData();
 renderCollectors();
+populateCollectorSelect();
 
 alert("Collector deleted successfully.");
 }
@@ -848,6 +874,7 @@ updateCollectionTotal();
 function saveCollection(){
 
 const memberId=document.getElementById("collectionMember").value;
+const collectorId=document.getElementById("collectionCollector").value;
 const date=validDateOrToday("collectionDate");
 
 if(!memberId){
@@ -865,6 +892,7 @@ return;
 const item={
 id:uid("C"),
 memberId,
+collectorId,
 date,
 share:num("colShare"),
 savings:num("colSavings"),
@@ -1775,12 +1803,6 @@ if(!confirm("This will permanently delete all accounting data. Make sure you hav
 
 if(!confirm("Final confirmation: delete all current data?"))return;
 
-/*
-Keep custom Expense Heads.
-They are master/setup data and should
-not be removed by transaction clearing.
-*/
-
 const savedCustomExpenseHeads=
 Array.isArray(data.customExpenseHeads)
 ?[...data.customExpenseHeads]
@@ -1801,6 +1823,7 @@ alert("All accounting data has been cleared. Custom Expense Heads were kept.");
 function refreshAll(){
 
 populateMemberSelects();
+populateCollectorSelect();
 populateExpenseHeads();
 
 renderDashboard();
@@ -1836,6 +1859,7 @@ members:[
 
 collection:[
 "collectionMember",
+"collectionCollector",
 "collectionDate",
 "colShare",
 "colSavings",
@@ -1996,6 +2020,7 @@ setToday("loanFirstDate");
 setToday("expenseDate");
 
 populateMemberSelects();
+populateCollectorSelect();
 populateExpenseHeads();
 
 setupEnterNavigation();
