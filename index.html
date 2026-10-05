@@ -2105,6 +2105,68 @@ function populateExpenseHeads(){
 }
 
 
+  <!-- ================= COLLECTORS ================= -->
+
+<section id="collectors" class="page">
+
+<h1>Collectors</h1>
+
+<div class="card">
+
+<div class="form-grid">
+
+<div class="field">
+<label>Collector Name</label>
+<input id="collectorName" autocomplete="off">
+</div>
+
+<div class="field">
+<label>Mobile Number</label>
+<input id="collectorMobile" autocomplete="off">
+</div>
+
+</div>
+
+<div class="actions">
+
+<button class="btn-green" onclick="saveCollector()">
+Save Collector
+</button>
+
+<button class="btn-secondary" onclick="clearCollectorForm()">
+Clear
+</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Collector List</h2>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Mobile</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="collectorTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
 /* ================= COLLECTION ================= */
 
 function collectionFields(){
@@ -4566,9 +4628,8 @@ const focusOrder={
   members:[
 
     "memberCode",
-    "memberMobile",
     "memberName"
-
+    "memberMobile",
   ],
 
   collection:[
