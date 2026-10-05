@@ -37,8 +37,13 @@ padding:16px;margin-bottom:15px;box-shadow:0 4px 12px rgba(15,23,42,.06)}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
 .field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}
 label{font-size:16px;font-weight:700;color:#334155}
-input,select,textarea{width:100%;min-height:50px;padding:11px 13px;border:1.5px solid #cbd5e1;
-border-radius:12px;background:#fff;color:var(--text);outline:none}
+
+/* iPhone Safari: prevent automatic page zoom when tapping form fields */
+input,select,textarea{
+width:100%;min-height:50px;padding:11px 13px;border:1.5px solid #cbd5e1;
+border-radius:12px;background:#fff;color:var(--text);outline:none;
+font-size:16px;
+}
 textarea{min-height:90px;resize:vertical}
 input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(15,118,110,.12)}
 button{min-height:48px;border:0;border-radius:12px;padding:10px 15px;font-weight:750}
@@ -102,7 +107,6 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 
 <main>
 
-<!-- ================= DASHBOARD ================= -->
 <section id="dashboard" class="page active">
 <h1>Dashboard</h1>
 
@@ -135,15 +139,10 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <button class="quick-btn q7" onclick="showPage('reports')"><span class="quick-icon">📊</span>Reports</button>
 <button class="quick-btn q9" onclick="showPage('expense')"><span class="quick-icon">💸</span>Expense</button>
 <button class="quick-btn q8" onclick="showPage('backup')"><span class="quick-icon">💾</span>Backup</button>
-
-<button class="quick-btn q8" onclick="showPage('collectors')">
-<span class="quick-icon">🧑‍💼</span>Collectors
-</button>
-
+<button class="quick-btn q8" onclick="showPage('collectors')"><span class="quick-icon">🧑‍💼</span>Collectors</button>
 </div>
 </section>
 
-<!-- ================= MEMBERS ================= -->
 <section id="members" class="page">
 <h1>Members</h1>
 <div class="card">
@@ -172,7 +171,6 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 </div>
 </section>
 
-<!-- ================= COLLECTORS ================= -->
 <section id="collectors" class="page">
 <h1>Collectors</h1>
 
@@ -205,7 +203,6 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 </div>
 </section>
 
-<!-- ================= COLLECTION ================= -->
 <section id="collection" class="page">
 <h1>Collection</h1>
 
@@ -254,7 +251,6 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 </div>
 </section>
 
-<!-- ================= LOAN ================= -->
 <section id="loan" class="page">
 <h1>Loan</h1>
 
@@ -296,7 +292,6 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 </div>
 </section>
 
-<!-- ================= ACCOUNTS ================= -->
 <section id="accounts" class="page">
 <h1>Member Accounts</h1>
 <div class="card">
@@ -318,7 +313,6 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 </div>
 </section>
 
-<!-- ================= LEDGER ================= -->
 <section id="ledger" class="page">
 <h1>General Ledger</h1>
 <div class="card">
@@ -347,7 +341,6 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 </div>
 </section>
 
-<!-- ================= CASH BOOK ================= -->
 <section id="cashbook" class="page">
 <h1>Cash Book</h1>
 <div class="card">
@@ -367,7 +360,6 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 </div>
 </section>
 
-<!-- ================= EXPENSE ================= -->
 <section id="expense" class="page">
 <h1>Expense</h1>
 <div class="notice">
@@ -406,7 +398,6 @@ Record office and operational expenses here. Saved expenses are automatically in
 </div>
 </section>
 
-<!-- ================= REPORTS ================= -->
 <section id="reports" class="page">
 <h1>Reports</h1>
 <div class="card">
@@ -444,7 +435,6 @@ Record office and operational expenses here. Saved expenses are automatically in
 </div>
 </section>
 
-<!-- ================= BACKUP ================= -->
 <section id="backup" class="page">
 <h1>Backup & Restore</h1>
 
@@ -538,8 +528,6 @@ let value=el.value.toString().replace(/,/g,"").replace(/[^\d.-]/g,"");
 return Number(value)||0;
 }
 
-/* ================= DATE ================= */
-
 function pad2(n){return String(n).padStart(2,"0");}
 
 function today(){
@@ -597,8 +585,6 @@ else if(value.length>2)value=value.slice(0,2)+"/"+value.slice(2);
 el.value=value;
 }
 
-/* ================= PAGE ================= */
-
 function showPage(id){
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
 const page=document.getElementById(id);
@@ -633,8 +619,6 @@ function memberCode(id){
 const m=data.members.find(x=>x.id===id);
 return m?m.code:"";
 }
-
-/* ================= MEMBERS ================= */
 
 function saveMember(){
 const code=document.getElementById("memberCode").value.trim();
@@ -703,8 +687,6 @@ document.getElementById("accountMember").value=id;
 showPage("accounts");
 }
 
-/* ================= SELECTS ================= */
-
 function fillSelect(id,options,placeholder){
 const select=document.getElementById(id);
 if(!select)return;
@@ -750,8 +732,6 @@ heads.map(h=>`<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`).join(
 
 if(heads.includes(current))select.value=current;
 }
-
-/* ================= COLLECTORS ================= */
 
 function saveCollector(){
 
@@ -834,8 +814,6 @@ populateCollectorSelect();
 
 alert("Collector deleted successfully.");
 }
-
-/* ================= COLLECTION ================= */
 
 function collectionFields(){
 return[
@@ -994,8 +972,6 @@ date:paymentDate
 });
 }
 
-/* ================= LOAN ================= */
-
 function calculateLoan(){
 
 const principal=num("loanPrincipal");
@@ -1116,8 +1092,6 @@ body.innerHTML=data.loans.map(l=>`
 `).join("");
 }
 
-/* ================= ACCOUNTS ================= */
-
 function renderAccount(){
 
 const memberId=document.getElementById("accountMember").value;
@@ -1215,8 +1189,6 @@ body.innerHTML=transactions.map(t=>`
 `).join("");
 }
 
-/* ================= LEDGER ================= */
-
 function ledgerRows(){
 
 const rows=[];
@@ -1297,8 +1269,6 @@ body.innerHTML=rows.map(r=>`
 </tr>
 `).join("");
 }
-
-/* ================= CASH BOOK ================= */
 
 function cashRows(){
 
@@ -1385,8 +1355,6 @@ return`
 
 }).join("");
 }
-
-/* ================= EXPENSE ================= */
 
 function saveExpense(){
 
@@ -1569,8 +1537,6 @@ refreshAll();
 alert("Expense deleted successfully.");
 }
 
-/* ================= REPORTS ================= */
-
 function allReportRows(){
 
 const rows=[];
@@ -1689,8 +1655,6 @@ document.getElementById("reportType").value="all";
 renderReports();
 }
 
-/* ================= DASHBOARD ================= */
-
 function renderDashboard(){
 
 const share=data.collections.reduce((s,c)=>s+Number(c.share||0),0);
@@ -1720,8 +1684,6 @@ document.getElementById("dTodayCollection").textContent=money(todayCollection);
 document.getElementById("dTodayExpense").textContent=money(todayExpense);
 document.getElementById("dBank").textContent=money(data.bankBalance);
 }
-
-/* ================= BACKUP ================= */
 
 function backupData(){
 
@@ -1818,8 +1780,6 @@ refreshAll();
 alert("All accounting data has been cleared. Custom Expense Heads were kept.");
 }
 
-/* ================= UTILITIES ================= */
-
 function refreshAll(){
 
 populateMemberSelects();
@@ -1846,8 +1806,6 @@ return String(value??"")
 .replace(/"/g,"&quot;")
 .replace(/'/g,"&#039;");
 }
-
-/* ================= ENTER NAVIGATION ================= */
 
 const focusOrder={
 
@@ -1938,8 +1896,6 @@ if(saveButton)saveButton.focus();
 
 });
 
-/* Collection calculation */
-
 [
 "colShare","colSavings","colInstallment","colAdmission",
 "colPassbook","colInsurance","colLoanForm","colOther"
@@ -1953,8 +1909,6 @@ el.addEventListener("input",updateCollectionTotal);
 
 });
 
-/* Loan calculation */
-
 [
 "loanPrincipal","loanRate","loanInstallments"
 ].forEach(id=>{
@@ -1966,8 +1920,6 @@ el.addEventListener("input",calculateLoan);
 }
 
 });
-
-/* Date formatting */
 
 [
 "collectionDate","loanDate","loanFirstDate",
@@ -1994,8 +1946,6 @@ this.value=dateInputValue(parsed);
 
 });
 
-/* Expense amount */
-
 const expenseAmount=document.getElementById("expenseAmount");
 
 if(expenseAmount){
@@ -2009,8 +1959,6 @@ this.value=this.value.replace(/[^\d]/g,"");
 }
 
 }
-
-/* ================= INITIALIZATION ================= */
 
 document.addEventListener("DOMContentLoaded",()=>{
 
