@@ -2570,6 +2570,120 @@ Note:t.note||""
 }
 
 
+function exportAllTransactionRows(){
+
+const rows=[];
+
+
+/* Collections */
+
+exportCollectionRows().forEach(r=>{
+
+rows.push({
+
+Date:r.Date,
+"Member Code":r["Member Code"],
+"Member Name":r["Member Name"],
+Collector:r.Collector,
+Type:r.Type,
+Head:r.Head,
+Amount:r.Amount
+
+});
+
+});
+
+
+/* Loans */
+
+data.loans.forEach(l=>{
+
+rows.push({
+
+Date:l.date,
+"Member Code":memberCode(l.memberId),
+"Member Name":memberName(l.memberId),
+Collector:"",
+Type:"Loan",
+Head:"Loan Disbursement",
+Amount:Number(l.principal)||0
+
+});
+
+});
+
+
+/* Loan Installments */
+
+data.loans.forEach(l=>{
+
+(l.payments||[]).forEach(p=>{
+
+rows.push({
+
+Date:p.date,
+"Member Code":memberCode(l.memberId),
+"Member Name":memberName(l.memberId),
+Collector:"",
+Type:"Loan",
+Head:"Loan Installment",
+Amount:Number(p.amount)||0
+
+});
+
+});
+
+});
+
+
+/* Expenses */
+
+data.expenses.forEach(e=>{
+
+rows.push({
+
+Date:e.date,
+"Member Code":"",
+"Member Name":"",
+Collector:"",
+Type:"Expense",
+Head:e.head,
+Amount:Number(e.amount)||0
+
+});
+
+});
+
+
+/* Bank Transfers */
+
+data.transfers.forEach(t=>{
+
+rows.push({
+
+Date:t.date,
+"Member Code":"",
+"Member Name":"",
+Collector:"",
+Type:"Bank Transfer",
+Head:t.type==="deposit"
+?"Cash to Bank - Deposit"
+:"Bank to Cash - Withdrawal",
+Amount:Number(t.amount)||0
+
+});
+
+});
+
+
+return rows.sort((a,b)=>
+String(a.Date).localeCompare(String(b.Date))
+);
+
+}
+
+
+
 async function exportAllTransactionsToExcel(){
 
 if(typeof XLSX==="undefined"){
@@ -2580,31 +2694,99 @@ return;
 
 }
 
+
 const wb=XLSX.utils.book_new();
 
+
+/* All Transactions */
+
 const allRows=exportAllTransactionRows();
+
 const wsAll=XLSX.utils.json_to_sheet(allRows);
-XLSX.utils.book_append_sheet(wb,wsAll,"All Transactions");
+
+XLSX.utils.book_append_sheet(
+wb,
+wsAll,
+"All Transactions"
+);
+
+
+/* Collections */
 
 const collectionRows=exportCollectionRows();
-const wsCollections=XLSX.utils.json_to_sheet(collectionRows);
-XLSX.utils.book_append_sheet(wb,wsCollections,"Collections");
+
+const wsCollections=XLSX.utils.json_to_sheet(
+collectionRows
+);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsCollections,
+"Collections"
+);
+
+
+/* Loans */
 
 const loanRows=exportLoanRows();
-const wsLoans=XLSX.utils.json_to_sheet(loanRows);
-XLSX.utils.book_append_sheet(wb,wsLoans,"Loans");
+
+const wsLoans=XLSX.utils.json_to_sheet(
+loanRows
+);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsLoans,
+"Loans"
+);
+
+
+/* Loan Installments */
 
 const installmentRows=exportInstallmentRows();
-const wsInstallments=XLSX.utils.json_to_sheet(installmentRows);
-XLSX.utils.book_append_sheet(wb,wsInstallments,"Loan Installments");
+
+const wsInstallments=XLSX.utils.json_to_sheet(
+installmentRows
+);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsInstallments,
+"Loan Installments"
+);
+
+
+/* Expenses */
 
 const expenseRows=exportExpenseRows();
-const wsExpenses=XLSX.utils.json_to_sheet(expenseRows);
-XLSX.utils.book_append_sheet(wb,wsExpenses,"Expenses");
+
+const wsExpenses=XLSX.utils.json_to_sheet(
+expenseRows
+);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsExpenses,
+"Expenses"
+);
+
+
+/* Bank Transfers */
 
 const transferRows=exportBankTransferRows();
-const wsTransfers=XLSX.utils.json_to_sheet(transferRows);
-XLSX.utils.book_append_sheet(wb,wsTransfers,"Bank Transfers");
+
+const wsTransfers=XLSX.utils.json_to_sheet(
+transferRows
+);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsTransfers,
+"Bank Transfers"
+);
+
+
+/* General Ledger */
 
 const ledgerData=ledgerRows().map(r=>({
 
@@ -2616,16 +2798,26 @@ Member:r.member,
 
 }));
 
-const wsLedger=XLSX.utils.json_to_sheet(ledgerData);
-XLSX.utils.book_append_sheet(wb,wsLedger,"General Ledger");
+const wsLedger=XLSX.utils.json_to_sheet(
+ledgerData
+);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsLedger,
+"General Ledger"
+);
 
 
-/* Excel file তৈরি */
+/* Create Excel file */
 
 const excelData=XLSX.write(wb,{
+
 bookType:"xlsx",
 type:"array"
+
 });
+
 
 const blob=new Blob(
 [excelData],
@@ -2634,16 +2826,21 @@ type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 }
 );
 
+
 const file=new File(
+
 [blob],
+
 "Cooperative-Transactions-"+today()+".xlsx",
+
 {
 type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 }
+
 );
 
 
-/* iPhone Share / Save to Files */
+/* iPhone Share */
 
 if(
 navigator.share &&
@@ -2654,20 +2851,27 @@ navigator.canShare({files:[file]})
 try{
 
 await navigator.share({
+
 files:[file],
-title:"Cooperative Transactions",
-text:"Cooperative Accounts Excel Backup"
+
+title:"Cooperative Transactions"
+
 });
 
 }catch(error){
 
 if(error.name!=="AbortError"){
-alert("Excel export was cancelled or could not be shared.");
-}
+
+alert("Excel export was cancelled.");
 
 }
 
-}else{
+}
+
+return;
+
+}
+
 
 /* Fallback */
 
@@ -2676,35 +2880,25 @@ const url=URL.createObjectURL(blob);
 const a=document.createElement("a");
 
 a.href=url;
-a.download="Cooperative-Transactions-"+today()+".xlsx";
+
+a.download=
+"Cooperative-Transactions-"+today()+".xlsx";
+
 a.style.display="none";
 
 document.body.appendChild(a);
+
 a.click();
 
 setTimeout(()=>{
 
 a.remove();
+
 URL.revokeObjectURL(url);
 
 },1000);
 
 }
-
-}
-
-
-function exportAllTransactionsToExcel(){
-
-if(typeof XLSX==="undefined"){
-
-alert("Excel Export library is not available. Please connect to the internet and try again.");
-
-return;
-
-}
-
-
 /* Create workbook */
 
 const wb=XLSX.utils.book_new();
