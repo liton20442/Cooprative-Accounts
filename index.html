@@ -226,7 +226,7 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 
 <div class="field">
 <label>Date</label>
-<input type="text" id="collectionDate" placeholder="dd/mm/yy" autocomplete="off">
+<input type="date" id="collectionDate" autocomplete="off">
 </div>
 
 <div class="field"><label>Share</label><input type="text" id="colShare" value=""></div>
@@ -256,14 +256,14 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <div class="card">
 <div class="form-grid">
 <div class="field full"><label>Member</label><select id="loanMember"></select></div>
-<div class="field"><label>Loan Date</label><input type="text" id="loanDate" placeholder="dd/mm/yy" autocomplete="off"></div>
+<div class="field"><label>Loan Date</label><input type="date" id="loanDate" autocomplete="off"></div>
 <div class="field"><label>Loan Principal</label><input type="text" id="loanPrincipal"></div>
 <div class="field"><label>Service Charge %</label><input type="text" id="loanRate" value="10"></div>
 <div class="field"><label>Service Charge Amount</label><input type="text" id="loanService" readonly></div>
 <div class="field"><label>Total Payable</label><input type="text" id="loanTotal" readonly></div>
 <div class="field"><label>Number of Installments</label><input type="text" id="loanInstallments"></div>
 <div class="field"><label>Installment Amount</label><input type="text" id="loanInstallmentAmount" readonly></div>
-<div class="field"><label>First Installment Date</label><input type="text" id="loanFirstDate" placeholder="dd/mm/yy" autocomplete="off"></div>
+<div class="field"><label>First Installment Date</label><input type="date" id="loanFirstDate" autocomplete="off"></div>
 <div class="field full"><label>Note</label><textarea id="loanNote"></textarea></div>
 </div>
 
@@ -371,7 +371,7 @@ Use this page only when money is transferred between Cash and Bank. Bank Deposit
 
 <div class="field">
 <label>Date</label>
-<input type="text" id="contraDate" placeholder="dd/mm/yy" autocomplete="off">
+<input type="date" id="contraDate" autocomplete="off">
 </div>
 
 <div class="field">
@@ -425,7 +425,7 @@ Record office and operational expenses here. Saved expenses are automatically in
 
 <div class="card">
 <div class="form-grid">
-<div class="field"><label>Date</label><input type="text" id="expenseDate" placeholder="dd/mm/yy" autocomplete="off"></div>
+<div class="field"><label>Date</label><input type="date" id="expenseDate" autocomplete="off"></div>
 <div class="field"><label>Expense Head</label><select id="expenseHead"></select></div>
 <div class="field"><label>Amount</label><input type="text" id="expenseAmount" autocomplete="off"></div>
 <div class="field"><label>Note</label><input type="text" id="expenseNote" autocomplete="off"></div>
@@ -459,8 +459,8 @@ Record office and operational expenses here. Saved expenses are automatically in
 <h1>Reports</h1>
 <div class="card">
 <div class="form-grid">
-<div class="field"><label>From Date</label><input type="text" id="reportFrom" placeholder="dd/mm/yy" autocomplete="off"></div>
-<div class="field"><label>To Date</label><input type="text" id="reportTo" placeholder="dd/mm/yy" autocomplete="off"></div>
+<div class="field"><label>From Date</label><input type="date" id="reportFrom" autocomplete="off"></div>
+<div class="field"><label>To Date</label><input type="date" id="reportTo" autocomplete="off"></div>
 <div class="field"><label>Member</label><select id="reportMember"></select></div>
 
 <div class="field"><label>Collector</label><select id="reportCollector"></select></div>
@@ -605,27 +605,54 @@ return parts[2]+"/"+parts[1]+"/"+parts[0].slice(-2);
 }
 
 function dateInputValue(iso){
-if(!iso)return "";
-const parts=String(iso).split("-");
-if(parts.length!==3)return "";
-return parts[2]+"/"+parts[1]+"/"+parts[0].slice(-2);
+return iso||"";
 }
 
 function parseDateInput(value){
 let v=String(value||"").trim();
 if(!v)return "";
+
+if(/^\d{4}-\d{2}-\d{2}$/.test(v)){
+const parts=v.split("-");
+const y=Number(parts[0]);
+const m=Number(parts[1]);
+const d=Number(parts[2]);
+
+const check=new Date(y,m-1,d);
+
+if(
+check.getFullYear()!==y||
+check.getMonth()!==m-1||
+check.getDate()!==d
+)return "";
+
+return v;
+}
+
 v=v.replace(/[^\d/.-]/g,"");
 const parts=v.split(/[\/.-]/);
+
 if(parts.length!==3)return "";
+
 let day=parts[0],month=parts[1],year=parts[2];
+
 if(day.length===1)day="0"+day;
 if(month.length===1)month="0"+month;
 if(year.length===2)year="20"+year;
+
 const d=Number(day),m=Number(month),y=Number(year);
+
 if(!d||!m||!y)return "";
 if(m<1||m>12||d<1||d>31)return "";
+
 const check=new Date(y,m-1,d);
-if(check.getFullYear()!==y||check.getMonth()!==m-1||check.getDate()!==d)return "";
+
+if(
+check.getFullYear()!==y||
+check.getMonth()!==m-1||
+check.getDate()!==d
+)return "";
+
 return y+"-"+pad2(m)+"-"+pad2(d);
 }
 
@@ -1874,12 +1901,12 @@ const from=parseDateInput(fromInput);
 const to=parseDateInput(toInput);
 
 if(fromInput.trim()&&!from){
-alert("Please enter From Date as dd/mm/yy.");
+alert("Please enter a valid From Date.");
 return;
 }
 
 if(toInput.trim()&&!to){
-alert("Please enter To Date as dd/mm/yy.");
+alert("Please enter a valid To Date.");
 return;
 }
 
@@ -2207,31 +2234,6 @@ const el=document.getElementById(id);
 if(el){
 el.addEventListener("input",calculateLoan);
 }
-
-});
-
-[
-"collectionDate","loanDate","loanFirstDate",
-"expenseDate","reportFrom","reportTo","contraDate"
-].forEach(id=>{
-
-const el=document.getElementById(id);
-
-if(!el)return;
-
-el.addEventListener("input",function(){
-formatDateWhileTyping(this);
-});
-
-el.addEventListener("blur",function(){
-
-const parsed=parseDateInput(this.value);
-
-if(parsed){
-this.value=dateInputValue(parsed);
-}
-
-});
 
 });
 
