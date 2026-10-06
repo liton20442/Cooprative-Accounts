@@ -664,6 +664,85 @@ document.getElementById("memberMobile").value="";
 document.getElementById("memberCode").focus();
 }
 
+  function editMember(id){
+
+const member=data.members.find(m=>m.id===id);
+if(!member)return;
+
+document.getElementById("memberCode").value=member.code;
+document.getElementById("memberName").value=member.name;
+document.getElementById("memberMobile").value=member.mobile||"";
+
+const saveButton=document.querySelector("#members .btn-green");
+
+if(saveButton){
+saveButton.textContent="Update Member";
+saveButton.onclick=function(){
+updateMember(id);
+};
+}
+
+document.getElementById("memberCode").focus();
+}
+
+function updateMember(id){
+
+const member=data.members.find(m=>m.id===id);
+if(!member)return;
+
+const code=document.getElementById("memberCode").value.trim();
+const name=document.getElementById("memberName").value.trim();
+const mobile=document.getElementById("memberMobile").value.trim();
+
+if(!code||!name){
+alert("Member Code and Member Name are required.");
+return;
+}
+
+const duplicate=data.members.some(
+m=>m.id!==id&&m.code.toLowerCase()===code.toLowerCase()
+);
+
+if(duplicate){
+alert("This Member Code already exists.");
+return;
+}
+
+member.code=code;
+member.name=name;
+member.mobile=mobile;
+
+saveData();
+
+const saveButton=document.querySelector("#members .btn-green");
+
+if(saveButton){
+saveButton.textContent="Save Member";
+saveButton.onclick=function(){
+saveMember();
+};
+}
+
+clearMemberForm();
+refreshAll();
+
+alert("Member updated successfully.");
+}
+
+function deleteMember(id){
+
+const member=data.members.find(m=>m.id===id);
+if(!member)return;
+
+if(!confirm(`Delete this member?\n\n${member.code} - ${member.name}`))return;
+
+data.members=data.members.filter(m=>m.id!==id);
+
+saveData();
+refreshAll();
+
+alert("Member deleted successfully.");
+}
 function renderMembers(){
 const search=document.getElementById("memberSearch").value.trim().toLowerCase();
 
@@ -685,7 +764,11 @@ body.innerHTML=list.map(m=>`
 <td>${escapeHtml(m.code)}</td>
 <td>${escapeHtml(m.name)}</td>
 <td>${escapeHtml(m.mobile||"")}</td>
-<td><button class="btn-small btn-blue" onclick="openMemberAccount('${m.id}')">Account</button></td>
+<td>
+<button class="btn-small btn-blue" onclick="openMemberAccount('${m.id}')">Account</button>
+<button class="btn-small btn-orange" onclick="editMember('${m.id}')">Edit</button>
+<button class="btn-small btn-red" onclick="deleteMember('${m.id}')">Delete</button>
+</td>
 </tr>
 `).join("");
 }
