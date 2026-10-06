@@ -91,6 +91,7 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 @media(max-width:390px){html,body{font-size:16px}.dashboard-grid,.quick-grid{grid-template-columns:1fr 1fr;gap:9px}
 .stat-card{min-height:100px;padding:12px}.stat-card .value{font-size:20px}.quick-btn{min-height:76px}}
 </style>
+   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
@@ -605,7 +606,13 @@ Record office and operational expenses here. Saved expenses are automatically in
 <p>Create a complete backup file containing members, collections, loans, schedules, expenses and accounting data.</p>
 <button class="btn-green" onclick="backupData()">Download Backup</button>
 </div>
-
+<div class="card">
+<h2>Excel Export</h2>
+<p>Export all accounting transactions into one Excel workbook with separate sheets.</p>
+<button class="btn-green" onclick="exportAllTransactionsToExcel()">
+Export All Transactions to Excel
+</button>
+</div>
 <div class="card">
 <h2>Restore</h2>
 <p>Restoring a backup replaces the current application data with the selected backup.</p>
@@ -2430,7 +2437,391 @@ document.getElementById("dBank").textContent=money(data.bankBalance);
 
 }
 
+/* =========================================================
+   EXCEL EXPORT
+   ========================================================= */
 
+function exportCollectionRows(){
+
+const rows=[];
+
+data.collections.forEach(c=>{
+
+const member=memberName(c.memberId);
+const collector=collectorName(c.collectorId);
+
+const heads=[
+["Share",c.share],
+["Savings",c.savings],
+["Loan Installment",c.installment],
+["Admission Fee",c.admission],
+["Pass Book",c.passbook],
+["Insurance",c.insurance],
+["Loan Form Sales",c.loanForm],
+["Other Income",c.other]
+];
+
+heads.forEach(([head,amount])=>{
+
+const value=Number(amount)||0;
+
+if(value>0){
+
+rows.push({
+Date:c.date,
+"Member Code":memberCode(c.memberId),
+"Member Name":member,
+Collector:collector,
+Type:"Collection",
+Head:head,
+Amount:value
+});
+
+}
+
+});
+
+});
+
+return rows;
+
+}
+
+
+function exportLoanRows(){
+
+return data.loans.map(l=>({
+
+Date:l.date,
+"Loan ID":l.id,
+"Member Code":memberCode(l.memberId),
+"Member Name":memberName(l.memberId),
+Principal:Number(l.principal)||0,
+"Service Charge":Number(l.service)||0,
+"Service Charge %":Number(l.rate)||0,
+"Total Payable":Number(l.total)||0,
+"Installments":Number(l.installments)||0,
+"Installment Amount":Number(l.installmentAmount)||0,
+"First Installment Date":l.firstDate||"",
+Note:l.note||""
+
+}));
+
+}
+
+
+function exportInstallmentRows(){
+
+const rows=[];
+
+data.loans.forEach(l=>{
+
+(l.payments||[]).forEach(p=>{
+
+rows.push({
+
+Date:p.date,
+"Loan ID":l.id,
+"Member Code":memberCode(l.memberId),
+"Member Name":memberName(l.memberId),
+"Payment Amount":Number(p.amount)||0,
+Principal:Number(p.principal)||0,
+"Service Charge":Number(p.service)||0
+
+});
+
+});
+
+});
+
+return rows;
+
+}
+
+
+function exportExpenseRows(){
+
+return data.expenses.map(e=>({
+
+Date:e.date,
+"Expense Head":e.head,
+Amount:Number(e.amount)||0,
+Note:e.note||"",
+Payment:e.payment||"Cash"
+
+}));
+
+}
+
+
+function exportBankTransferRows(){
+
+return data.transfers.map(t=>({
+
+Date:t.date,
+Type:t.type==="deposit"
+?"Cash to Bank - Deposit"
+:"Bank to Cash - Withdrawal",
+Amount:Number(t.amount)||0,
+Note:t.note||""
+
+}));
+
+}
+
+
+function exportAllTransactionRows(){
+
+const rows=[];
+
+
+/* Collections */
+
+exportCollectionRows().forEach(r=>{
+
+rows.push({
+
+Date:r.Date,
+"Member Code":r["Member Code"],
+"Member Name":r["Member Name"],
+Collector:r.Collector,
+Type:r.Type,
+Head:r.Head,
+Amount:r.Amount
+
+});
+
+});
+
+
+/* Loans */
+
+data.loans.forEach(l=>{
+
+rows.push({
+
+Date:l.date,
+"Member Code":memberCode(l.memberId),
+"Member Name":memberName(l.memberId),
+Collector:"",
+Type:"Loan",
+Head:"Loan Disbursement",
+Amount:Number(l.principal)||0
+
+});
+
+});
+
+
+/* Loan Installments */
+
+data.loans.forEach(l=>{
+
+(l.payments||[]).forEach(p=>{
+
+rows.push({
+
+Date:p.date,
+"Member Code":memberCode(l.memberId),
+"Member Name":memberName(l.memberId),
+Collector:"",
+Type:"Loan",
+Head:"Loan Installment",
+Amount:Number(p.amount)||0
+
+});
+
+});
+
+});
+
+
+/* Expenses */
+
+data.expenses.forEach(e=>{
+
+rows.push({
+
+Date:e.date,
+"Member Code":"",
+"Member Name":"",
+Collector:"",
+Type:"Expense",
+Head:e.head,
+Amount:Number(e.amount)||0
+
+});
+
+});
+
+
+/* Bank Transfers */
+
+data.transfers.forEach(t=>{
+
+rows.push({
+
+Date:t.date,
+"Member Code":"",
+"Member Name":"",
+Collector:"",
+Type:"Bank Transfer",
+Head:t.type==="deposit"
+?"Cash to Bank - Deposit"
+:"Bank to Cash - Withdrawal",
+Amount:Number(t.amount)||0
+
+});
+
+});
+
+
+return rows.sort((a,b)=>
+String(a.Date).localeCompare(String(b.Date))
+);
+
+}
+
+
+function exportAllTransactionsToExcel(){
+
+if(typeof XLSX==="undefined"){
+
+alert("Excel Export library is not available. Please connect to the internet and try again.");
+
+return;
+
+}
+
+
+/* Create workbook */
+
+const wb=XLSX.utils.book_new();
+
+
+/* =========================================================
+   ALL TRANSACTIONS
+   ========================================================= */
+
+const allRows=exportAllTransactionRows();
+
+const wsAll=XLSX.utils.json_to_sheet(allRows);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsAll,
+"All Transactions"
+);
+
+
+/* =========================================================
+   COLLECTIONS
+   ========================================================= */
+
+const collectionRows=exportCollectionRows();
+
+const wsCollections=XLSX.utils.json_to_sheet(collectionRows);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsCollections,
+"Collections"
+);
+
+
+/* =========================================================
+   LOANS
+   ========================================================= */
+
+const loanRows=exportLoanRows();
+
+const wsLoans=XLSX.utils.json_to_sheet(loanRows);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsLoans,
+"Loans"
+);
+
+
+/* =========================================================
+   LOAN INSTALLMENTS
+   ========================================================= */
+
+const installmentRows=exportInstallmentRows();
+
+const wsInstallments=XLSX.utils.json_to_sheet(installmentRows);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsInstallments,
+"Loan Installments"
+);
+
+
+/* =========================================================
+   EXPENSES
+   ========================================================= */
+
+const expenseRows=exportExpenseRows();
+
+const wsExpenses=XLSX.utils.json_to_sheet(expenseRows);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsExpenses,
+"Expenses"
+);
+
+
+/* =========================================================
+   BANK TRANSFERS
+   ========================================================= */
+
+const transferRows=exportBankTransferRows();
+
+const wsTransfers=XLSX.utils.json_to_sheet(transferRows);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsTransfers,
+"Bank Transfers"
+);
+
+
+/* =========================================================
+   GENERAL LEDGER
+   ========================================================= */
+
+const ledgerData=ledgerRows().map(r=>({
+
+Date:r.date,
+Head:r.head,
+Member:r.member,
+"In":Number(r.in)||0,
+"Out":Number(r.out)||0
+
+}));
+
+const wsLedger=XLSX.utils.json_to_sheet(ledgerData);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsLedger,
+"General Ledger"
+);
+
+
+/* =========================================================
+   DOWNLOAD
+   ========================================================= */
+
+const filename=
+"Cooperative-Transactions-"+today()+".xlsx";
+
+XLSX.writeFile(wb,filename);
+
+}
 /* =========================================================
    BACKUP
    ========================================================= */
