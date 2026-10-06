@@ -11,6 +11,7 @@
 <link rel="apple-touch-icon" href="cbt-icon-180-v3.png">
 <link rel="icon" type="image/png" sizes="180x180" href="cbt-icon-180-v3.png">
 <link rel="manifest" href="manifest.json">
+
 <style>
 :root{
 --primary:#0f766e;--primary-dark:#115e59;--secondary:#2563eb;
@@ -461,6 +462,7 @@ Record office and operational expenses here. Saved expenses are automatically in
 <h1>Reports</h1>
 
 <div class="card">
+
 <div class="form-grid">
 
 <div class="field">
@@ -499,9 +501,11 @@ Record office and operational expenses here. Saved expenses are automatically in
 <button class="btn" onclick="renderReports()">View Report</button>
 <button class="btn-secondary" onclick="clearReport()">Clear</button>
 </div>
+
 </div>
 
 <div class="card">
+
 <h2>Collection Head Summary</h2>
 
 <div class="summary-box">
@@ -552,13 +556,17 @@ Record office and operational expenses here. Saved expenses are automatically in
 </div>
 
 </div>
+
 </div>
 
 <div class="card">
+
 <h2>Detailed Report</h2>
 
 <div class="table-wrap">
+
 <table>
+
 <thead>
 <tr>
 <th>Date</th>
@@ -571,18 +579,24 @@ Record office and operational expenses here. Saved expenses are automatically in
 </thead>
 
 <tbody id="reportTable"></tbody>
+
 </table>
+
 </div>
 
 <div class="summary-box">
+
 <div class="summary-line">
 <span>Grand Total</span>
 <strong id="reportTotal">0</strong>
 </div>
+
 </div>
 
 </div>
+
 </section>
+
 <section id="backup" class="page">
 <h1>Backup & Restore</h1>
 
@@ -697,10 +711,13 @@ return iso||"";
 }
 
 function parseDateInput(value){
+
 let v=String(value||"").trim();
+
 if(!v)return "";
 
 if(/^\d{4}-\d{2}-\d{2}$/.test(v)){
+
 const parts=v.split("-");
 const y=Number(parts[0]);
 const m=Number(parts[1]);
@@ -718,6 +735,7 @@ return v;
 }
 
 v=v.replace(/[^\d/.-]/g,"");
+
 const parts=v.split(/[\/.-]/);
 
 if(parts.length!==3)return "";
@@ -771,6 +789,7 @@ refreshPage(id);
 }
 
 function refreshPage(id){
+
 populateMemberSelects();
 populateCollectorSelect();
 populateExpenseHeads();
@@ -786,6 +805,7 @@ if(id==="cashbook")renderCashBook();
 if(id==="contra")renderContra();
 if(id==="expense")renderExpenses();
 if(id==="reports")renderReports();
+
 }
 
 function memberName(id){
@@ -804,6 +824,7 @@ return c?c.name:"";
 }
 
 function saveMember(){
+
 const code=document.getElementById("memberCode").value.trim();
 const name=document.getElementById("memberName").value.trim();
 const mobile=document.getElementById("memberMobile").value.trim();
@@ -828,17 +849,21 @@ createdAt:new Date().toISOString()
 saveData();
 clearMemberForm();
 refreshAll();
+
 alert("Member saved successfully.");
 }
 
 function clearMemberForm(){
+
 document.getElementById("memberCode").value="";
 document.getElementById("memberName").value="";
 document.getElementById("memberMobile").value="";
 document.getElementById("memberCode").focus();
+
 }
 
 function editMember(id){
+
 const member=data.members.find(m=>m.id===id);
 if(!member)return;
 
@@ -856,9 +881,11 @@ updateMember(id);
 }
 
 document.getElementById("memberCode").focus();
+
 }
 
 function updateMember(id){
+
 const member=data.members.find(m=>m.id===id);
 if(!member)return;
 
@@ -899,9 +926,11 @@ clearMemberForm();
 refreshAll();
 
 alert("Member updated successfully.");
+
 }
 
 function deleteMember(id){
+
 const member=data.members.find(m=>m.id===id);
 if(!member)return;
 
@@ -913,9 +942,11 @@ saveData();
 refreshAll();
 
 alert("Member deleted successfully.");
+
 }
 
 function renderMembers(){
+
 const search=document.getElementById("memberSearch").value.trim().toLowerCase();
 
 const list=data.members.filter(m=>{
@@ -943,15 +974,21 @@ body.innerHTML=list.map(m=>`
 </td>
 </tr>
 `).join("");
+
 }
 
 function openMemberAccount(id){
+
 populateMemberSelects();
+
 document.getElementById("accountMember").value=id;
+
 showPage("accounts");
+
 }
 
 function fillSelect(id,options,placeholder){
+
 const select=document.getElementById(id);
 if(!select)return;
 
@@ -961,9 +998,11 @@ select.innerHTML=`<option value="">${placeholder}</option>`+
 options.map(x=>`<option value="${x.id}">${escapeHtml(x.label)}</option>`).join("");
 
 if(options.some(x=>x.id===current))select.value=current;
+
 }
 
 function populateMemberSelects(){
+
 const options=data.members.map(m=>({
 id:m.id,label:`${m.code} - ${m.name}`
 }));
@@ -972,6 +1011,7 @@ fillSelect("collectionMember",options,"Select Member");
 fillSelect("loanMember",options,"Select Member");
 fillSelect("accountMember",options,"Select Member");
 fillSelect("reportMember",options,"All Members");
+
 }
 
 function populateCollectorSelect(){
@@ -983,9 +1023,11 @@ label:c.name+(c.mobile?" - "+c.mobile:"")
 
 fillSelect("collectionCollector",options,"Select Collector");
 fillSelect("reportCollector",options,"All Collectors");
+
 }
 
 function populateExpenseHeads(){
+
 const select=document.getElementById("expenseHead");
 if(!select)return;
 
@@ -996,6 +1038,7 @@ select.innerHTML=`<option value="">Select Expense Head</option>`+
 heads.map(h=>`<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`).join("");
 
 if(heads.includes(current))select.value=current;
+
 }
 
 function saveCollector(){
@@ -1030,12 +1073,15 @@ renderCollectors();
 populateCollectorSelect();
 
 alert("Collector saved successfully.");
+
 }
 
 function clearCollectorForm(){
+
 document.getElementById("collectorName").value="";
 document.getElementById("collectorMobile").value="";
 document.getElementById("collectorName").focus();
+
 }
 
 function renderCollectors(){
@@ -1062,6 +1108,7 @@ Delete
 </td>
 </tr>
 `).join("");
+
 }
 
 function deleteCollector(id){
@@ -1078,9 +1125,11 @@ renderCollectors();
 populateCollectorSelect();
 
 alert("Collector deleted successfully.");
+
 }
 
 function collectionFields(){
+
 return[
 ["Share","colShare"],
 ["Savings","colSavings"],
@@ -1091,14 +1140,19 @@ return[
 ["Loan Form Sales","colLoanForm"],
 ["Other","colOther"]
 ];
+
 }
 
 function collectionTotal(){
+
 return collectionFields().reduce((sum,x)=>sum+num(x[1]),0);
+
 }
 
 function updateCollectionTotal(){
+
 document.getElementById("collectionTotal").textContent=money(collectionTotal());
+
 }
 
 function clearCollectionForm(){
@@ -1112,6 +1166,7 @@ ids.forEach(id=>document.getElementById(id).value="");
 
 setToday("collectionDate");
 updateCollectionTotal();
+
 }
 
 function saveCollection(){
@@ -1181,7 +1236,9 @@ const pay=Math.min(remaining,outstanding);
 allocateInstallment(loan,pay,date);
 
 remaining-=pay;
+
 }
+
 }
 
 data.collections.push(item);
@@ -1199,6 +1256,7 @@ document.getElementById("collectionDate").value=dateInputValue(date);
 ].forEach(id=>document.getElementById(id).value="");
 
 updateCollectionTotal();
+
 }
 
 function allocateInstallment(loan,payment,paymentDate){
@@ -1235,6 +1293,7 @@ principal:principalPart,
 service:servicePart,
 date:paymentDate
 });
+
 }
 
 function calculateLoan(){
@@ -1259,6 +1318,7 @@ document.getElementById("loanPreviewPrincipal").textContent=money(principal);
 document.getElementById("loanPreviewService").textContent=money(service);
 document.getElementById("loanPreviewTotal").textContent=money(total);
 document.getElementById("loanPreviewInstallment").textContent=money(installment);
+
 }
 
 function saveLoan(){
@@ -1305,6 +1365,7 @@ refreshAll();
 
 alert("Loan saved successfully.");
 clearLoanForm();
+
 }
 
 function clearLoanForm(){
@@ -1320,18 +1381,25 @@ document.getElementById("loanNote").value="";
 setToday("loanDate");
 setToday("loanFirstDate");
 calculateLoan();
+
 }
 
 function loanPaid(loan){
+
 return(loan.payments||[]).reduce((s,p)=>s+Number(p.amount||0),0);
+
 }
 
 function loanOutstanding(loan){
+
 return Math.max(0,Number(loan.total||0)-loanPaid(loan));
+
 }
 
 function loanServicePaid(loan){
+
 return(loan.payments||[]).reduce((s,p)=>s+Number(p.service||0),0);
+
 }
 
 function renderLoans(){
@@ -1355,6 +1423,7 @@ body.innerHTML=data.loans.map(l=>`
 <td>${money(loanOutstanding(l))}</td>
 </tr>
 `).join("");
+
 }
 
 function renderAccount(){
@@ -1400,6 +1469,7 @@ summary.innerHTML=`
 const transactions=[];
 
 data.collections.filter(c=>c.memberId===memberId).forEach(c=>{
+
 transactions.push({
 date:c.date,
 description:"Collection",
@@ -1415,6 +1485,7 @@ c.loanForm?`Loan Form ${money(c.loanForm)}`:"",
 c.other?`Other ${money(c.other)}`:""
 ].filter(Boolean).join(" • ")
 });
+
 });
 
 data.loans.filter(l=>l.memberId===memberId).forEach(l=>{
@@ -1427,12 +1498,14 @@ details:`Principal ${money(l.principal)} • Service ${money(l.service)} • Tot
 });
 
 (l.payments||[]).forEach(p=>{
+
 transactions.push({
 date:p.date,
 description:"Loan Installment",
 amount:p.amount,
 details:`Principal ${money(p.principal)} • Service ${money(p.service)}`
 });
+
 });
 
 });
@@ -1452,6 +1525,7 @@ body.innerHTML=transactions.map(t=>`
 <td>${escapeHtml(t.details)}</td>
 </tr>
 `).join("");
+
 }
 
 function ledgerRows(){
@@ -1473,6 +1547,7 @@ if(Number(amount)>0){
 rows.push({date:c.date,head,member:name,in:Number(amount),out:0});
 }
 });
+
 });
 
 data.loans.forEach(l=>{
@@ -1486,7 +1561,9 @@ out:l.principal
 });
 
 (l.payments||[]).forEach(p=>{
+
 if(Number(p.service)>0){
+
 rows.push({
 date:p.date,
 head:"Service Charge",
@@ -1494,12 +1571,15 @@ member:memberName(l.memberId),
 in:p.service,
 out:0
 });
+
 }
+
 });
 
 });
 
 data.expenses.forEach(e=>{
+
 rows.push({
 date:e.date,
 head:e.head,
@@ -1507,9 +1587,11 @@ member:"",
 in:0,
 out:e.amount
 });
+
 });
 
 return rows.sort((a,b)=>a.date.localeCompare(b.date));
+
 }
 
 function renderLedger(){
@@ -1533,6 +1615,7 @@ body.innerHTML=rows.map(r=>`
 <td>${r.out?money(r.out):""}</td>
 </tr>
 `).join("");
+
 }
 
 function cashRows(){
@@ -1540,55 +1623,70 @@ function cashRows(){
 const rows=[];
 
 data.collections.forEach(c=>{
+
 rows.push({
 date:c.date,
 description:`Collection - ${memberName(c.memberId)}`,
 in:c.total,
 out:0
 });
+
 });
 
 data.loans.forEach(l=>{
+
 rows.push({
 date:l.date,
 description:`Loan Disbursement - ${memberName(l.memberId)}`,
 in:0,
 out:l.principal
 });
+
 });
 
 data.expenses.forEach(e=>{
+
 if(e.payment==="Cash"){
+
 rows.push({
 date:e.date,
 description:`Expense - ${e.head}`,
 in:0,
 out:e.amount
 });
+
 }
+
 });
 
 data.transfers.forEach(t=>{
+
 if(t.type==="deposit"){
+
 rows.push({
 date:t.date,
 description:"Bank Deposit",
 in:0,
 out:t.amount
 });
+
 }
 
 if(t.type==="withdraw"){
+
 rows.push({
 date:t.date,
 description:"Bank Withdrawal",
 in:t.amount,
 out:0
 });
+
 }
+
 });
 
 return rows.sort((a,b)=>a.date.localeCompare(b.date));
+
 }
 
 function cashBalance(){
@@ -1601,6 +1699,7 @@ balance-=Number(r.out||0);
 });
 
 return balance;
+
 }
 
 function renderCashBook(){
@@ -1639,6 +1738,7 @@ return`
 </tr>`;
 
 }).join("");
+
 }
 
 function saveContra(){
@@ -1698,6 +1798,7 @@ type==="deposit"
 );
 
 clearContraForm();
+
 }
 
 function clearContraForm(){
@@ -1708,6 +1809,7 @@ document.getElementById("contraAmount").value="";
 document.getElementById("contraNote").value="";
 
 renderContra();
+
 }
 
 function renderContra(){
@@ -1736,6 +1838,7 @@ body.innerHTML=rows.map(t=>`
 <td>${escapeHtml(t.note||"")}</td>
 </tr>
 `).join("");
+
 }
 
 function saveExpense(){
@@ -1771,6 +1874,7 @@ refreshAll();
 
 alert("Expense saved successfully.");
 clearExpenseForm();
+
 }
 
 function clearExpenseForm(){
@@ -1779,6 +1883,7 @@ setToday("expenseDate");
 document.getElementById("expenseHead").value="";
 document.getElementById("expenseAmount").value="";
 document.getElementById("expenseNote").value="";
+
 }
 
 function addExpenseForm(){
@@ -1801,6 +1906,7 @@ data.customExpenseHeads.push(clean);
 saveData();
 populateExpenseHeads();
 document.getElementById("expenseHead").value=clean;
+
 }
 
 function renderExpenses(){
@@ -1840,6 +1946,7 @@ body.innerHTML=rows.map(e=>`
 </td>
 </tr>
 `).join("");
+
 }
 
 function editExpense(id){
@@ -1860,6 +1967,7 @@ if(saveButton){
 saveButton.textContent="Update Expense";
 saveButton.onclick=function(){updateExpense(id);};
 }
+
 }
 
 function updateExpense(id){
@@ -1893,6 +2001,7 @@ resetExpenseSaveButton();
 
 alert("Expense updated successfully.");
 clearExpenseForm();
+
 }
 
 function resetExpenseSaveButton(){
@@ -1902,6 +2011,7 @@ if(!saveButton)return;
 
 saveButton.textContent="Save Expense";
 saveButton.onclick=function(){saveExpense();};
+
 }
 
 function deleteExpense(id){
@@ -1917,24 +2027,70 @@ saveData();
 refreshAll();
 
 alert("Expense deleted successfully.");
+
+}
+
+
+/* =========================================================
+   REPORT DATA
+   ========================================================= */
+
+function reportCollectionRows(){
+
+const rows=[];
+
+data.collections.forEach(c=>{
+
+const member=memberName(c.memberId);
+const collector=collectorName(c.collectorId);
+
+const heads=[
+["Share",c.share],
+["Savings",c.savings],
+["Loan Installment",c.installment],
+["Admission Fee",c.admission],
+["Pass Book",c.passbook],
+["Insurance",c.insurance],
+["Loan Form Sales",c.loanForm],
+["Other",c.other]
+];
+
+heads.forEach(([head,amount])=>{
+
+const value=Number(amount)||0;
+
+if(value>0){
+
+rows.push({
+date:c.date,
+member,
+memberId:c.memberId,
+collector,
+collectorId:c.collectorId||"",
+type:"Collection",
+description:head,
+amount:value
+});
+
+}
+
+});
+
+});
+
+return rows;
+
 }
 
 function allReportRows(){
 
 const rows=[];
 
-data.collections.forEach(c=>{
-rows.push({
-date:c.date,
-member:memberName(c.memberId),
-memberId:c.memberId,
-collector:collectorName(c.collectorId),
-collectorId:c.collectorId||"",
-type:"Collection",
-description:"Collection",
-amount:c.total
-});
-});
+/* Collection - every head separately */
+
+rows.push(...reportCollectionRows());
+
+/* Loans */
 
 data.loans.forEach(l=>{
 
@@ -1950,6 +2106,7 @@ amount:l.principal
 });
 
 (l.payments||[]).forEach(p=>{
+
 rows.push({
 date:p.date,
 member:memberName(l.memberId),
@@ -1960,11 +2117,15 @@ type:"Loan",
 description:"Loan Installment",
 amount:p.amount
 });
+
 });
 
 });
+
+/* Expenses */
 
 data.expenses.forEach(e=>{
+
 rows.push({
 date:e.date,
 member:"",
@@ -1975,10 +2136,25 @@ type:"Expense",
 description:e.head,
 amount:e.amount
 });
+
 });
 
-return rows.sort((a,b)=>a.date.localeCompare(b.date));
+return rows.sort((a,b)=>{
+
+const dateCompare=a.date.localeCompare(b.date);
+
+if(dateCompare!==0)return dateCompare;
+
+return String(a.description).localeCompare(String(b.description));
+
+});
+
 }
+
+
+/* =========================================================
+   REPORT RENDER
+   ========================================================= */
 
 function renderReports(){
 
@@ -1989,18 +2165,24 @@ const from=parseDateInput(fromInput);
 const to=parseDateInput(toInput);
 
 if(fromInput.trim()&&!from){
+
 alert("Please enter a valid From Date.");
 return;
+
 }
 
 if(toInput.trim()&&!to){
+
 alert("Please enter a valid To Date.");
 return;
+
 }
 
 if(from&&to&&from>to){
+
 alert("From Date cannot be later than To Date.");
 return;
+
 }
 
 const member=document.getElementById("reportMember").value;
@@ -2008,9 +2190,9 @@ const collector=document.getElementById("reportCollector").value;
 const type=document.getElementById("reportType").value;
 
 
-/* =========================
+/* =========================================================
    COLLECTION HEAD SUMMARY
-========================= */
+   ========================================================= */
 
 const collectionRows=data.collections.filter(c=>{
 
@@ -2019,41 +2201,43 @@ if(to&&c.date>to)return false;
 
 if(member&&c.memberId!==member)return false;
 
-if(collector&&c.collectorId!==collector)return false;
+if(collector&&(c.collectorId||"")!==collector)return false;
 
 return true;
+
 });
 
+
 const reportShare=collectionRows.reduce(
-(s,c)=>s+Number(c.share||0),0
+(sum,c)=>sum+Number(c.share||0),0
 );
 
 const reportSavings=collectionRows.reduce(
-(s,c)=>s+Number(c.savings||0),0
+(sum,c)=>sum+Number(c.savings||0),0
 );
 
 const reportInstallment=collectionRows.reduce(
-(s,c)=>s+Number(c.installment||0),0
+(sum,c)=>sum+Number(c.installment||0),0
 );
 
 const reportAdmission=collectionRows.reduce(
-(s,c)=>s+Number(c.admission||0),0
+(sum,c)=>sum+Number(c.admission||0),0
 );
 
 const reportPassbook=collectionRows.reduce(
-(s,c)=>s+Number(c.passbook||0),0
+(sum,c)=>sum+Number(c.passbook||0),0
 );
 
 const reportInsurance=collectionRows.reduce(
-(s,c)=>s+Number(c.insurance||0),0
+(sum,c)=>sum+Number(c.insurance||0),0
 );
 
 const reportLoanForm=collectionRows.reduce(
-(s,c)=>s+Number(c.loanForm||0),0
+(sum,c)=>sum+Number(c.loanForm||0),0
 );
 
 const reportOther=collectionRows.reduce(
-(s,c)=>s+Number(c.other||0),0
+(sum,c)=>sum+Number(c.other||0),0
 );
 
 const reportCollectionTotal=
@@ -2066,43 +2250,57 @@ reportInsurance+
 reportLoanForm+
 reportOther;
 
+
+/* Show summary */
+
 document.getElementById("reportShare").textContent=money(reportShare);
+
 document.getElementById("reportSavings").textContent=money(reportSavings);
+
 document.getElementById("reportInstallment").textContent=money(reportInstallment);
+
 document.getElementById("reportAdmission").textContent=money(reportAdmission);
+
 document.getElementById("reportPassbook").textContent=money(reportPassbook);
+
 document.getElementById("reportInsurance").textContent=money(reportInsurance);
+
 document.getElementById("reportLoanForm").textContent=money(reportLoanForm);
+
 document.getElementById("reportOther").textContent=money(reportOther);
+
 document.getElementById("reportCollectionTotal").textContent=money(reportCollectionTotal);
 
 
-/* =========================
-   DETAILED TRANSACTION REPORT
-========================= */
+/* =========================================================
+   DETAILED REPORT
+   ========================================================= */
 
 const rows=allReportRows().filter(r=>{
 
 if(from&&r.date<from)return false;
+
 if(to&&r.date>to)return false;
 
 if(member&&r.memberId!==member)return false;
 
-if(collector&&r.collectorId!==collector)return false;
+if(collector&&(r.collectorId||"")!==collector)return false;
 
 if(type!=="all"&&r.type.toLowerCase()!==type)return false;
 
 return true;
+
 });
+
 
 const body=document.getElementById("reportTable");
 
 const total=rows.reduce(
-(s,r)=>s+Number(r.amount||0),
-0
+(sum,r)=>sum+Number(r.amount||0),0
 );
 
 document.getElementById("reportTotal").textContent=money(total);
+
 
 if(!rows.length){
 
@@ -2114,48 +2312,90 @@ No report data found.
 </tr>`;
 
 return;
+
 }
 
+
 body.innerHTML=rows.map(r=>`
+
 <tr>
+
 <td>${escapeHtml(displayDate(r.date))}</td>
+
 <td>${escapeHtml(r.member)}</td>
+
 <td>${escapeHtml(r.collector)}</td>
+
 <td>${escapeHtml(r.type)}</td>
+
 <td>${escapeHtml(r.description)}</td>
+
 <td>${money(r.amount)}</td>
+
 </tr>
+
 `).join("");
+
 }
-  
+
+
+/* =========================================================
+   CLEAR REPORT
+   ========================================================= */
+
 function clearReport(){
 
 document.getElementById("reportFrom").value="";
+
 document.getElementById("reportTo").value="";
+
 document.getElementById("reportMember").value="";
+
 document.getElementById("reportCollector").value="";
+
 document.getElementById("reportType").value="all";
 
 document.getElementById("reportShare").textContent="0";
+
 document.getElementById("reportSavings").textContent="0";
+
 document.getElementById("reportInstallment").textContent="0";
+
 document.getElementById("reportAdmission").textContent="0";
+
 document.getElementById("reportPassbook").textContent="0";
+
 document.getElementById("reportInsurance").textContent="0";
+
 document.getElementById("reportLoanForm").textContent="0";
+
 document.getElementById("reportOther").textContent="0";
+
 document.getElementById("reportCollectionTotal").textContent="0";
+
 document.getElementById("reportTotal").textContent="0";
 
-renderReports();
+document.getElementById("reportTable").innerHTML="";
+
 }
+
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+
 function renderDashboard(){
 
 const share=data.collections.reduce((s,c)=>s+Number(c.share||0),0);
+
 const savings=data.collections.reduce((s,c)=>s+Number(c.savings||0),0);
+
 const loan=data.loans.reduce((s,l)=>s+Number(l.principal||0),0);
+
 const installment=data.collections.reduce((s,c)=>s+Number(c.installment||0),0);
+
 const service=data.loans.reduce((s,l)=>s+loanServicePaid(l),0);
+
 const outstanding=data.loans.reduce((s,l)=>s+loanOutstanding(l),0);
 
 const t=today();
@@ -2167,17 +2407,33 @@ const todayExpense=data.expenses.filter(e=>e.date===t)
 .reduce((s,e)=>s+Number(e.amount||0),0);
 
 document.getElementById("dMembers").textContent=money(data.members.length);
+
 document.getElementById("dShare").textContent=money(share);
+
 document.getElementById("dSavings").textContent=money(savings);
+
 document.getElementById("dLoan").textContent=money(loan);
+
 document.getElementById("dInstallment").textContent=money(installment);
+
 document.getElementById("dService").textContent=money(service);
+
 document.getElementById("dOutstanding").textContent=money(outstanding);
+
 document.getElementById("dCash").textContent=money(cashBalance());
+
 document.getElementById("dTodayCollection").textContent=money(todayCollection);
+
 document.getElementById("dTodayExpense").textContent=money(todayExpense);
+
 document.getElementById("dBank").textContent=money(data.bankBalance);
+
 }
+
+
+/* =========================================================
+   BACKUP
+   ========================================================= */
 
 function backupData(){
 
@@ -2204,7 +2460,13 @@ a.click();
 a.remove();
 
 URL.revokeObjectURL(url);
+
 }
+
+
+/* =========================================================
+   RESTORE
+   ========================================================= */
 
 function restoreData(){
 
@@ -2246,13 +2508,21 @@ refreshAll();
 alert("Backup restored successfully.");
 
 }catch(e){
+
 alert("Invalid backup file.");
+
 }
 
 };
 
 reader.readAsText(file);
+
 }
+
+
+/* =========================================================
+   CLEAR ALL DATA
+   ========================================================= */
 
 function clearAllData(){
 
@@ -2273,7 +2543,13 @@ saveData();
 refreshAll();
 
 alert("All accounting data has been cleared. Custom Expense Heads were kept.");
+
 }
+
+
+/* =========================================================
+   REFRESH ALL
+   ========================================================= */
 
 function refreshAll(){
 
@@ -2291,7 +2567,13 @@ renderCashBook();
 renderContra();
 renderExpenses();
 renderReports();
+
 }
+
+
+/* =========================================================
+   ESCAPE HTML
+   ========================================================= */
 
 function escapeHtml(value){
 
@@ -2301,7 +2583,13 @@ return String(value??"")
 .replace(/>/g,"&gt;")
 .replace(/"/g,"&quot;")
 .replace(/'/g,"&#039;");
+
 }
+
+
+/* =========================================================
+   ENTER NAVIGATION
+   ========================================================= */
 
 const focusOrder={
 
@@ -2378,7 +2666,9 @@ if(next){
 next.focus();
 
 if(next.select){
+
 try{next.select();}catch(_){}
+
 }
 
 }
@@ -2399,6 +2689,7 @@ if(saveButton)saveButton.focus();
 
 });
 
+
 [
 "colShare","colSavings","colInstallment","colAdmission",
 "colPassbook","colInsurance","colLoanForm","colOther"
@@ -2407,10 +2698,13 @@ if(saveButton)saveButton.focus();
 const el=document.getElementById(id);
 
 if(el){
+
 el.addEventListener("input",updateCollectionTotal);
+
 }
 
 });
+
 
 [
 "loanPrincipal","loanRate","loanInstallments"
@@ -2419,10 +2713,13 @@ el.addEventListener("input",updateCollectionTotal);
 const el=document.getElementById(id);
 
 if(el){
+
 el.addEventListener("input",calculateLoan);
+
 }
 
 });
+
 
 const expenseAmount=document.getElementById("expenseAmount");
 
@@ -2435,6 +2732,7 @@ this.value=this.value.replace(/[^\d]/g,"");
 });
 
 }
+
 
 const contraAmount=document.getElementById("contraAmount");
 
@@ -2450,19 +2748,31 @@ this.value=this.value.replace(/[^\d]/g,"");
 
 }
 
+
+/* =========================================================
+   START
+   ========================================================= */
+
 document.addEventListener("DOMContentLoaded",()=>{
 
 setToday("collectionDate");
+
 setToday("loanDate");
+
 setToday("loanFirstDate");
+
 setToday("expenseDate");
+
 setToday("contraDate");
 
 populateMemberSelects();
+
 populateCollectorSelect();
+
 populateExpenseHeads();
 
 setupEnterNavigation();
+
 refreshAll();
 
 });
