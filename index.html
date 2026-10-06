@@ -2445,17 +2445,43 @@ data
 };
 
 const json=JSON.stringify(payload,null,2);
-const dataUrl="data:application/json;charset=utf-8,"+encodeURIComponent(json);
 
+const blob=new Blob(
+[json],
+{type:"application/json"}
+);
+
+const file=new File(
+[blob],
+"Cooperative-Backup-"+today()+".json",
+{type:"application/json"}
+);
+
+if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+
+navigator.share({
+files:[file],
+title:"Cooperative Backup"
+}).catch(()=>{});
+
+}else{
+
+const url=URL.createObjectURL(blob);
 const a=document.createElement("a");
 
-a.href=dataUrl;
+a.href=url;
 a.download="Cooperative-Backup-"+today()+".json";
 a.style.display="none";
 
 document.body.appendChild(a);
 a.click();
+
+setTimeout(()=>{
 a.remove();
+URL.revokeObjectURL(url);
+},1000);
+
+}
 
 }
 /* =========================================================
