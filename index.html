@@ -37,8 +37,6 @@ padding:16px;margin-bottom:15px;box-shadow:0 4px 12px rgba(15,23,42,.06)}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
 .field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}
 label{font-size:16px;font-weight:700;color:#334155}
-
-/* iPhone Safari: prevent automatic page zoom when tapping form fields */
 input,select,textarea{
 width:100%;min-height:50px;padding:11px 13px;border:1.5px solid #cbd5e1;
 border-radius:12px;background:#fff;color:var(--text);outline:none;
@@ -140,6 +138,7 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <button class="quick-btn q9" onclick="showPage('expense')"><span class="quick-icon">💸</span>Expense</button>
 <button class="quick-btn q8" onclick="showPage('backup')"><span class="quick-icon">💾</span>Backup</button>
 <button class="quick-btn q8" onclick="showPage('collectors')"><span class="quick-icon">🧑‍💼</span>Collectors</button>
+<button class="quick-btn q6" onclick="showPage('contra')"><span class="quick-icon">🔄</span>Bank Transfer</button>
 </div>
 </section>
 
@@ -360,6 +359,64 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 </div>
 </section>
 
+<section id="contra" class="page">
+<h1>Bank Transfer</h1>
+
+<div class="notice">
+Use this page only when money is transferred between Cash and Bank. Bank Deposit reduces Cash and increases Bank. Bank Withdrawal increases Cash and reduces Bank.
+</div>
+
+<div class="card">
+<div class="form-grid">
+
+<div class="field">
+<label>Date</label>
+<input type="text" id="contraDate" placeholder="dd/mm/yy" autocomplete="off">
+</div>
+
+<div class="field">
+<label>Transaction Type</label>
+<select id="contraType">
+<option value="">Select Transaction Type</option>
+<option value="deposit">Cash to Bank - Deposit</option>
+<option value="withdraw">Bank to Cash - Withdrawal</option>
+</select>
+</div>
+
+<div class="field full">
+<label>Amount</label>
+<input type="text" id="contraAmount" autocomplete="off">
+</div>
+
+<div class="field full">
+<label>Note</label>
+<input type="text" id="contraNote" autocomplete="off">
+</div>
+
+</div>
+
+<div class="summary-box">
+<div class="summary-line"><span>Current Cash in Hand</span><strong id="contraCashBalance">0</strong></div>
+<div class="summary-line"><span>Current Bank Balance</span><strong id="contraBankBalance">0</strong></div>
+</div>
+
+<div class="actions">
+<button class="btn-blue" onclick="saveContra()">Save Transfer</button>
+<button class="btn-secondary" onclick="clearContraForm()">Clear</button>
+</div>
+</div>
+
+<div class="card">
+<h2>Bank Transfer History</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Note</th></tr></thead>
+<tbody id="contraTable"></tbody>
+</table>
+</div>
+</div>
+</section>
+
 <section id="expense" class="page">
 <h1>Expense</h1>
 <div class="notice">
@@ -406,7 +463,6 @@ Record office and operational expenses here. Saved expenses are automatically in
 <div class="field"><label>To Date</label><input type="text" id="reportTo" placeholder="dd/mm/yy" autocomplete="off"></div>
 <div class="field"><label>Member</label><select id="reportMember"></select></div>
 
-<!-- Collector added to Reports -->
 <div class="field"><label>Collector</label><select id="reportCollector"></select></div>
 
 <div class="field">
@@ -489,6 +545,7 @@ collections:[],
 loans:[],
 expenses:[],
 customExpenseHeads:[],
+transfers:[],
 bankBalance:0,
 openingCash:0
 };
@@ -507,7 +564,8 @@ collectors:parsed.collectors||[],
 collections:parsed.collections||[],
 loans:parsed.loans||[],
 expenses:parsed.expenses||[],
-customExpenseHeads:parsed.customExpenseHeads||[]
+customExpenseHeads:parsed.customExpenseHeads||[],
+transfers:parsed.transfers||[]
 };
 }catch(e){return blankData();}
 }
@@ -610,6 +668,7 @@ if(id==="loan"){calculateLoan();renderLoans();}
 if(id==="accounts")renderAccount();
 if(id==="ledger")renderLedger();
 if(id==="cashbook")renderCashBook();
+if(id==="contra")renderContra();
 if(id==="expense")renderExpenses();
 if(id==="reports")renderReports();
 }
@@ -664,8 +723,7 @@ document.getElementById("memberMobile").value="";
 document.getElementById("memberCode").focus();
 }
 
-  function editMember(id){
-
+function editMember(id){
 const member=data.members.find(m=>m.id===id);
 if(!member)return;
 
@@ -686,7 +744,6 @@ document.getElementById("memberCode").focus();
 }
 
 function updateMember(id){
-
 const member=data.members.find(m=>m.id===id);
 if(!member)return;
 
@@ -730,7 +787,6 @@ alert("Member updated successfully.");
 }
 
 function deleteMember(id){
-
 const member=data.members.find(m=>m.id===id);
 if(!member)return;
 
@@ -743,6 +799,7 @@ refreshAll();
 
 alert("Member deleted successfully.");
 }
+
 function renderMembers(){
 const search=document.getElementById("memberSearch").value.trim().toLowerCase();
 
@@ -1396,6 +1453,26 @@ out:e.amount
 }
 });
 
+data.transfers.forEach(t=>{
+if(t.type==="deposit"){
+rows.push({
+date:t.date,
+description:"Bank Deposit",
+in:0,
+out:t.amount
+});
+}
+
+if(t.type==="withdraw"){
+rows.push({
+date:t.date,
+description:"Bank Withdrawal",
+in:t.amount,
+out:0
+});
+}
+});
+
 return rows.sort((a,b)=>a.date.localeCompare(b.date));
 }
 
@@ -1447,6 +1524,103 @@ return`
 </tr>`;
 
 }).join("");
+}
+
+function saveContra(){
+
+const date=validDateOrToday("contraDate");
+const type=document.getElementById("contraType").value;
+const amount=num("contraAmount");
+const note=document.getElementById("contraNote").value.trim();
+
+if(!type){
+alert("Please select a Transaction Type.");
+return;
+}
+
+if(amount<=0){
+alert("Please enter a valid amount.");
+return;
+}
+
+const currentCash=cashBalance();
+const currentBank=Number(data.bankBalance)||0;
+
+if(type==="deposit"&&amount>currentCash){
+alert("Cash in hand is not sufficient.");
+return;
+}
+
+if(type==="withdraw"&&amount>currentBank){
+alert("Bank balance is not sufficient.");
+return;
+}
+
+const transfer={
+id:uid("CT"),
+date,
+type,
+amount,
+note,
+createdAt:new Date().toISOString()
+};
+
+data.transfers.push(transfer);
+
+if(type==="deposit"){
+data.bankBalance=currentBank+amount;
+}else{
+data.bankBalance=currentBank-amount;
+}
+
+saveData();
+refreshAll();
+
+alert(
+type==="deposit"
+?"Bank deposit saved successfully."
+:"Bank withdrawal saved successfully."
+);
+
+clearContraForm();
+}
+
+function clearContraForm(){
+
+setToday("contraDate");
+document.getElementById("contraType").value="";
+document.getElementById("contraAmount").value="";
+document.getElementById("contraNote").value="";
+
+renderContra();
+}
+
+function renderContra(){
+
+const body=document.getElementById("contraTable");
+if(!body)return;
+
+const cashEl=document.getElementById("contraCashBalance");
+const bankEl=document.getElementById("contraBankBalance");
+
+if(cashEl)cashEl.textContent=money(cashBalance());
+if(bankEl)bankEl.textContent=money(data.bankBalance);
+
+if(!data.transfers.length){
+body.innerHTML=`<tr><td colspan="4" class="empty">No bank transfers found.</td></tr>`;
+return;
+}
+
+const rows=[...data.transfers].sort((a,b)=>b.date.localeCompare(a.date));
+
+body.innerHTML=rows.map(t=>`
+<tr>
+<td>${escapeHtml(displayDate(t.date))}</td>
+<td>${t.type==="deposit"?"Cash to Bank - Deposit":"Bank to Cash - Withdrawal"}</td>
+<td>${money(t.amount)}</td>
+<td>${escapeHtml(t.note||"")}</td>
+</tr>
+`).join("");
 }
 
 function saveExpense(){
@@ -1848,7 +2022,8 @@ collectors:parsed.data.collectors||[],
 collections:parsed.data.collections||[],
 loans:parsed.data.loans||[],
 expenses:parsed.data.expenses||[],
-customExpenseHeads:parsed.data.customExpenseHeads||[]
+customExpenseHeads:parsed.data.customExpenseHeads||[],
+transfers:parsed.data.transfers||[]
 };
 
 saveData();
@@ -1899,6 +2074,7 @@ renderLoans();
 renderAccount();
 renderLedger();
 renderCashBook();
+renderContra();
 renderExpenses();
 renderReports();
 }
@@ -1950,6 +2126,13 @@ expense:[
 "expenseHead",
 "expenseAmount",
 "expenseNote"
+],
+
+contra:[
+"contraDate",
+"contraType",
+"contraAmount",
+"contraNote"
 ]
 
 };
@@ -2029,7 +2212,7 @@ el.addEventListener("input",calculateLoan);
 
 [
 "collectionDate","loanDate","loanFirstDate",
-"expenseDate","reportFrom","reportTo"
+"expenseDate","reportFrom","reportTo","contraDate"
 ].forEach(id=>{
 
 const el=document.getElementById(id);
@@ -2064,6 +2247,18 @@ this.value=this.value.replace(/[^\d]/g,"");
 
 }
 
+const contraAmount=document.getElementById("contraAmount");
+
+if(contraAmount){
+
+contraAmount.addEventListener("input",function(){
+
+this.value=this.value.replace(/[^\d]/g,"");
+
+});
+
+}
+
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
@@ -2072,6 +2267,7 @@ setToday("collectionDate");
 setToday("loanDate");
 setToday("loanFirstDate");
 setToday("expenseDate");
+setToday("contraDate");
 
 populateMemberSelects();
 populateCollectorSelect();
