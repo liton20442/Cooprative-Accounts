@@ -459,13 +459,29 @@ Record office and operational expenses here. Saved expenses are automatically in
 
 <section id="reports" class="page">
 <h1>Reports</h1>
+
 <div class="card">
 <div class="form-grid">
-<div class="field"><label>From Date</label><input type="date" id="reportFrom" autocomplete="off"></div>
-<div class="field"><label>To Date</label><input type="date" id="reportTo" autocomplete="off"></div>
-<div class="field"><label>Member</label><select id="reportMember"></select></div>
 
-<div class="field"><label>Collector</label><select id="reportCollector"></select></div>
+<div class="field">
+<label>From Date</label>
+<input type="date" id="reportFrom" autocomplete="off">
+</div>
+
+<div class="field">
+<label>To Date</label>
+<input type="date" id="reportTo" autocomplete="off">
+</div>
+
+<div class="field">
+<label>Member</label>
+<select id="reportMember"></select>
+</div>
+
+<div class="field">
+<label>Collector</label>
+<select id="reportCollector"></select>
+</div>
 
 <div class="field">
 <label>Report Type</label>
@@ -476,27 +492,97 @@ Record office and operational expenses here. Saved expenses are automatically in
 <option value="expense">Expense</option>
 </select>
 </div>
+
 </div>
 
 <div class="actions">
-<button class="btn" onclick="renderReports()">Generate Report</button>
+<button class="btn" onclick="renderReports()">View Report</button>
 <button class="btn-secondary" onclick="clearReport()">Clear</button>
 </div>
 </div>
 
 <div class="card">
+<h2>Collection Head Summary</h2>
+
+<div class="summary-box">
+
+<div class="summary-line">
+<span>Share</span>
+<strong id="reportShare">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Savings</span>
+<strong id="reportSavings">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Loan Installment</span>
+<strong id="reportInstallment">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Admission Fee</span>
+<strong id="reportAdmission">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Pass Book</span>
+<strong id="reportPassbook">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Insurance</span>
+<strong id="reportInsurance">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Loan Form Sales</span>
+<strong id="reportLoanForm">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Other</span>
+<strong id="reportOther">0</strong>
+</div>
+
+<div class="summary-line total-row">
+<span>Total Collection</span>
+<strong id="reportCollectionTotal">0</strong>
+</div>
+
+</div>
+</div>
+
+<div class="card">
+<h2>Detailed Report</h2>
+
 <div class="table-wrap">
 <table>
-<thead><tr><th>Date</th><th>Member</th><th>Collector</th><th>Type</th><th>Description</th><th>Amount</th></tr></thead>
+<thead>
+<tr>
+<th>Date</th>
+<th>Member</th>
+<th>Collector</th>
+<th>Type</th>
+<th>Description</th>
+<th>Amount</th>
+</tr>
+</thead>
+
 <tbody id="reportTable"></tbody>
 </table>
 </div>
+
 <div class="summary-box">
-<div class="summary-line"><span>Grand Total</span><strong id="reportTotal">0</strong></div>
+<div class="summary-line">
+<span>Grand Total</span>
+<strong id="reportTotal">0</strong>
 </div>
+</div>
+
 </div>
 </section>
-
 <section id="backup" class="page">
 <h1>Backup & Restore</h1>
 
@@ -1912,9 +1998,88 @@ alert("Please enter a valid To Date.");
 return;
 }
 
+if(from&&to&&from>to){
+alert("From Date cannot be later than To Date.");
+return;
+}
+
 const member=document.getElementById("reportMember").value;
 const collector=document.getElementById("reportCollector").value;
 const type=document.getElementById("reportType").value;
+
+
+/* =========================
+   COLLECTION HEAD SUMMARY
+========================= */
+
+const collectionRows=data.collections.filter(c=>{
+
+if(from&&c.date<from)return false;
+if(to&&c.date>to)return false;
+
+if(member&&c.memberId!==member)return false;
+
+if(collector&&c.collectorId!==collector)return false;
+
+return true;
+});
+
+const reportShare=collectionRows.reduce(
+(s,c)=>s+Number(c.share||0),0
+);
+
+const reportSavings=collectionRows.reduce(
+(s,c)=>s+Number(c.savings||0),0
+);
+
+const reportInstallment=collectionRows.reduce(
+(s,c)=>s+Number(c.installment||0),0
+);
+
+const reportAdmission=collectionRows.reduce(
+(s,c)=>s+Number(c.admission||0),0
+);
+
+const reportPassbook=collectionRows.reduce(
+(s,c)=>s+Number(c.passbook||0),0
+);
+
+const reportInsurance=collectionRows.reduce(
+(s,c)=>s+Number(c.insurance||0),0
+);
+
+const reportLoanForm=collectionRows.reduce(
+(s,c)=>s+Number(c.loanForm||0),0
+);
+
+const reportOther=collectionRows.reduce(
+(s,c)=>s+Number(c.other||0),0
+);
+
+const reportCollectionTotal=
+reportShare+
+reportSavings+
+reportInstallment+
+reportAdmission+
+reportPassbook+
+reportInsurance+
+reportLoanForm+
+reportOther;
+
+document.getElementById("reportShare").textContent=money(reportShare);
+document.getElementById("reportSavings").textContent=money(reportSavings);
+document.getElementById("reportInstallment").textContent=money(reportInstallment);
+document.getElementById("reportAdmission").textContent=money(reportAdmission);
+document.getElementById("reportPassbook").textContent=money(reportPassbook);
+document.getElementById("reportInsurance").textContent=money(reportInsurance);
+document.getElementById("reportLoanForm").textContent=money(reportLoanForm);
+document.getElementById("reportOther").textContent=money(reportOther);
+document.getElementById("reportCollectionTotal").textContent=money(reportCollectionTotal);
+
+
+/* =========================
+   DETAILED TRANSACTION REPORT
+========================= */
 
 const rows=allReportRows().filter(r=>{
 
@@ -1932,12 +2097,22 @@ return true;
 
 const body=document.getElementById("reportTable");
 
-const total=rows.reduce((s,r)=>s+Number(r.amount||0),0);
+const total=rows.reduce(
+(s,r)=>s+Number(r.amount||0),
+0
+);
 
 document.getElementById("reportTotal").textContent=money(total);
 
 if(!rows.length){
-body.innerHTML=`<tr><td colspan="6" class="empty">No report data found.</td></tr>`;
+
+body.innerHTML=`
+<tr>
+<td colspan="6" class="empty">
+No report data found.
+</td>
+</tr>`;
+
 return;
 }
 
@@ -1952,7 +2127,7 @@ body.innerHTML=rows.map(r=>`
 </tr>
 `).join("");
 }
-
+  
 function clearReport(){
 
 document.getElementById("reportFrom").value="";
@@ -1961,9 +2136,19 @@ document.getElementById("reportMember").value="";
 document.getElementById("reportCollector").value="";
 document.getElementById("reportType").value="all";
 
+document.getElementById("reportShare").textContent="0";
+document.getElementById("reportSavings").textContent="0";
+document.getElementById("reportInstallment").textContent="0";
+document.getElementById("reportAdmission").textContent="0";
+document.getElementById("reportPassbook").textContent="0";
+document.getElementById("reportInsurance").textContent="0";
+document.getElementById("reportLoanForm").textContent="0";
+document.getElementById("reportOther").textContent="0";
+document.getElementById("reportCollectionTotal").textContent="0";
+document.getElementById("reportTotal").textContent="0";
+
 renderReports();
 }
-
 function renderDashboard(){
 
 const share=data.collections.reduce((s,c)=>s+Number(c.share||0),0);
