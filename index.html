@@ -1831,7 +1831,7 @@ if(cashEl)cashEl.textContent=money(cashBalance());
 if(bankEl)bankEl.textContent=money(data.bankBalance);
 
 if(!data.transfers.length){
-body.innerHTML=`<tr><td colspan="4" class="empty">No bank transfers found.</td></tr>`;
+body.innerHTML=`<tr><td colspan="5" class="empty">No bank transfers found.</td></tr>`;
 return;
 }
 
@@ -1843,11 +1843,14 @@ body.innerHTML=rows.map(t=>`
 <td>${t.type==="deposit"?"Cash to Bank - Deposit":"Bank to Cash - Withdrawal"}</td>
 <td>${money(t.amount)}</td>
 <td>${escapeHtml(t.note||"")}</td>
+<td>
+<button class="btn-small btn-blue" onclick="editContra('${t.id}')">Edit</button>
+<button class="btn-small btn-red" onclick="deleteContra('${t.id}')">Delete</button>
+</td>
 </tr>
 `).join("");
 
 }
-
 function saveExpense(){
 
 const date=validDateOrToday("expenseDate");
