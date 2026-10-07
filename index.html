@@ -1808,6 +1808,186 @@ clearContraForm();
 
 }
 
+   function editContra(id){
+
+const transfer=data.transfers.find(t=>t.id===id);
+if(!transfer)return;
+
+document.getElementById("contraDate").value=dateInputValue(transfer.date);
+document.getElementById("contraType").value=transfer.type;
+document.getElementById("contraAmount").value=transfer.amount;
+document.getElementById("contraNote").value=transfer.note||"";
+
+const saveButton=document.querySelector("#contra .btn-blue");
+
+if(saveButton){
+saveButton.textContent="Update Transfer";
+saveButton.onclick=function(){
+updateContra(id);
+};
+}
+
+window.scrollTo({top:0,behavior:"smooth"});
+
+}
+
+
+function updateContra(id){
+
+const transfer=data.transfers.find(t=>t.id===id);
+if(!transfer)return;
+
+const date=validDateOrToday("contraDate");
+const type=document.getElementById("contraType").value;
+const amount=num("contraAmount");
+const note=document.getElementById("contraNote").value.trim();
+
+if(!type){
+alert("Please select a Transaction Type.");
+return;
+}
+
+if(amount<=0){
+alert("Please enter a valid amount.");
+return;
+}
+
+
+/* Remove old transfer effect */
+
+recalculateBankBalanceWithout(id);
+
+
+/* Check new transfer against recalculated balances */
+
+const currentCash=cashBalance();
+const currentBank=Number(data.bankBalance)||0;
+
+if(type==="deposit"&&amount>currentCash){
+
+recalculateBankBalance();
+
+alert("Cash in hand is not sufficient.");
+return;
+
+}
+
+if(type==="withdraw"&&amount>currentBank){
+
+recalculateBankBalance();
+
+alert("Bank balance is not sufficient.");
+return;
+
+}
+
+
+/* Update transfer */
+
+transfer.date=date;
+transfer.type=type;
+transfer.amount=amount;
+transfer.note=note;
+
+
+/* Recalculate everything */
+
+recalculateBankBalance();
+
+saveData();
+refreshAll();
+
+resetContraSaveButton();
+
+alert("Bank transfer updated successfully.");
+
+clearContraForm();
+
+}
+
+
+function deleteContra(id){
+
+const transfer=data.transfers.find(t=>t.id===id);
+if(!transfer)return;
+
+const typeText=
+transfer.type==="deposit"
+?"Cash to Bank - Deposit"
+:"Bank to Cash - Withdrawal";
+
+if(!confirm(
+`Delete this bank transfer?\n\n${typeText} - ${money(transfer.amount)}`
+))return;
+
+data.transfers=data.transfers.filter(t=>t.id!==id);
+
+recalculateBankBalance();
+
+saveData();
+refreshAll();
+
+alert("Bank transfer deleted successfully.");
+
+}
+
+
+function recalculateBankBalanceWithout(excludeId){
+
+let balance=0;
+
+data.transfers.forEach(t=>{
+
+if(t.id===excludeId)return;
+
+if(t.type==="deposit"){
+balance+=Number(t.amount)||0;
+}
+
+if(t.type==="withdraw"){
+balance-=Number(t.amount)||0;
+}
+
+});
+
+data.bankBalance=balance;
+
+}
+
+
+function recalculateBankBalance(){
+
+let balance=0;
+
+data.transfers.forEach(t=>{
+
+if(t.type==="deposit"){
+balance+=Number(t.amount)||0;
+}
+
+if(t.type==="withdraw"){
+balance-=Number(t.amount)||0;
+}
+
+});
+
+data.bankBalance=balance;
+
+}
+
+
+function resetContraSaveButton(){
+
+const saveButton=document.querySelector("#contra .btn-blue");
+
+if(!saveButton)return;
+
+saveButton.textContent="Save Transfer";
+saveButton.onclick=function(){
+saveContra();
+};
+
+}
 function clearContraForm(){
 
 setToday("contraDate");
