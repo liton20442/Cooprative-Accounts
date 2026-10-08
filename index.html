@@ -1242,40 +1242,28 @@ if(item.installment>0){
 
 const activeLoans=data.loans
 .filter(l=>l.memberId===memberId)
-.filter(l=>loanOutstanding(l)>0)
-.sort((a,b)=>a.date.localeCompare(b.date));
+.filter(l=>Number(l.total||0)>0);
 
 if(!activeLoans.length){
-alert("No outstanding loan found for this member.");
+alert("No loan found for this member.");
 return;
 }
 
-const totalOutstanding=activeLoans.reduce((s,l)=>s+loanOutstanding(l),0);
+const totalOutstanding=activeLoans.reduce(
+(s,l)=>s+loanOutstanding(l),0
+);
 
 if(item.installment>totalOutstanding+0.01){
 alert("The installment amount is greater than the member's loan outstanding.");
 return;
 }
 
-let remaining=item.installment;
-
-for(const loan of activeLoans){
-
-if(remaining<=0)break;
-
-const outstanding=loanOutstanding(loan);
-
-const pay=Math.min(remaining,outstanding);
-
-allocateInstallment(loan,pay,date);
-
-remaining-=pay;
-
-}
-
 }
 
 data.collections.push(item);
+
+/* Rebuild all loan payment allocations */
+rebuildLoanPayments();
 
 saveData();
 refreshAll();
@@ -1287,12 +1275,13 @@ document.getElementById("collectionDate").value=dateInputValue(date);
 [
 "colShare","colSavings","colInstallment","colAdmission",
 "colPassbook","colInsurance","colLoanForm","colOther"
-].forEach(id=>document.getElementById(id).value="");
+].forEach(id=>{
+document.getElementById(id).value="";
+});
 
 updateCollectionTotal();
 
 }
-
 function allocateInstallment(loan,payment,paymentDate){
 
 if(!loan.payments)loan.payments=[];
