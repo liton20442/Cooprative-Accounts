@@ -828,7 +828,10 @@ populateExpenseHeads();
 if(id==="dashboard")renderDashboard();
 if(id==="members")renderMembers();
 if(id==="collectors")renderCollectors();
-if(id==="collection")updateCollectionTotal();
+if(id==="collection"){
+updateCollectionTotal();
+renderCollections();
+}
 if(id==="loan"){calculateLoan();renderLoans();}
 if(id==="accounts")renderAccount();
 if(id==="ledger")renderLedger();
