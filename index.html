@@ -91,7 +91,7 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 @media(max-width:390px){html,body{font-size:16px}.dashboard-grid,.quick-grid{grid-template-columns:1fr 1fr;gap:9px}
 .stat-card{min-height:100px;padding:12px}.stat-card .value{font-size:20px}.quick-btn{min-height:76px}}
 </style>
-   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
@@ -150,10 +150,24 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <h1>Members</h1>
 <div class="card">
 <div class="form-grid">
-<div class="field"><label>Member Code / Number</label><input id="memberCode" autocomplete="off"></div>
-<div class="field full"><label>Member Name</label><input id="memberName" autocomplete="off"></div>
-<div class="field full"><label>Mobile Number</label><input id="memberMobile" autocomplete="off"></div>
+
+<div class="field">
+<label>Member Code / Number</label>
+<input id="memberCode" autocomplete="off">
 </div>
+
+<div class="field full">
+<label>Mobile Number</label>
+<input id="memberMobile" autocomplete="off">
+</div>
+
+<div class="field full">
+<label>Member Name</label>
+<input id="memberName" autocomplete="off">
+</div>
+
+</div>
+
 <div class="actions">
 <button class="btn-green" onclick="saveMember()">Save Member</button>
 <button class="btn-secondary" onclick="clearMemberForm()">Clear</button>
@@ -176,7 +190,6 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 
 <section id="collectors" class="page">
 <h1>Collectors</h1>
-
 <div class="card">
 <div class="form-grid">
 <div class="field">
@@ -188,7 +201,6 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <input id="collectorMobile" autocomplete="off">
 </div>
 </div>
-
 <div class="actions">
 <button class="btn-green" onclick="saveCollector()">Save Collector</button>
 <button class="btn-secondary" onclick="clearCollectorForm()">Clear</button>
@@ -241,6 +253,7 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <div class="field"><label>Insurance</label><input type="text" id="colInsurance" value=""></div>
 <div class="field"><label>Loan Form Sales</label><input type="text" id="colLoanForm" value=""></div>
 <div class="field"><label>Other</label><input type="text" id="colOther" value=""></div>
+
 </div>
 
 <div class="summary-box">
@@ -252,14 +265,14 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <button class="btn-secondary" onclick="clearCollectionForm()">Clear</button>
 </div>
 </div>
-</section>
+
 <div class="card">
 <h2>Collection History</h2>
 
 <div class="search-row">
 <input id="collectionSearch"
-       placeholder="Search by member code or name"
-       oninput="renderCollections()">
+placeholder="Search by member code or name"
+oninput="renderCollections()">
 </div>
 
 <div class="table-wrap">
@@ -273,11 +286,13 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <th>Action</th>
 </tr>
 </thead>
-
 <tbody id="collectionTable"></tbody>
 </table>
 </div>
 </div>
+
+</section>
+
 <section id="loan" class="page">
 <h1>Loan</h1>
 
@@ -321,11 +336,21 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 
 <section id="accounts" class="page">
 <h1>Member Accounts</h1>
+
 <div class="card">
 <div class="field">
 <label>Member</label>
 <select id="accountMember" onchange="renderAccount()"></select>
 </div>
+</div>
+
+<div class="card">
+<h2>Member Information</h2>
+<div id="accountMemberInfo"></div>
+</div>
+
+<div class="card">
+<h2>Account Summary</h2>
 <div id="accountSummary"></div>
 </div>
 
@@ -333,7 +358,15 @@ Select a member and enter all applicable collection amounts in one form. Loan In
 <h2>Transaction History</h2>
 <div class="table-wrap">
 <table>
-<thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Details</th></tr></thead>
+<thead>
+<tr>
+<th>Date</th>
+<th>Description</th>
+<th>Amount</th>
+<th>Details</th>
+<th>Action</th>
+</tr>
+</thead>
 <tbody id="accountTransactions"></tbody>
 </table>
 </div>
@@ -487,29 +520,23 @@ Record office and operational expenses here. Saved expenses are automatically in
 <h1>Reports</h1>
 
 <div class="card">
-
 <div class="form-grid">
-
 <div class="field">
 <label>From Date</label>
 <input type="date" id="reportFrom" autocomplete="off">
 </div>
-
 <div class="field">
 <label>To Date</label>
 <input type="date" id="reportTo" autocomplete="off">
 </div>
-
 <div class="field">
 <label>Member</label>
 <select id="reportMember"></select>
 </div>
-
 <div class="field">
 <label>Collector</label>
 <select id="reportCollector"></select>
 </div>
-
 <div class="field">
 <label>Report Type</label>
 <select id="reportType">
@@ -519,79 +546,33 @@ Record office and operational expenses here. Saved expenses are automatically in
 <option value="expense">Expense</option>
 </select>
 </div>
-
 </div>
 
 <div class="actions">
 <button class="btn" onclick="renderReports()">View Report</button>
 <button class="btn-secondary" onclick="clearReport()">Clear</button>
 </div>
-
 </div>
 
 <div class="card">
-
 <h2>Collection Head Summary</h2>
-
 <div class="summary-box">
-
-<div class="summary-line">
-<span>Share</span>
-<strong id="reportShare">0</strong>
+<div class="summary-line"><span>Share</span><strong id="reportShare">0</strong></div>
+<div class="summary-line"><span>Savings</span><strong id="reportSavings">0</strong></div>
+<div class="summary-line"><span>Loan Installment</span><strong id="reportInstallment">0</strong></div>
+<div class="summary-line"><span>Admission Fee</span><strong id="reportAdmission">0</strong></div>
+<div class="summary-line"><span>Pass Book</span><strong id="reportPassbook">0</strong></div>
+<div class="summary-line"><span>Insurance</span><strong id="reportInsurance">0</strong></div>
+<div class="summary-line"><span>Loan Form Sales</span><strong id="reportLoanForm">0</strong></div>
+<div class="summary-line"><span>Other</span><strong id="reportOther">0</strong></div>
+<div class="summary-line total-row"><span>Total Collection</span><strong id="reportCollectionTotal">0</strong></div>
 </div>
-
-<div class="summary-line">
-<span>Savings</span>
-<strong id="reportSavings">0</strong>
-</div>
-
-<div class="summary-line">
-<span>Loan Installment</span>
-<strong id="reportInstallment">0</strong>
-</div>
-
-<div class="summary-line">
-<span>Admission Fee</span>
-<strong id="reportAdmission">0</strong>
-</div>
-
-<div class="summary-line">
-<span>Pass Book</span>
-<strong id="reportPassbook">0</strong>
-</div>
-
-<div class="summary-line">
-<span>Insurance</span>
-<strong id="reportInsurance">0</strong>
-</div>
-
-<div class="summary-line">
-<span>Loan Form Sales</span>
-<strong id="reportLoanForm">0</strong>
-</div>
-
-<div class="summary-line">
-<span>Other</span>
-<strong id="reportOther">0</strong>
-</div>
-
-<div class="summary-line total-row">
-<span>Total Collection</span>
-<strong id="reportCollectionTotal">0</strong>
-</div>
-
-</div>
-
 </div>
 
 <div class="card">
-
 <h2>Detailed Report</h2>
-
 <div class="table-wrap">
-
 <table>
-
 <thead>
 <tr>
 <th>Date</th>
@@ -602,24 +583,17 @@ Record office and operational expenses here. Saved expenses are automatically in
 <th>Amount</th>
 </tr>
 </thead>
-
 <tbody id="reportTable"></tbody>
-
 </table>
-
 </div>
 
 <div class="summary-box">
-
 <div class="summary-line">
 <span>Grand Total</span>
 <strong id="reportTotal">0</strong>
 </div>
-
 </div>
-
 </div>
-
 </section>
 
 <section id="backup" class="page">
@@ -630,13 +604,13 @@ Record office and operational expenses here. Saved expenses are automatically in
 <p>Create a complete backup file containing members, collections, loans, schedules, expenses and accounting data.</p>
 <button class="btn-green" onclick="backupData()">Download Backup</button>
 </div>
+
 <div class="card">
 <h2>Excel Export</h2>
 <p>Export all accounting transactions into one Excel workbook with separate sheets.</p>
-<button class="btn-green" onclick="exportAllTransactionsToExcel()">
-Export All Transactions to Excel
-</button>
+<button class="btn-green" onclick="exportAllTransactionsToExcel()">Export All Transactions to Excel</button>
 </div>
+
 <div class="card">
 <h2>Restore</h2>
 <p>Restoring a backup replaces the current application data with the selected backup.</p>
@@ -688,7 +662,9 @@ function loadData(){
 try{
 const raw=localStorage.getItem(STORAGE_KEY);
 if(!raw)return blankData();
+
 const parsed=JSON.parse(raw);
+
 return{
 ...blankData(),
 ...parsed,
@@ -700,7 +676,10 @@ expenses:parsed.expenses||[],
 customExpenseHeads:parsed.customExpenseHeads||[],
 transfers:parsed.transfers||[]
 };
-}catch(e){return blankData();}
+
+}catch(e){
+return blankData();
+}
 }
 
 function saveData(){
@@ -719,22 +698,36 @@ return Math.round(n).toLocaleString("en-IN");
 function num(id){
 const el=document.getElementById(id);
 if(!el)return 0;
-let value=el.value.toString().replace(/,/g,"").replace(/[^\d.-]/g,"");
+
+let value=el.value.toString()
+.replace(/,/g,"")
+.replace(/[^\d.-]/g,"");
+
 return Number(value)||0;
 }
 
-function pad2(n){return String(n).padStart(2,"0");}
+function pad2(n){
+return String(n).padStart(2,"0");
+}
 
 function today(){
 const d=new Date();
-return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
+
+return d.getFullYear()+"-"+
+pad2(d.getMonth()+1)+"-"+
+pad2(d.getDate());
 }
 
 function displayDate(iso){
+
 if(!iso)return "";
+
 const parts=String(iso).split("-");
+
 if(parts.length!==3)return iso;
+
 return parts[2]+"/"+parts[1]+"/"+parts[0].slice(-2);
+
 }
 
 function dateInputValue(iso){
@@ -771,13 +764,17 @@ const parts=v.split(/[\/.-]/);
 
 if(parts.length!==3)return "";
 
-let day=parts[0],month=parts[1],year=parts[2];
+let day=parts[0];
+let month=parts[1];
+let year=parts[2];
 
 if(day.length===1)day="0"+day;
 if(month.length===1)month="0"+month;
 if(year.length===2)year="20"+year;
 
-const d=Number(day),m=Number(month),y=Number(year);
+const d=Number(day);
+const m=Number(month);
+const y=Number(year);
 
 if(!d||!m||!y)return "";
 if(m<1||m>12||d<1||d>31)return "";
@@ -794,29 +791,39 @@ return y+"-"+pad2(m)+"-"+pad2(d);
 }
 
 function setToday(id){
+
 const el=document.getElementById(id);
+
 if(el)el.value=dateInputValue(today());
+
 }
 
 function validDateOrToday(id){
-const el=document.getElementById(id);
-const parsed=parseDateInput(el?el.value:"");
-return parsed||today();
-}
 
-function formatDateWhileTyping(el){
-let value=el.value.replace(/[^\d]/g,"").slice(0,6);
-if(value.length>4)value=value.slice(0,2)+"/"+value.slice(2,4)+"/"+value.slice(4);
-else if(value.length>2)value=value.slice(0,2)+"/"+value.slice(2);
-el.value=value;
+const el=document.getElementById(id);
+
+const parsed=parseDateInput(el?el.value:"");
+
+return parsed||today();
+
 }
 
 function showPage(id){
-document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+
+document.querySelectorAll(".page")
+.forEach(p=>p.classList.remove("active"));
+
 const page=document.getElementById(id);
+
 if(page)page.classList.add("active");
-window.scrollTo({top:0,behavior:"smooth"});
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
 refreshPage(id);
+
 }
 
 function refreshPage(id){
@@ -826,36 +833,64 @@ populateCollectorSelect();
 populateExpenseHeads();
 
 if(id==="dashboard")renderDashboard();
+
 if(id==="members")renderMembers();
+
 if(id==="collectors")renderCollectors();
+
 if(id==="collection"){
 updateCollectionTotal();
 renderCollections();
 }
-if(id==="loan"){calculateLoan();renderLoans();}
-if(id==="accounts")renderAccount();
+
+if(id==="loan"){
+calculateLoan();
+renderLoans();
+}
+
+if(id==="accounts"){
+renderAccount();
+}
+
 if(id==="ledger")renderLedger();
+
 if(id==="cashbook")renderCashBook();
+
 if(id==="contra")renderContra();
+
 if(id==="expense")renderExpenses();
+
 if(id==="reports")renderReports();
 
 }
 
 function memberName(id){
+
 const m=data.members.find(x=>x.id===id);
+
 return m?m.name:"";
+
 }
 
 function memberCode(id){
+
 const m=data.members.find(x=>x.id===id);
+
 return m?m.code:"";
+
 }
 
 function collectorName(id){
+
 const c=data.collectors.find(x=>x.id===id);
+
 return c?c.name:"";
+
 }
+
+/* =========================
+   MEMBERS
+   ========================= */
 
 function saveMember(){
 
@@ -868,7 +903,9 @@ alert("Member Code and Member Name are required.");
 return;
 }
 
-const duplicate=data.members.some(m=>m.code.toLowerCase()===code.toLowerCase());
+const duplicate=data.members.some(
+m=>m.code.toLowerCase()===code.toLowerCase()
+);
 
 if(duplicate){
 alert("This Member Code already exists.");
@@ -876,7 +913,10 @@ return;
 }
 
 data.members.push({
-id:uid("M"),code,name,mobile,
+id:uid("M"),
+code,
+name,
+mobile,
 createdAt:new Date().toISOString()
 });
 
@@ -885,13 +925,15 @@ clearMemberForm();
 refreshAll();
 
 alert("Member saved successfully.");
+
 }
 
 function clearMemberForm(){
 
 document.getElementById("memberCode").value="";
-document.getElementById("memberName").value="";
 document.getElementById("memberMobile").value="";
+document.getElementById("memberName").value="";
+
 document.getElementById("memberCode").focus();
 
 }
@@ -899,19 +941,23 @@ document.getElementById("memberCode").focus();
 function editMember(id){
 
 const member=data.members.find(m=>m.id===id);
+
 if(!member)return;
 
 document.getElementById("memberCode").value=member.code;
-document.getElementById("memberName").value=member.name;
 document.getElementById("memberMobile").value=member.mobile||"";
+document.getElementById("memberName").value=member.name;
 
 const saveButton=document.querySelector("#members .btn-green");
 
 if(saveButton){
+
 saveButton.textContent="Update Member";
+
 saveButton.onclick=function(){
 updateMember(id);
 };
+
 }
 
 document.getElementById("memberCode").focus();
@@ -921,6 +967,7 @@ document.getElementById("memberCode").focus();
 function updateMember(id){
 
 const member=data.members.find(m=>m.id===id);
+
 if(!member)return;
 
 const code=document.getElementById("memberCode").value.trim();
@@ -933,7 +980,8 @@ return;
 }
 
 const duplicate=data.members.some(
-m=>m.id!==id&&m.code.toLowerCase()===code.toLowerCase()
+m=>m.id!==id&&
+m.code.toLowerCase()===code.toLowerCase()
 );
 
 if(duplicate){
@@ -947,28 +995,57 @@ member.mobile=mobile;
 
 saveData();
 
-const saveButton=document.querySelector("#members .btn-green");
-
-if(saveButton){
-saveButton.textContent="Save Member";
-saveButton.onclick=function(){
-saveMember();
-};
-}
+resetMemberSaveButton();
 
 clearMemberForm();
+
 refreshAll();
 
 alert("Member updated successfully.");
 
 }
 
+function resetMemberSaveButton(){
+
+const saveButton=document.querySelector("#members .btn-green");
+
+if(!saveButton)return;
+
+saveButton.textContent="Save Member";
+
+saveButton.onclick=function(){
+saveMember();
+};
+
+}
+
 function deleteMember(id){
 
 const member=data.members.find(m=>m.id===id);
+
 if(!member)return;
 
-if(!confirm(`Delete this member?\n\n${member.code} - ${member.name}`))return;
+if(!confirm(
+`Delete this member?\n\n${member.code} - ${member.name}`
+))return;
+
+const hasCollections=data.collections.some(
+c=>c.memberId===id
+);
+
+const hasLoans=data.loans.some(
+l=>l.memberId===id
+);
+
+if(hasCollections||hasLoans){
+
+alert(
+"This member cannot be deleted because account or loan history exists."
+);
+
+return;
+
+}
 
 data.members=data.members.filter(m=>m.id!==id);
 
@@ -981,32 +1058,67 @@ alert("Member deleted successfully.");
 
 function renderMembers(){
 
-const search=document.getElementById("memberSearch").value.trim().toLowerCase();
+const search=document.getElementById("memberSearch").value
+.trim()
+.toLowerCase();
 
 const list=data.members.filter(m=>{
+
 return !search||
 m.code.toLowerCase().includes(search)||
 m.name.toLowerCase().includes(search);
+
 });
 
 const body=document.getElementById("memberTable");
 
 if(!list.length){
-body.innerHTML=`<tr><td colspan="4" class="empty">No members found.</td></tr>`;
+
+body.innerHTML=`
+<tr>
+<td colspan="4" class="empty">
+No members found.
+</td>
+</tr>`;
+
 return;
+
 }
 
 body.innerHTML=list.map(m=>`
+
 <tr>
+
 <td>${escapeHtml(m.code)}</td>
+
 <td>${escapeHtml(m.name)}</td>
+
 <td>${escapeHtml(m.mobile||"")}</td>
+
 <td>
-<button class="btn-small btn-blue" onclick="openMemberAccount('${m.id}')">Account</button>
-<button class="btn-small btn-orange" onclick="editMember('${m.id}')">Edit</button>
-<button class="btn-small btn-red" onclick="deleteMember('${m.id}')">Delete</button>
+
+<button
+class="btn-small btn-blue"
+onclick="openMemberAccount('${m.id}')">
+Account
+</button>
+
+<button
+class="btn-small btn-orange"
+onclick="editMember('${m.id}')">
+Edit
+</button>
+
+<button
+class="btn-small btn-red"
+onclick="deleteMember('${m.id}')">
+Delete
+</button>
+
 </td>
+
 </tr>
+
 `).join("");
 
 }
@@ -1021,30 +1133,60 @@ showPage("accounts");
 
 }
 
+/* =========================
+   SELECTS
+   ========================= */
+
 function fillSelect(id,options,placeholder){
 
 const select=document.getElementById(id);
+
 if(!select)return;
 
 const current=select.value;
 
-select.innerHTML=`<option value="">${placeholder}</option>`+
-options.map(x=>`<option value="${x.id}">${escapeHtml(x.label)}</option>`).join("");
+select.innerHTML=
+`<option value="">${placeholder}</option>`+
+options.map(x=>
+`<option value="${x.id}">${escapeHtml(x.label)}</option>`
+).join("");
 
-if(options.some(x=>x.id===current))select.value=current;
+if(options.some(x=>x.id===current)){
+select.value=current;
+}
 
 }
 
 function populateMemberSelects(){
 
 const options=data.members.map(m=>({
-id:m.id,label:`${m.code} - ${m.name}`
+id:m.id,
+label:`${m.code} - ${m.name}`
 }));
 
-fillSelect("collectionMember",options,"Select Member");
-fillSelect("loanMember",options,"Select Member");
-fillSelect("accountMember",options,"Select Member");
-fillSelect("reportMember",options,"All Members");
+fillSelect(
+"collectionMember",
+options,
+"Select Member"
+);
+
+fillSelect(
+"loanMember",
+options,
+"Select Member"
+);
+
+fillSelect(
+"accountMember",
+options,
+"Select Member"
+);
+
+fillSelect(
+"reportMember",
+options,
+"All Members"
+);
 
 }
 
@@ -1055,25 +1197,48 @@ id:c.id,
 label:c.name+(c.mobile?" - "+c.mobile:"")
 }));
 
-fillSelect("collectionCollector",options,"Select Collector");
-fillSelect("reportCollector",options,"All Collectors");
+fillSelect(
+"collectionCollector",
+options,
+"Select Collector"
+);
+
+fillSelect(
+"reportCollector",
+options,
+"All Collectors"
+);
 
 }
 
 function populateExpenseHeads(){
 
 const select=document.getElementById("expenseHead");
+
 if(!select)return;
 
-const heads=[...defaultExpenseHeads,...data.customExpenseHeads];
+const heads=[
+...defaultExpenseHeads,
+...data.customExpenseHeads
+];
+
 const current=select.value;
 
-select.innerHTML=`<option value="">Select Expense Head</option>`+
-heads.map(h=>`<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`).join("");
+select.innerHTML=
+`<option value="">Select Expense Head</option>`+
+heads.map(h=>
+`<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`
+).join("");
 
-if(heads.includes(current))select.value=current;
+if(heads.includes(current)){
+select.value=current;
+}
 
 }
+
+/* =========================
+   COLLECTORS
+   ========================= */
 
 function saveCollector(){
 
@@ -1102,6 +1267,7 @@ createdAt:new Date().toISOString()
 });
 
 saveData();
+
 clearCollectorForm();
 renderCollectors();
 populateCollectorSelect();
@@ -1114,6 +1280,7 @@ function clearCollectorForm(){
 
 document.getElementById("collectorName").value="";
 document.getElementById("collectorMobile").value="";
+
 document.getElementById("collectorName").focus();
 
 }
@@ -1121,26 +1288,42 @@ document.getElementById("collectorName").focus();
 function renderCollectors(){
 
 const body=document.getElementById("collectorTable");
+
 if(!body)return;
 
 if(!data.collectors.length){
+
 body.innerHTML=`
 <tr>
-<td colspan="3" class="empty">No collectors found.</td>
+<td colspan="3" class="empty">
+No collectors found.
+</td>
 </tr>`;
+
 return;
+
 }
 
 body.innerHTML=data.collectors.map(c=>`
+
 <tr>
+
 <td>${escapeHtml(c.name)}</td>
+
 <td>${escapeHtml(c.mobile||"")}</td>
+
 <td>
-<button class="btn-small btn-red" onclick="deleteCollector('${c.id}')">
+
+<button
+class="btn-small btn-red"
+onclick="deleteCollector('${c.id}')">
 Delete
 </button>
+
 </td>
+
 </tr>
+
 `).join("");
 
 }
@@ -1148,19 +1331,29 @@ Delete
 function deleteCollector(id){
 
 const collector=data.collectors.find(c=>c.id===id);
+
 if(!collector)return;
 
-if(!confirm(`Delete this collector?\n\n${collector.name}`))return;
+if(!confirm(
+`Delete this collector?\n\n${collector.name}`
+))return;
 
-data.collectors=data.collectors.filter(c=>c.id!==id);
+data.collectors=data.collectors.filter(
+c=>c.id!==id
+);
 
 saveData();
+
 renderCollectors();
 populateCollectorSelect();
 
 alert("Collector deleted successfully.");
 
 }
+
+/* =========================
+   COLLECTION
+   ========================= */
 
 function collectionFields(){
 
@@ -1179,46 +1372,74 @@ return[
 
 function collectionTotal(){
 
-return collectionFields().reduce((sum,x)=>sum+num(x[1]),0);
+return collectionFields()
+.reduce(
+(sum,x)=>sum+num(x[1]),
+0
+);
 
 }
 
 function updateCollectionTotal(){
 
-document.getElementById("collectionTotal").textContent=money(collectionTotal());
+const el=document.getElementById("collectionTotal");
+
+if(el){
+el.textContent=money(collectionTotal());
+}
 
 }
 
 function clearCollectionForm(){
 
 const ids=[
-"colShare","colSavings","colInstallment","colAdmission",
-"colPassbook","colInsurance","colLoanForm","colOther"
+"colShare",
+"colSavings",
+"colInstallment",
+"colAdmission",
+"colPassbook",
+"colInsurance",
+"colLoanForm",
+"colOther"
 ];
 
-ids.forEach(id=>document.getElementById(id).value="");
+ids.forEach(id=>{
+document.getElementById(id).value="";
+});
 
 setToday("collectionDate");
+
 updateCollectionTotal();
 
 }
 
 function saveCollection(){
 
-const memberId=document.getElementById("collectionMember").value;
-const collectorId=document.getElementById("collectionCollector").value;
-const date=validDateOrToday("collectionDate");
+const memberId=
+document.getElementById("collectionMember").value;
+
+const collectorId=
+document.getElementById("collectionCollector").value;
+
+const date=
+validDateOrToday("collectionDate");
 
 if(!memberId){
+
 alert("Please select a member.");
+
 return;
+
 }
 
 const total=collectionTotal();
 
 if(total<=0){
+
 alert("Enter at least one collection amount.");
+
 return;
+
 }
 
 const item={
@@ -1245,100 +1466,133 @@ const activeLoans=data.loans
 .filter(l=>Number(l.total||0)>0);
 
 if(!activeLoans.length){
+
 alert("No loan found for this member.");
+
 return;
+
 }
 
 const totalOutstanding=activeLoans.reduce(
-(s,l)=>s+loanOutstanding(l),0
+(s,l)=>s+loanOutstanding(l),
+0
 );
 
 if(item.installment>totalOutstanding+0.01){
-alert("The installment amount is greater than the member's loan outstanding.");
+
+alert(
+"The installment amount is greater than the member's loan outstanding."
+);
+
 return;
+
 }
 
 }
 
 data.collections.push(item);
 
-/* Rebuild all loan payment allocations */
 rebuildLoanPayments();
 
 saveData();
+
+resetCollectionSaveButton();
+
 refreshAll();
 
 alert("Collection saved successfully.");
 
-document.getElementById("collectionDate").value=dateInputValue(date);
-
-[
-"colShare","colSavings","colInstallment","colAdmission",
-"colPassbook","colInsurance","colLoanForm","colOther"
-].forEach(id=>{
-document.getElementById(id).value="";
-});
-
-updateCollectionTotal();
+clearCollectionForm();
 
 }
-function allocateInstallment(loan,payment,paymentDate){
+
+function allocateInstallment(
+loan,
+payment,
+paymentDate
+){
 
 if(!loan.payments)loan.payments=[];
 
-const totalInstallments=Number(loan.installments)||1;
-const serviceTotal=Number(loan.service)||0;
+const totalInstallments=
+Number(loan.installments)||1;
 
-let servicePaid=loan.payments.reduce((s,p)=>s+Number(p.service||0),0);
-let principalPaid=loan.payments.reduce((s,p)=>s+Number(p.principal||0),0);
+const serviceTotal=
+Number(loan.service)||0;
 
-let remainingService=Math.max(0,serviceTotal-servicePaid);
-let remainingPrincipal=Math.max(0,loan.principal-principalPaid);
+let servicePaid=loan.payments.reduce(
+(s,p)=>s+Number(p.service||0),
+0
+);
+
+let principalPaid=loan.payments.reduce(
+(s,p)=>s+Number(p.principal||0),
+0
+);
+
+let remainingService=Math.max(
+0,
+serviceTotal-servicePaid
+);
+
+let remainingPrincipal=Math.max(
+0,
+loan.principal-principalPaid
+);
 
 let servicePart=Math.min(
 remainingService,
-Math.round((serviceTotal/totalInstallments)*100)/100
+Math.round(
+(serviceTotal/totalInstallments)*100
+)/100
 );
 
-if(payment>=remainingService)servicePart=remainingService;
+if(payment>=remainingService){
+servicePart=remainingService;
+}
 
 let principalPart=payment-servicePart;
 
 if(principalPart>remainingPrincipal){
+
 principalPart=remainingPrincipal;
+
 servicePart=payment-principalPart;
+
 }
 
 loan.payments.push({
+
 id:uid("P"),
+
 amount:payment,
+
 principal:principalPart,
+
 service:servicePart,
+
 date:paymentDate
+
 });
 
 }
-function rebuildLoanPayments(){
 
-/*
-Rebuild loan payments from all collection records.
-This is necessary so Collection Edit/Delete keeps
-Principal and Service Charge allocation correct.
-*/
+function rebuildLoanPayments(){
 
 data.loans.forEach(loan=>{
 loan.payments=[];
 });
 
-/* Process collections in date order */
 const collections=[...data.collections]
 .sort((a,b)=>{
 
-const dateCompare=String(a.date).localeCompare(String(b.date));
+const dateCompare=
+String(a.date).localeCompare(String(b.date));
 
 if(dateCompare!==0)return dateCompare;
 
-return String(a.createdAt||"").localeCompare(
+return String(a.createdAt||"")
+.localeCompare(
 String(b.createdAt||"")
 );
 
@@ -1346,7 +1600,8 @@ String(b.createdAt||"")
 
 for(const collection of collections){
 
-const payment=Number(collection.installment)||0;
+const payment=
+Number(collection.installment)||0;
 
 if(payment<=0)continue;
 
@@ -1357,13 +1612,13 @@ const activeLoans=data.loans
 .filter(l=>loanOutstanding(l)>0)
 .sort((a,b)=>{
 
-const dateCompare=String(a.date).localeCompare(
-String(b.date)
-);
+const dateCompare=
+String(a.date).localeCompare(String(b.date));
 
 if(dateCompare!==0)return dateCompare;
 
-return String(a.createdAt||"").localeCompare(
+return String(a.createdAt||"")
+.localeCompare(
 String(b.createdAt||"")
 );
 
@@ -1373,11 +1628,13 @@ for(const loan of activeLoans){
 
 if(remaining<=0)break;
 
-const outstanding=loanOutstanding(loan);
+const outstanding=
+loanOutstanding(loan);
 
 if(outstanding<=0)continue;
 
-const pay=Math.min(remaining,outstanding);
+const pay=
+Math.min(remaining,outstanding);
 
 allocateInstallment(
 loan,
@@ -1392,112 +1649,6 @@ remaining-=pay;
 }
 
 }
-function calculateLoan(){
-
-const principal=num("loanPrincipal");
-
-let rate=Number(
-document.getElementById("loanRate").value.toString().replace(/,/g,"")
-)||0;
-
-const installments=Number(document.getElementById("loanInstallments").value)||0;
-
-const service=principal*rate/100;
-const total=principal+service;
-const installment=installments>0?total/installments:0;
-
-document.getElementById("loanService").value=service?money(service):"";
-document.getElementById("loanTotal").value=total?money(total):"";
-document.getElementById("loanInstallmentAmount").value=installment?money(installment):"";
-
-document.getElementById("loanPreviewPrincipal").textContent=money(principal);
-document.getElementById("loanPreviewService").textContent=money(service);
-document.getElementById("loanPreviewTotal").textContent=money(total);
-document.getElementById("loanPreviewInstallment").textContent=money(installment);
-
-}
-
-function saveLoan(){
-
-const memberId=document.getElementById("loanMember").value;
-const date=validDateOrToday("loanDate");
-const principal=num("loanPrincipal");
-
-const rate=Number(
-document.getElementById("loanRate").value.toString().replace(/,/g,"")
-)||0;
-
-const installments=Number(document.getElementById("loanInstallments").value)||0;
-const firstDate=validDateOrToday("loanFirstDate");
-const note=document.getElementById("loanNote").value.trim();
-
-if(!memberId||principal<=0||installments<=0){
-alert("Please complete Member, Loan Principal and Number of Installments.");
-return;
-}
-
-const service=principal*rate/100;
-const total=principal+service;
-
-const loan={
-id:uid("L"),
-memberId,
-date,
-principal,
-rate,
-service,
-total,
-installments,
-installmentAmount:total/installments,
-firstDate,
-note,
-payments:[],
-createdAt:new Date().toISOString()
-};
-
-data.loans.push(loan);
-saveData();
-refreshAll();
-
-alert("Loan saved successfully.");
-clearLoanForm();
-
-}
-
-function clearLoanForm(){
-
-document.getElementById("loanPrincipal").value="";
-document.getElementById("loanRate").value="10";
-document.getElementById("loanInstallments").value="";
-document.getElementById("loanService").value="";
-document.getElementById("loanTotal").value="";
-document.getElementById("loanInstallmentAmount").value="";
-document.getElementById("loanNote").value="";
-
-setToday("loanDate");
-setToday("loanFirstDate");
-calculateLoan();
-
-}
-
-function loanPaid(loan){
-
-return(loan.payments||[]).reduce((s,p)=>s+Number(p.amount||0),0);
-
-}
-
-function loanOutstanding(loan){
-
-return Math.max(0,Number(loan.total||0)-loanPaid(loan));
-
-}
-
-function loanServicePaid(loan){
-
-return(loan.payments||[]).reduce((s,p)=>s+Number(p.service||0),0);
-
-}
-
 
 function renderCollections(){
 
@@ -1507,7 +1658,9 @@ if(!body)return;
 
 const search=(
 document.getElementById("collectionSearch")?.value||""
-).trim().toLowerCase();
+)
+.trim()
+.toLowerCase();
 
 const rows=data.collections
 .filter(c=>{
@@ -1527,13 +1680,15 @@ name.toLowerCase().includes(search);
 })
 .sort((a,b)=>{
 
-const dateCompare=String(b.date).localeCompare(
+const dateCompare=
+String(b.date).localeCompare(
 String(a.date)
 );
 
 if(dateCompare!==0)return dateCompare;
 
-return String(b.createdAt||"").localeCompare(
+return String(b.createdAt||"")
+.localeCompare(
 String(a.createdAt||"")
 );
 
@@ -1563,13 +1718,16 @@ const memberText=member
 :"Unknown Member";
 
 return`
+
 <tr>
 
 <td>${escapeHtml(displayDate(c.date))}</td>
 
 <td>${escapeHtml(memberText)}</td>
 
-<td>${escapeHtml(collectorName(c.collectorId))}</td>
+<td>${escapeHtml(
+collectorName(c.collectorId)
+)}</td>
 
 <td>${money(c.total)}</td>
 
@@ -1590,19 +1748,29 @@ Delete
 </td>
 
 </tr>
+
 `;
 
 }).join("");
 
 }
 
-   function editCollection(id){
+/*
+   COLLECTION EDIT
+   Only one editCollection function is used.
+*/
 
-const collection=data.collections.find(
-c=>c.id===id
-);
+function editCollection(id){
+
+const collection=
+data.collections.find(c=>c.id===id);
 
 if(!collection)return;
+
+showPage("collection");
+
+populateMemberSelects();
+populateCollectorSelect();
 
 document.getElementById("collectionMember").value=
 collection.memberId;
@@ -1639,9 +1807,8 @@ collection.other||"";
 
 updateCollectionTotal();
 
-const saveButton=document.querySelector(
-"#collection .btn-green"
-);
+const saveButton=
+document.querySelector("#collection .btn-green");
 
 if(saveButton){
 
@@ -1660,74 +1827,10 @@ behavior:"smooth"
 
 }
 
-   function editCollection(id){
+function updateCollection(id){
 
-const collection=data.collections.find(
-c=>c.id===id
-);
-
-if(!collection)return;
-
-document.getElementById("collectionMember").value=
-collection.memberId;
-
-document.getElementById("collectionCollector").value=
-collection.collectorId||"";
-
-document.getElementById("collectionDate").value=
-dateInputValue(collection.date);
-
-document.getElementById("colShare").value=
-collection.share||"";
-
-document.getElementById("colSavings").value=
-collection.savings||"";
-
-document.getElementById("colInstallment").value=
-collection.installment||"";
-
-document.getElementById("colAdmission").value=
-collection.admission||"";
-
-document.getElementById("colPassbook").value=
-collection.passbook||"";
-
-document.getElementById("colInsurance").value=
-collection.insurance||"";
-
-document.getElementById("colLoanForm").value=
-collection.loanForm||"";
-
-document.getElementById("colOther").value=
-collection.other||"";
-
-updateCollectionTotal();
-
-const saveButton=document.querySelector(
-"#collection .btn-green"
-);
-
-if(saveButton){
-
-saveButton.textContent="Update Collection";
-
-saveButton.onclick=function(){
-updateCollection(id);
-};
-
-}
-
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
-
-}
-   function updateCollection(id){
-
-const collection=data.collections.find(
-c=>c.id===id
-);
+const collection=
+data.collections.find(c=>c.id===id);
 
 if(!collection)return;
 
@@ -1743,6 +1846,7 @@ validDateOrToday("collectionDate");
 if(!memberId){
 
 alert("Please select a member.");
+
 return;
 
 }
@@ -1752,30 +1856,29 @@ const total=collectionTotal();
 if(total<=0){
 
 alert("Enter at least one collection amount.");
+
 return;
 
 }
 
 const installment=num("colInstallment");
 
-/*
-Temporarily remove this collection from the
-loan calculation before checking the new amount.
-*/
-
-const oldCollection={
-...collection
-};
-
-const collectionIndex=data.collections.findIndex(
+const collectionIndex=
+data.collections.findIndex(
 c=>c.id===id
 );
 
 if(collectionIndex===-1)return;
 
-data.collections.splice(collectionIndex,1);
+const oldCollection={
+...collection
+};
 
-/* Rebuild loan balances without old collection */
+data.collections.splice(
+collectionIndex,
+1
+);
+
 rebuildLoanPayments();
 
 if(installment>0){
@@ -1795,11 +1898,13 @@ oldCollection
 rebuildLoanPayments();
 
 alert("No outstanding loan found for this member.");
+
 return;
 
 }
 
-const totalOutstanding=activeLoans.reduce(
+const totalOutstanding=
+activeLoans.reduce(
 (s,l)=>s+loanOutstanding(l),
 0
 );
@@ -1824,7 +1929,6 @@ return;
 
 }
 
-/* Update collection */
 collection.memberId=memberId;
 collection.collectorId=collectorId;
 collection.date=date;
@@ -1839,16 +1943,12 @@ collection.loanForm=num("colLoanForm");
 collection.other=num("colOther");
 collection.total=total;
 
-/*
-Put collection back in its original position.
-*/
 data.collections.splice(
 collectionIndex,
 0,
 collection
 );
 
-/* Recalculate all loan payments */
 rebuildLoanPayments();
 
 saveData();
@@ -1857,16 +1957,16 @@ resetCollectionSaveButton();
 
 refreshAll();
 
-alert("Collection updated successfully.");
-
 clearCollectionForm();
 
-}
-   function resetCollectionSaveButton(){
+alert("Collection updated successfully.");
 
-const saveButton=document.querySelector(
-"#collection .btn-green"
-);
+}
+
+function resetCollectionSaveButton(){
+
+const saveButton=
+document.querySelector("#collection .btn-green");
 
 if(!saveButton)return;
 
@@ -1877,15 +1977,16 @@ saveCollection();
 };
 
 }
-   function deleteCollection(id){
 
-const collection=data.collections.find(
-c=>c.id===id
-);
+function deleteCollection(id){
+
+const collection=
+data.collections.find(c=>c.id===id);
 
 if(!collection)return;
 
-const member=data.members.find(
+const member=
+data.members.find(
 m=>m.id===collection.memberId
 );
 
@@ -1897,15 +1998,10 @@ if(!confirm(
 `Delete this collection?\n\n${memberText} - ${money(collection.total)}`
 ))return;
 
-/* Delete collection */
 data.collections=data.collections.filter(
 c=>c.id!==id
 );
 
-/*
-Rebuild loan payments so the deleted
-installment is also removed from the loan.
-*/
 rebuildLoanPayments();
 
 saveData();
@@ -1915,78 +2011,414 @@ refreshAll();
 alert("Collection deleted successfully.");
 
 }
-   
+
+/* =========================
+   LOANS
+   ========================= */
+
+function calculateLoan(){
+
+const principal=num("loanPrincipal");
+
+let rate=Number(
+document.getElementById("loanRate")
+.value
+.toString()
+.replace(/,/g,"")
+)||0;
+
+const installments=
+Number(
+document.getElementById("loanInstallments").value
+)||0;
+
+const service=
+principal*rate/100;
+
+const total=
+principal+service;
+
+const installment=
+installments>0
+?total/installments
+:0;
+
+document.getElementById("loanService").value=
+service?money(service):"";
+
+document.getElementById("loanTotal").value=
+total?money(total):"";
+
+document.getElementById("loanInstallmentAmount").value=
+installment?money(installment):"";
+
+document.getElementById("loanPreviewPrincipal").textContent=
+money(principal);
+
+document.getElementById("loanPreviewService").textContent=
+money(service);
+
+document.getElementById("loanPreviewTotal").textContent=
+money(total);
+
+document.getElementById("loanPreviewInstallment").textContent=
+money(installment);
+
+}
+
+function saveLoan(){
+
+const memberId=
+document.getElementById("loanMember").value;
+
+const date=
+validDateOrToday("loanDate");
+
+const principal=num("loanPrincipal");
+
+const rate=Number(
+document.getElementById("loanRate")
+.value
+.toString()
+.replace(/,/g,"")
+)||0;
+
+const installments=
+Number(
+document.getElementById("loanInstallments").value
+)||0;
+
+const firstDate=
+validDateOrToday("loanFirstDate");
+
+const note=
+document.getElementById("loanNote")
+.value
+.trim();
+
+if(!memberId||principal<=0||installments<=0){
+
+alert(
+"Please complete Member, Loan Principal and Number of Installments."
+);
+
+return;
+
+}
+
+const service=
+principal*rate/100;
+
+const total=
+principal+service;
+
+const loan={
+
+id:uid("L"),
+
+memberId,
+
+date,
+
+principal,
+
+rate,
+
+service,
+
+total,
+
+installments,
+
+installmentAmount:
+total/installments,
+
+firstDate,
+
+note,
+
+payments:[],
+
+createdAt:
+new Date().toISOString()
+
+};
+
+data.loans.push(loan);
+
+saveData();
+
+refreshAll();
+
+alert("Loan saved successfully.");
+
+clearLoanForm();
+
+}
+
+function clearLoanForm(){
+
+document.getElementById("loanPrincipal").value="";
+document.getElementById("loanRate").value="10";
+document.getElementById("loanInstallments").value="";
+document.getElementById("loanService").value="";
+document.getElementById("loanTotal").value="";
+document.getElementById("loanInstallmentAmount").value="";
+document.getElementById("loanNote").value="";
+
+setToday("loanDate");
+setToday("loanFirstDate");
+
+calculateLoan();
+
+}
+
+function loanPaid(loan){
+
+return(loan.payments||[])
+.reduce(
+(s,p)=>s+Number(p.amount||0),
+0
+);
+
+}
+
+function loanOutstanding(loan){
+
+return Math.max(
+0,
+Number(loan.total||0)-loanPaid(loan)
+);
+
+}
+
+function loanServicePaid(loan){
+
+return(loan.payments||[])
+.reduce(
+(s,p)=>s+Number(p.service||0),
+0
+);
+
+}
+
 function renderLoans(){
-const body=document.getElementById("loanTable");
+
+const body=
+document.getElementById("loanTable");
 
 if(!data.loans.length){
-body.innerHTML=`<tr><td colspan="8" class="empty">No loans found.</td></tr>`;
+
+body.innerHTML=
+`<tr><td colspan="8" class="empty">No loans found.</td></tr>`;
+
 return;
+
 }
 
 body.innerHTML=data.loans.map(l=>`
+
 <tr>
+
 <td>${escapeHtml(l.id)}</td>
+
 <td>${escapeHtml(memberName(l.memberId))}</td>
+
 <td>${escapeHtml(displayDate(l.date))}</td>
+
 <td>${money(l.principal)}</td>
+
 <td>${money(l.service)}</td>
+
 <td>${money(l.total)}</td>
+
 <td>${money(loanPaid(l))}</td>
+
 <td>${money(loanOutstanding(l))}</td>
+
 </tr>
+
 `).join("");
 
 }
 
+/* =========================
+   ACCOUNTS
+   ========================= */
+
 function renderAccount(){
 
-const memberId=document.getElementById("accountMember").value;
-const summary=document.getElementById("accountSummary");
-const body=document.getElementById("accountTransactions");
+const memberId=
+document.getElementById("accountMember").value;
+
+const info=
+document.getElementById("accountMemberInfo");
+
+const summary=
+document.getElementById("accountSummary");
+
+const body=
+document.getElementById("accountTransactions");
 
 if(!memberId){
-summary.innerHTML=`<div class="empty">Select a member to view account.</div>`;
+
+info.innerHTML=
+`<div class="empty">Select a member to view information.</div>`;
+
+summary.innerHTML="";
+
 body.innerHTML="";
+
 return;
+
 }
 
-const member=data.members.find(m=>m.id===memberId);
+const member=
+data.members.find(m=>m.id===memberId);
 
 if(!member){
-summary.innerHTML=`<div class="empty">Member not found.</div>`;
+
+info.innerHTML=
+`<div class="empty">Member not found.</div>`;
+
+summary.innerHTML="";
+
 body.innerHTML="";
+
 return;
+
 }
 
-const share=data.collections.filter(c=>c.memberId===memberId).reduce((s,c)=>s+Number(c.share||0),0);
-const savings=data.collections.filter(c=>c.memberId===memberId).reduce((s,c)=>s+Number(c.savings||0),0);
-const installments=data.collections.filter(c=>c.memberId===memberId).reduce((s,c)=>s+Number(c.installment||0),0);
+/* MEMBER INFORMATION */
 
-const service=data.loans.filter(l=>l.memberId===memberId).reduce((s,l)=>s+loanServicePaid(l),0);
-const loans=data.loans.filter(l=>l.memberId===memberId);
-const loanOutstandingTotal=loans.reduce((s,l)=>s+loanOutstanding(l),0);
+info.innerHTML=`
+
+<div class="summary-box">
+
+<div class="summary-line">
+<span>Member Code</span>
+<strong>${escapeHtml(member.code)}</strong>
+</div>
+
+<div class="summary-line">
+<span>Member Name</span>
+<strong>${escapeHtml(member.name)}</strong>
+</div>
+
+<div class="summary-line">
+<span>Mobile</span>
+<strong>${escapeHtml(member.mobile||"")}</strong>
+</div>
+
+</div>
+
+`;
+
+/* ACCOUNT SUMMARY */
+
+const share=
+data.collections
+.filter(c=>c.memberId===memberId)
+.reduce(
+(s,c)=>s+Number(c.share||0),
+0
+);
+
+const savings=
+data.collections
+.filter(c=>c.memberId===memberId)
+.reduce(
+(s,c)=>s+Number(c.savings||0),
+0
+);
+
+const installments=
+data.collections
+.filter(c=>c.memberId===memberId)
+.reduce(
+(s,c)=>s+Number(c.installment||0),
+0
+);
+
+const service=
+data.loans
+.filter(l=>l.memberId===memberId)
+.reduce(
+(s,l)=>s+loanServicePaid(l),
+0
+);
+
+const loans=
+data.loans.filter(
+l=>l.memberId===memberId
+);
+
+const loanReceived=
+loans.reduce(
+(s,l)=>s+Number(l.principal||0),
+0
+);
+
+const loanOutstandingTotal=
+loans.reduce(
+(s,l)=>s+loanOutstanding(l),
+0
+);
 
 summary.innerHTML=`
+
 <div class="summary-box">
-<div class="summary-line"><span>Member Code</span><strong>${escapeHtml(member.code)}</strong></div>
-<div class="summary-line"><span>Member Name</span><strong>${escapeHtml(member.name)}</strong></div>
-<div class="summary-line"><span>Mobile</span><strong>${escapeHtml(member.mobile||"")}</strong></div>
-<div class="summary-line"><span>Share</span><strong>${money(share)}</strong></div>
-<div class="summary-line"><span>Savings</span><strong>${money(savings)}</strong></div>
-<div class="summary-line"><span>Loan Installment Paid</span><strong>${money(installments)}</strong></div>
-<div class="summary-line"><span>Service Charge Paid</span><strong>${money(service)}</strong></div>
-<div class="summary-line"><span>Loan Outstanding</span><strong>${money(loanOutstandingTotal)}</strong></div>
-</div>`;
+
+<div class="summary-line">
+<span>Share</span>
+<strong>${money(share)}</strong>
+</div>
+
+<div class="summary-line">
+<span>Savings</span>
+<strong>${money(savings)}</strong>
+</div>
+
+<div class="summary-line">
+<span>Loan Received</span>
+<strong>${money(loanReceived)}</strong>
+</div>
+
+<div class="summary-line">
+<span>Loan Installment Paid</span>
+<strong>${money(installments)}</strong>
+</div>
+
+<div class="summary-line">
+<span>Service Charge Paid</span>
+<strong>${money(service)}</strong>
+</div>
+
+<div class="summary-line">
+<span>Loan Outstanding</span>
+<strong>${money(loanOutstandingTotal)}</strong>
+</div>
+
+</div>
+
+`;
+
+/* TRANSACTIONS */
 
 const transactions=[];
 
-data.collections.filter(c=>c.memberId===memberId).forEach(c=>{
+data.collections
+.filter(c=>c.memberId===memberId)
+.forEach(c=>{
 
 transactions.push({
+
 date:c.date,
+
 description:"Collection",
+
 amount:c.total,
+
 details:[
 c.share?`Share ${money(c.share)}`:"",
 c.savings?`Savings ${money(c.savings)}`:"",
@@ -1996,50 +2428,107 @@ c.passbook?`Pass Book ${money(c.passbook)}`:"",
 c.insurance?`Insurance ${money(c.insurance)}`:"",
 c.loanForm?`Loan Form ${money(c.loanForm)}`:"",
 c.other?`Other ${money(c.other)}`:""
-].filter(Boolean).join(" • ")
-});
+]
+.filter(Boolean)
+.join(" • "),
+
+actionType:"collection",
+actionId:c.id
 
 });
 
-data.loans.filter(l=>l.memberId===memberId).forEach(l=>{
+});
+
+data.loans
+.filter(l=>l.memberId===memberId)
+.forEach(l=>{
 
 transactions.push({
+
 date:l.date,
+
 description:"Loan Disbursement",
+
 amount:l.principal,
-details:`Principal ${money(l.principal)} • Service ${money(l.service)} • Total ${money(l.total)}`
-});
 
-(l.payments||[]).forEach(p=>{
+details:
+`Principal ${money(l.principal)} • Service ${money(l.service)} • Total ${money(l.total)}`,
 
-transactions.push({
-date:p.date,
-description:"Loan Installment",
-amount:p.amount,
-details:`Principal ${money(p.principal)} • Service ${money(p.service)}`
-});
+actionType:"",
+actionId:""
 
 });
 
 });
-
-transactions.sort((a,b)=>a.date.localeCompare(b.date));
 
 if(!transactions.length){
-body.innerHTML=`<tr><td colspan="4" class="empty">No transactions found.</td></tr>`;
+
+body.innerHTML=
+`<tr><td colspan="5" class="empty">No transactions found.</td></tr>`;
+
 return;
+
 }
 
+transactions.sort(
+(a,b)=>a.date.localeCompare(b.date)
+);
+
 body.innerHTML=transactions.map(t=>`
+
 <tr>
+
 <td>${escapeHtml(displayDate(t.date))}</td>
+
 <td>${escapeHtml(t.description)}</td>
+
 <td>${money(t.amount)}</td>
+
 <td>${escapeHtml(t.details)}</td>
+
+<td>
+
+${
+t.actionType==="collection"
+?`
+<button
+class="btn-small btn-orange"
+onclick="editAccountCollection('${t.actionId}')">
+Edit
+</button>
+
+<button
+class="btn-small btn-red"
+onclick="deleteAccountCollection('${t.actionId}')">
+Delete
+</button>
+`
+:""
+}
+
+</td>
+
 </tr>
+
 `).join("");
 
 }
+
+function editAccountCollection(id){
+
+editCollection(id);
+
+}
+
+function deleteAccountCollection(id){
+
+deleteCollection(id);
+
+}
+
+/* =========================
+   LEDGER
+   ========================= */
 
 function ledgerRows(){
 
@@ -2050,15 +2539,32 @@ data.collections.forEach(c=>{
 const name=memberName(c.memberId);
 
 const heads=[
-["Share",c.share],["Savings",c.savings],["Loan Installment",c.installment],
-["Admission Fee",c.admission],["Pass Book",c.passbook],["Insurance",c.insurance],
-["Loan Form Sales",c.loanForm],["Other Income",c.other]
+
+["Share",c.share],
+["Savings",c.savings],
+["Loan Installment",c.installment],
+["Admission Fee",c.admission],
+["Pass Book",c.passbook],
+["Insurance",c.insurance],
+["Loan Form Sales",c.loanForm],
+["Other Income",c.other]
+
 ];
 
 heads.forEach(([head,amount])=>{
+
 if(Number(amount)>0){
-rows.push({date:c.date,head,member:name,in:Number(amount),out:0});
+
+rows.push({
+date:c.date,
+head,
+member:name,
+in:Number(amount),
+out:0
+});
+
 }
+
 });
 
 });
@@ -2066,11 +2572,17 @@ rows.push({date:c.date,head,member:name,in:Number(amount),out:0});
 data.loans.forEach(l=>{
 
 rows.push({
+
 date:l.date,
+
 head:"Loan Disbursement",
+
 member:memberName(l.memberId),
+
 in:0,
+
 out:l.principal
+
 });
 
 (l.payments||[]).forEach(p=>{
@@ -2078,11 +2590,17 @@ out:l.principal
 if(Number(p.service)>0){
 
 rows.push({
+
 date:p.date,
+
 head:"Service Charge",
+
 member:memberName(l.memberId),
+
 in:p.service,
+
 out:0
+
 });
 
 }
@@ -2094,42 +2612,73 @@ out:0
 data.expenses.forEach(e=>{
 
 rows.push({
+
 date:e.date,
+
 head:e.head,
+
 member:"",
+
 in:0,
+
 out:e.amount
-});
 
 });
 
-return rows.sort((a,b)=>a.date.localeCompare(b.date));
+});
+
+return rows.sort(
+(a,b)=>a.date.localeCompare(b.date)
+);
 
 }
 
 function renderLedger(){
 
-const selected=document.getElementById("ledgerHead").value;
+const selected=
+document.getElementById("ledgerHead").value;
 
-const rows=ledgerRows().filter(r=>!selected||r.head===selected);
-const body=document.getElementById("ledgerTable");
+const rows=
+ledgerRows()
+.filter(
+r=>!selected||r.head===selected
+);
+
+const body=
+document.getElementById("ledgerTable");
 
 if(!rows.length){
-body.innerHTML=`<tr><td colspan="5" class="empty">No ledger entries found.</td></tr>`;
+
+body.innerHTML=
+`<tr><td colspan="5" class="empty">No ledger entries found.</td></tr>`;
+
 return;
+
 }
 
 body.innerHTML=rows.map(r=>`
+
 <tr>
+
 <td>${escapeHtml(displayDate(r.date))}</td>
+
 <td>${escapeHtml(r.head)}</td>
+
 <td>${escapeHtml(r.member)}</td>
+
 <td>${r.in?money(r.in):""}</td>
+
 <td>${r.out?money(r.out):""}</td>
+
 </tr>
+
 `).join("");
 
 }
+
+/* =========================
+   CASH BOOK
+   ========================= */
 
 function cashRows(){
 
@@ -2138,10 +2687,16 @@ const rows=[];
 data.collections.forEach(c=>{
 
 rows.push({
+
 date:c.date,
-description:`Collection - ${memberName(c.memberId)}`,
+
+description:
+`Collection - ${memberName(c.memberId)}`,
+
 in:c.total,
+
 out:0
+
 });
 
 });
@@ -2149,10 +2704,16 @@ out:0
 data.loans.forEach(l=>{
 
 rows.push({
+
 date:l.date,
-description:`Loan Disbursement - ${memberName(l.memberId)}`,
+
+description:
+`Loan Disbursement - ${memberName(l.memberId)}`,
+
 in:0,
+
 out:l.principal
+
 });
 
 });
@@ -2162,10 +2723,16 @@ data.expenses.forEach(e=>{
 if(e.payment==="Cash"){
 
 rows.push({
+
 date:e.date,
-description:`Expense - ${e.head}`,
+
+description:
+`Expense - ${e.head}`,
+
 in:0,
+
 out:e.amount
+
 });
 
 }
@@ -2177,10 +2744,15 @@ data.transfers.forEach(t=>{
 if(t.type==="deposit"){
 
 rows.push({
+
 date:t.date,
+
 description:"Bank Deposit",
+
 in:0,
+
 out:t.amount
+
 });
 
 }
@@ -2188,27 +2760,38 @@ out:t.amount
 if(t.type==="withdraw"){
 
 rows.push({
+
 date:t.date,
+
 description:"Bank Withdrawal",
+
 in:t.amount,
+
 out:0
+
 });
 
 }
 
 });
 
-return rows.sort((a,b)=>a.date.localeCompare(b.date));
+return rows.sort(
+(a,b)=>a.date.localeCompare(b.date)
+);
 
 }
 
 function cashBalance(){
 
-let balance=Number(data.openingCash)||0;
+let balance=
+Number(data.openingCash)||0;
 
 cashRows().forEach(r=>{
+
 balance+=Number(r.in||0);
+
 balance-=Number(r.out||0);
+
 });
 
 return balance;
@@ -2218,90 +2801,167 @@ return balance;
 function renderCashBook(){
 
 const rows=cashRows();
-let balance=Number(data.openingCash)||0;
 
-document.getElementById("cashOpening").textContent=money(data.openingCash);
+let balance=
+Number(data.openingCash)||0;
 
-const totalIn=rows.reduce((s,r)=>s+Number(r.in||0),0);
-const totalOut=rows.reduce((s,r)=>s+Number(r.out||0),0);
+document.getElementById("cashOpening")
+.textContent=
+money(data.openingCash);
 
-document.getElementById("cashIn").textContent=money(totalIn);
-document.getElementById("cashOut").textContent=money(totalOut);
-document.getElementById("cashBalance").textContent=money(cashBalance());
+const totalIn=
+rows.reduce(
+(s,r)=>s+Number(r.in||0),
+0
+);
 
-const body=document.getElementById("cashTable");
+const totalOut=
+rows.reduce(
+(s,r)=>s+Number(r.out||0),
+0
+);
+
+document.getElementById("cashIn")
+.textContent=
+money(totalIn);
+
+document.getElementById("cashOut")
+.textContent=
+money(totalOut);
+
+document.getElementById("cashBalance")
+.textContent=
+money(cashBalance());
+
+const body=
+document.getElementById("cashTable");
 
 if(!rows.length){
-body.innerHTML=`<tr><td colspan="5" class="empty">No cash transactions found.</td></tr>`;
+
+body.innerHTML=
+`<tr><td colspan="5" class="empty">No cash transactions found.</td></tr>`;
+
 return;
+
 }
 
 body.innerHTML=rows.map(r=>{
 
 balance+=Number(r.in||0);
+
 balance-=Number(r.out||0);
 
 return`
+
 <tr>
+
 <td>${escapeHtml(displayDate(r.date))}</td>
+
 <td>${escapeHtml(r.description)}</td>
+
 <td>${r.in?money(r.in):""}</td>
+
 <td>${r.out?money(r.out):""}</td>
+
 <td>${money(balance)}</td>
-</tr>`;
+
+</tr>
+
+`;
 
 }).join("");
 
 }
 
+/* =========================
+   BANK TRANSFER
+   ========================= */
+
 function saveContra(){
 
-const date=validDateOrToday("contraDate");
-const type=document.getElementById("contraType").value;
-const amount=num("contraAmount");
-const note=document.getElementById("contraNote").value.trim();
+const date=
+validDateOrToday("contraDate");
+
+const type=
+document.getElementById("contraType").value;
+
+const amount=
+num("contraAmount");
+
+const note=
+document.getElementById("contraNote")
+.value.trim();
 
 if(!type){
+
 alert("Please select a Transaction Type.");
+
 return;
+
 }
 
 if(amount<=0){
+
 alert("Please enter a valid amount.");
+
 return;
+
 }
 
 const currentCash=cashBalance();
-const currentBank=Number(data.bankBalance)||0;
+
+const currentBank=
+Number(data.bankBalance)||0;
 
 if(type==="deposit"&&amount>currentCash){
+
 alert("Cash in hand is not sufficient.");
+
 return;
+
 }
 
 if(type==="withdraw"&&amount>currentBank){
+
 alert("Bank balance is not sufficient.");
+
 return;
+
 }
 
 const transfer={
+
 id:uid("CT"),
+
 date,
+
 type,
+
 amount,
+
 note,
-createdAt:new Date().toISOString()
+
+createdAt:
+new Date().toISOString()
+
 };
 
 data.transfers.push(transfer);
 
 if(type==="deposit"){
-data.bankBalance=currentBank+amount;
+
+data.bankBalance=
+currentBank+amount;
+
 }else{
-data.bankBalance=currentBank-amount;
+
+data.bankBalance=
+currentBank-amount;
+
 }
 
 saveData();
+
 refreshAll();
 
 alert(
@@ -2314,66 +2974,100 @@ clearContraForm();
 
 }
 
-   function editContra(id){
+function editContra(id){
 
-const transfer=data.transfers.find(t=>t.id===id);
+const transfer=
+data.transfers.find(t=>t.id===id);
+
 if(!transfer)return;
 
-document.getElementById("contraDate").value=dateInputValue(transfer.date);
-document.getElementById("contraType").value=transfer.type;
-document.getElementById("contraAmount").value=transfer.amount;
-document.getElementById("contraNote").value=transfer.note||"";
+document.getElementById("contraDate")
+.value=dateInputValue(transfer.date);
 
-const saveButton=document.querySelector("#contra .btn-blue");
+document.getElementById("contraType")
+.value=transfer.type;
+
+document.getElementById("contraAmount")
+.value=transfer.amount;
+
+document.getElementById("contraNote")
+.value=transfer.note||"";
+
+const saveButton=
+document.querySelector("#contra .btn-blue");
 
 if(saveButton){
+
 saveButton.textContent="Update Transfer";
+
 saveButton.onclick=function(){
 updateContra(id);
 };
-}
-
-window.scrollTo({top:0,behavior:"smooth"});
 
 }
 
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
 
 function updateContra(id){
 
-const transfer=data.transfers.find(t=>t.id===id);
+const transfer=
+data.transfers.find(t=>t.id===id);
+
 if(!transfer)return;
 
-const date=validDateOrToday("contraDate");
-const type=document.getElementById("contraType").value;
-const amount=num("contraAmount");
-const note=document.getElementById("contraNote").value.trim();
+const date=
+validDateOrToday("contraDate");
+
+const type=
+document.getElementById("contraType").value;
+
+const amount=
+num("contraAmount");
+
+const note=
+document.getElementById("contraNote")
+.value.trim();
 
 if(!type){
+
 alert("Please select a Transaction Type.");
+
 return;
+
 }
 
 if(amount<=0){
+
 alert("Please enter a valid amount.");
+
 return;
+
 }
 
+const oldType=transfer.type;
+const oldAmount=Number(transfer.amount)||0;
 
-/* Remove old transfer effect */
-
-recalculateBankBalanceWithout(id);
-
-
-/* Check new transfer against recalculated balances */
+if(oldType==="deposit"){
+data.bankBalance-=oldAmount;
+}else if(oldType==="withdraw"){
+data.bankBalance+=oldAmount;
+}
 
 const currentCash=cashBalance();
-const currentBank=Number(data.bankBalance)||0;
+const currentBank=
+Number(data.bankBalance)||0;
 
 if(type==="deposit"&&amount>currentCash){
 
 recalculateBankBalance();
 
 alert("Cash in hand is not sufficient.");
+
 return;
 
 }
@@ -2383,24 +3077,20 @@ if(type==="withdraw"&&amount>currentBank){
 recalculateBankBalance();
 
 alert("Bank balance is not sufficient.");
+
 return;
 
 }
-
-
-/* Update transfer */
 
 transfer.date=date;
 transfer.type=type;
 transfer.amount=amount;
 transfer.note=note;
 
-
-/* Recalculate everything */
-
 recalculateBankBalance();
 
 saveData();
+
 refreshAll();
 
 resetContraSaveButton();
@@ -2411,10 +3101,11 @@ clearContraForm();
 
 }
 
-
 function deleteContra(id){
 
-const transfer=data.transfers.find(t=>t.id===id);
+const transfer=
+data.transfers.find(t=>t.id===id);
+
 if(!transfer)return;
 
 const typeText=
@@ -2426,40 +3117,20 @@ if(!confirm(
 `Delete this bank transfer?\n\n${typeText} - ${money(transfer.amount)}`
 ))return;
 
-data.transfers=data.transfers.filter(t=>t.id!==id);
+data.transfers=
+data.transfers.filter(
+t=>t.id!==id
+);
 
 recalculateBankBalance();
 
 saveData();
+
 refreshAll();
 
 alert("Bank transfer deleted successfully.");
 
 }
-
-
-function recalculateBankBalanceWithout(excludeId){
-
-let balance=0;
-
-data.transfers.forEach(t=>{
-
-if(t.id===excludeId)return;
-
-if(t.type==="deposit"){
-balance+=Number(t.amount)||0;
-}
-
-if(t.type==="withdraw"){
-balance-=Number(t.amount)||0;
-}
-
-});
-
-data.bankBalance=balance;
-
-}
-
 
 function recalculateBankBalance(){
 
@@ -2481,24 +3152,29 @@ data.bankBalance=balance;
 
 }
 
-
 function resetContraSaveButton(){
 
-const saveButton=document.querySelector("#contra .btn-blue");
+const saveButton=
+document.querySelector("#contra .btn-blue");
 
 if(!saveButton)return;
 
 saveButton.textContent="Save Transfer";
+
 saveButton.onclick=function(){
 saveContra();
 };
 
 }
+
 function clearContraForm(){
 
 setToday("contraDate");
+
 document.getElementById("contraType").value="";
+
 document.getElementById("contraAmount").value="";
+
 document.getElementById("contraNote").value="";
 
 renderContra();
@@ -2507,68 +3183,142 @@ renderContra();
 
 function renderContra(){
 
-const body=document.getElementById("contraTable");
+const body=
+document.getElementById("contraTable");
+
 if(!body)return;
 
-const cashEl=document.getElementById("contraCashBalance");
-const bankEl=document.getElementById("contraBankBalance");
+const cashEl=
+document.getElementById("contraCashBalance");
 
-if(cashEl)cashEl.textContent=money(cashBalance());
-if(bankEl)bankEl.textContent=money(data.bankBalance);
+const bankEl=
+document.getElementById("contraBankBalance");
 
-if(!data.transfers.length){
-body.innerHTML=`<tr><td colspan="5" class="empty">No bank transfers found.</td></tr>`;
-return;
+if(cashEl){
+cashEl.textContent=
+money(cashBalance());
 }
 
-const rows=[...data.transfers].sort((a,b)=>b.date.localeCompare(a.date));
+if(bankEl){
+bankEl.textContent=
+money(data.bankBalance);
+}
+
+if(!data.transfers.length){
+
+body.innerHTML=
+`<tr><td colspan="5" class="empty">No bank transfers found.</td></tr>`;
+
+return;
+
+}
+
+const rows=[...data.transfers]
+.sort(
+(a,b)=>b.date.localeCompare(a.date)
+);
 
 body.innerHTML=rows.map(t=>`
+
 <tr>
+
 <td>${escapeHtml(displayDate(t.date))}</td>
-<td>${t.type==="deposit"?"Cash to Bank - Deposit":"Bank to Cash - Withdrawal"}</td>
-<td>${money(t.amount)}</td>
-<td>${escapeHtml(t.note||"")}</td>
+
 <td>
-<button class="btn-small btn-blue" onclick="editContra('${t.id}')">Edit</button>
-<button class="btn-small btn-red" onclick="deleteContra('${t.id}')">Delete</button>
+${t.type==="deposit"
+?"Cash to Bank - Deposit"
+:"Bank to Cash - Withdrawal"}
 </td>
+
+<td>${money(t.amount)}</td>
+
+<td>${escapeHtml(t.note||"")}</td>
+
+<td>
+
+<button
+class="btn-small btn-blue"
+onclick="editContra('${t.id}')">
+Edit
+</button>
+
+<button
+class="btn-small btn-red"
+onclick="deleteContra('${t.id}')">
+Delete
+</button>
+
+</td>
+
 </tr>
+
 `).join("");
 
 }
+
+/* =========================
+   EXPENSE
+   ========================= */
+
 function saveExpense(){
 
-const date=validDateOrToday("expenseDate");
-const head=document.getElementById("expenseHead").value.trim();
-const amount=num("expenseAmount");
-const note=document.getElementById("expenseNote").value.trim();
+const date=
+validDateOrToday("expenseDate");
+
+const head=
+document.getElementById("expenseHead")
+.value.trim();
+
+const amount=
+num("expenseAmount");
+
+const note=
+document.getElementById("expenseNote")
+.value.trim();
 
 if(!head){
+
 alert("Please select an Expense Head.");
+
 return;
+
 }
 
 if(amount<=0){
+
 alert("Please enter a valid expense amount.");
+
 return;
+
 }
 
 const expense={
+
 id:uid("E"),
+
 date,
+
 head,
+
 amount,
+
 note,
+
 payment:"Cash",
-createdAt:new Date().toISOString()
+
+createdAt:
+new Date().toISOString()
+
 };
 
 data.expenses.push(expense);
+
 saveData();
+
 refreshAll();
 
 alert("Expense saved successfully.");
+
 clearExpenseForm();
 
 }
@@ -2576,114 +3326,210 @@ clearExpenseForm();
 function clearExpenseForm(){
 
 setToday("expenseDate");
+
 document.getElementById("expenseHead").value="";
+
 document.getElementById("expenseAmount").value="";
+
 document.getElementById("expenseNote").value="";
 
 }
 
 function addExpenseForm(){
 
-const head=prompt("Enter new expense head:");
+const head=
+prompt("Enter new expense head:");
 
 if(!head||!head.trim())return;
 
 const clean=head.trim();
 
-const exists=[...defaultExpenseHeads,...data.customExpenseHeads]
-.some(h=>h.toLowerCase()===clean.toLowerCase());
+const exists=
+[
+...defaultExpenseHeads,
+...data.customExpenseHeads
+]
+.some(
+h=>h.toLowerCase()===clean.toLowerCase()
+);
 
 if(exists){
+
 alert("This expense head already exists.");
+
 return;
+
 }
 
 data.customExpenseHeads.push(clean);
+
 saveData();
+
 populateExpenseHeads();
-document.getElementById("expenseHead").value=clean;
+
+document.getElementById("expenseHead")
+.value=clean;
 
 }
 
 function renderExpenses(){
 
-const body=document.getElementById("expenseTable");
+const body=
+document.getElementById("expenseTable");
+
 if(!body)return;
 
-const search=(document.getElementById("expenseSearch")?.value||"").trim().toLowerCase();
+const search=
+(
+document.getElementById("expenseSearch")?.value||""
+)
+.trim()
+.toLowerCase();
 
-const rows=data.expenses.filter(e=>{
+const rows=
+data.expenses
+.filter(e=>{
 
 if(!search)return true;
 
-return String(e.head||"").toLowerCase().includes(search)||
-String(e.note||"").toLowerCase().includes(search);
+return String(e.head||"")
+.toLowerCase()
+.includes(search)||
+String(e.note||"")
+.toLowerCase()
+.includes(search);
 
-}).sort((a,b)=>b.date.localeCompare(a.date));
+})
+.sort(
+(a,b)=>b.date.localeCompare(a.date)
+);
 
-const total=data.expenses.reduce((s,e)=>s+Number(e.amount||0),0);
+const total=
+data.expenses.reduce(
+(s,e)=>s+Number(e.amount||0),
+0
+);
 
-document.getElementById("expenseGrandTotal").textContent=money(total);
+document.getElementById("expenseGrandTotal")
+.textContent=money(total);
 
 if(!rows.length){
-body.innerHTML=`<tr><td colspan="5" class="empty">No expense records found.</td></tr>`;
+
+body.innerHTML=
+`<tr><td colspan="5" class="empty">No expense records found.</td></tr>`;
+
 return;
+
 }
 
 body.innerHTML=rows.map(e=>`
+
 <tr>
+
 <td>${escapeHtml(displayDate(e.date))}</td>
+
 <td>${escapeHtml(e.head)}</td>
+
 <td>${money(e.amount)}</td>
+
 <td>${escapeHtml(e.note||"")}</td>
+
 <td>
-<button class="btn-small btn-blue" onclick="editExpense('${e.id}')">Edit</button>
-<button class="btn-small btn-red" onclick="deleteExpense('${e.id}')">Delete</button>
+
+<button
+class="btn-small btn-blue"
+onclick="editExpense('${e.id}')">
+Edit
+</button>
+
+<button
+class="btn-small btn-red"
+onclick="deleteExpense('${e.id}')">
+Delete
+</button>
+
 </td>
+
 </tr>
+
 `).join("");
 
 }
 
 function editExpense(id){
 
-const expense=data.expenses.find(e=>e.id===id);
+const expense=
+data.expenses.find(e=>e.id===id);
+
 if(!expense)return;
 
-document.getElementById("expenseDate").value=dateInputValue(expense.date);
-document.getElementById("expenseHead").value=expense.head;
-document.getElementById("expenseAmount").value=expense.amount;
-document.getElementById("expenseNote").value=expense.note||"";
+document.getElementById("expenseDate")
+.value=dateInputValue(expense.date);
 
-window.scrollTo({top:0,behavior:"smooth"});
+document.getElementById("expenseHead")
+.value=expense.head;
 
-const saveButton=document.querySelector("#expense .btn-orange");
+document.getElementById("expenseAmount")
+.value=expense.amount;
+
+document.getElementById("expenseNote")
+.value=expense.note||"";
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+const saveButton=
+document.querySelector("#expense .btn-orange");
 
 if(saveButton){
+
 saveButton.textContent="Update Expense";
-saveButton.onclick=function(){updateExpense(id);};
+
+saveButton.onclick=function(){
+updateExpense(id);
+};
+
 }
 
 }
 
 function updateExpense(id){
 
-const expense=data.expenses.find(e=>e.id===id);
+const expense=
+data.expenses.find(e=>e.id===id);
+
 if(!expense)return;
 
-const date=validDateOrToday("expenseDate");
-const head=document.getElementById("expenseHead").value.trim();
-const amount=num("expenseAmount");
-const note=document.getElementById("expenseNote").value.trim();
+const date=
+validDateOrToday("expenseDate");
+
+const head=
+document.getElementById("expenseHead")
+.value.trim();
+
+const amount=
+num("expenseAmount");
+
+const note=
+document.getElementById("expenseNote")
+.value.trim();
 
 if(!head){
+
 alert("Please select an Expense Head.");
+
 return;
+
 }
 
 if(amount<=0){
+
 alert("Please enter a valid expense amount.");
+
 return;
+
 }
 
 expense.date=date;
@@ -2692,44 +3538,59 @@ expense.amount=amount;
 expense.note=note;
 
 saveData();
+
 refreshAll();
+
 resetExpenseSaveButton();
 
 alert("Expense updated successfully.");
+
 clearExpenseForm();
 
 }
 
 function resetExpenseSaveButton(){
 
-const saveButton=document.querySelector("#expense .btn-orange");
+const saveButton=
+document.querySelector("#expense .btn-orange");
+
 if(!saveButton)return;
 
 saveButton.textContent="Save Expense";
-saveButton.onclick=function(){saveExpense();};
+
+saveButton.onclick=function(){
+saveExpense();
+};
 
 }
 
 function deleteExpense(id){
 
-const expense=data.expenses.find(e=>e.id===id);
+const expense=
+data.expenses.find(e=>e.id===id);
+
 if(!expense)return;
 
-if(!confirm(`Delete this expense?\n\n${expense.head} - ${money(expense.amount)}`))return;
+if(!confirm(
+`Delete this expense?\n\n${expense.head} - ${money(expense.amount)}`
+))return;
 
-data.expenses=data.expenses.filter(e=>e.id!==id);
+data.expenses=
+data.expenses.filter(
+e=>e.id!==id
+);
 
 saveData();
+
 refreshAll();
 
 alert("Expense deleted successfully.");
 
 }
 
-
-/* =========================================================
-   REPORT DATA
-   ========================================================= */
+/* =========================
+   REPORTS
+   ========================= */
 
 function reportCollectionRows(){
 
@@ -2737,10 +3598,14 @@ const rows=[];
 
 data.collections.forEach(c=>{
 
-const member=memberName(c.memberId);
-const collector=collectorName(c.collectorId);
+const member=
+memberName(c.memberId);
+
+const collector=
+collectorName(c.collectorId);
 
 const heads=[
+
 ["Share",c.share],
 ["Savings",c.savings],
 ["Loan Installment",c.installment],
@@ -2749,15 +3614,18 @@ const heads=[
 ["Insurance",c.insurance],
 ["Loan Form Sales",c.loanForm],
 ["Other",c.other]
+
 ];
 
 heads.forEach(([head,amount])=>{
 
-const value=Number(amount)||0;
+const value=
+Number(amount)||0;
 
 if(value>0){
 
 rows.push({
+
 date:c.date,
 member,
 memberId:c.memberId,
@@ -2766,6 +3634,7 @@ collectorId:c.collectorId||"",
 type:"Collection",
 description:head,
 amount:value
+
 });
 
 }
@@ -2782,15 +3651,12 @@ function allReportRows(){
 
 const rows=[];
 
-/* Collection - every head separately */
-
 rows.push(...reportCollectionRows());
-
-/* Loans */
 
 data.loans.forEach(l=>{
 
 rows.push({
+
 date:l.date,
 member:memberName(l.memberId),
 memberId:l.memberId,
@@ -2799,11 +3665,13 @@ collectorId:"",
 type:"Loan",
 description:"Loan Disbursement",
 amount:l.principal
+
 });
 
 (l.payments||[]).forEach(p=>{
 
 rows.push({
+
 date:p.date,
 member:memberName(l.memberId),
 memberId:l.memberId,
@@ -2812,17 +3680,17 @@ collectorId:"",
 type:"Loan",
 description:"Loan Installment",
 amount:p.amount
-});
 
 });
 
 });
 
-/* Expenses */
+});
 
 data.expenses.forEach(e=>{
 
 rows.push({
+
 date:e.date,
 member:"",
 memberId:"",
@@ -2831,38 +3699,45 @@ collectorId:"",
 type:"Expense",
 description:e.head,
 amount:e.amount
+
 });
 
 });
 
 return rows.sort((a,b)=>{
 
-const dateCompare=a.date.localeCompare(b.date);
+const dateCompare=
+a.date.localeCompare(b.date);
 
 if(dateCompare!==0)return dateCompare;
 
-return String(a.description).localeCompare(String(b.description));
+return String(a.description)
+.localeCompare(
+String(b.description)
+);
 
 });
 
 }
 
-
-/* =========================================================
-   REPORT RENDER
-   ========================================================= */
-
 function renderReports(){
 
-const fromInput=document.getElementById("reportFrom").value;
-const toInput=document.getElementById("reportTo").value;
+const fromInput=
+document.getElementById("reportFrom").value;
 
-const from=parseDateInput(fromInput);
-const to=parseDateInput(toInput);
+const toInput=
+document.getElementById("reportTo").value;
+
+const from=
+parseDateInput(fromInput);
+
+const to=
+parseDateInput(toInput);
 
 if(fromInput.trim()&&!from){
 
 alert("Please enter a valid From Date.");
+
 return;
 
 }
@@ -2870,70 +3745,94 @@ return;
 if(toInput.trim()&&!to){
 
 alert("Please enter a valid To Date.");
+
 return;
 
 }
 
 if(from&&to&&from>to){
 
-alert("From Date cannot be later than To Date.");
+alert(
+"From Date cannot be later than To Date."
+);
+
 return;
 
 }
 
-const member=document.getElementById("reportMember").value;
-const collector=document.getElementById("reportCollector").value;
-const type=document.getElementById("reportType").value;
+const member=
+document.getElementById("reportMember").value;
 
+const collector=
+document.getElementById("reportCollector").value;
 
-/* =========================================================
-   COLLECTION HEAD SUMMARY
-   ========================================================= */
+const type=
+document.getElementById("reportType").value;
 
-const collectionRows=data.collections.filter(c=>{
+const collectionRows=
+data.collections.filter(c=>{
 
 if(from&&c.date<from)return false;
+
 if(to&&c.date>to)return false;
 
 if(member&&c.memberId!==member)return false;
 
-if(collector&&(c.collectorId||"")!==collector)return false;
+if(
+collector&&
+(c.collectorId||"")!==collector
+)return false;
 
 return true;
 
 });
 
-
-const reportShare=collectionRows.reduce(
-(sum,c)=>sum+Number(c.share||0),0
+const reportShare=
+collectionRows.reduce(
+(sum,c)=>sum+Number(c.share||0),
+0
 );
 
-const reportSavings=collectionRows.reduce(
-(sum,c)=>sum+Number(c.savings||0),0
+const reportSavings=
+collectionRows.reduce(
+(sum,c)=>sum+Number(c.savings||0),
+0
 );
 
-const reportInstallment=collectionRows.reduce(
-(sum,c)=>sum+Number(c.installment||0),0
+const reportInstallment=
+collectionRows.reduce(
+(sum,c)=>sum+Number(c.installment||0),
+0
 );
 
-const reportAdmission=collectionRows.reduce(
-(sum,c)=>sum+Number(c.admission||0),0
+const reportAdmission=
+collectionRows.reduce(
+(sum,c)=>sum+Number(c.admission||0),
+0
 );
 
-const reportPassbook=collectionRows.reduce(
-(sum,c)=>sum+Number(c.passbook||0),0
+const reportPassbook=
+collectionRows.reduce(
+(sum,c)=>sum+Number(c.passbook||0),
+0
 );
 
-const reportInsurance=collectionRows.reduce(
-(sum,c)=>sum+Number(c.insurance||0),0
+const reportInsurance=
+collectionRows.reduce(
+(sum,c)=>sum+Number(c.insurance||0),
+0
 );
 
-const reportLoanForm=collectionRows.reduce(
-(sum,c)=>sum+Number(c.loanForm||0),0
+const reportLoanForm=
+collectionRows.reduce(
+(sum,c)=>sum+Number(c.loanForm||0),
+0
 );
 
-const reportOther=collectionRows.reduce(
-(sum,c)=>sum+Number(c.other||0),0
+const reportOther=
+collectionRows.reduce(
+(sum,c)=>sum+Number(c.other||0),
+0
 );
 
 const reportCollectionTotal=
@@ -2946,33 +3845,35 @@ reportInsurance+
 reportLoanForm+
 reportOther;
 
+document.getElementById("reportShare")
+.textContent=money(reportShare);
 
-/* Show summary */
+document.getElementById("reportSavings")
+.textContent=money(reportSavings);
 
-document.getElementById("reportShare").textContent=money(reportShare);
+document.getElementById("reportInstallment")
+.textContent=money(reportInstallment);
 
-document.getElementById("reportSavings").textContent=money(reportSavings);
+document.getElementById("reportAdmission")
+.textContent=money(reportAdmission);
 
-document.getElementById("reportInstallment").textContent=money(reportInstallment);
+document.getElementById("reportPassbook")
+.textContent=money(reportPassbook);
 
-document.getElementById("reportAdmission").textContent=money(reportAdmission);
+document.getElementById("reportInsurance")
+.textContent=money(reportInsurance);
 
-document.getElementById("reportPassbook").textContent=money(reportPassbook);
+document.getElementById("reportLoanForm")
+.textContent=money(reportLoanForm);
 
-document.getElementById("reportInsurance").textContent=money(reportInsurance);
+document.getElementById("reportOther")
+.textContent=money(reportOther);
 
-document.getElementById("reportLoanForm").textContent=money(reportLoanForm);
+document.getElementById("reportCollectionTotal")
+.textContent=money(reportCollectionTotal);
 
-document.getElementById("reportOther").textContent=money(reportOther);
-
-document.getElementById("reportCollectionTotal").textContent=money(reportCollectionTotal);
-
-
-/* =========================================================
-   DETAILED REPORT
-   ========================================================= */
-
-const rows=allReportRows().filter(r=>{
+const rows=
+allReportRows().filter(r=>{
 
 if(from&&r.date<from)return false;
 
@@ -2980,23 +3881,31 @@ if(to&&r.date>to)return false;
 
 if(member&&r.memberId!==member)return false;
 
-if(collector&&(r.collectorId||"")!==collector)return false;
+if(
+collector&&
+(r.collectorId||"")!==collector
+)return false;
 
-if(type!=="all"&&r.type.toLowerCase()!==type)return false;
+if(
+type!=="all"&&
+r.type.toLowerCase()!==type
+)return false;
 
 return true;
 
 });
 
+const body=
+document.getElementById("reportTable");
 
-const body=document.getElementById("reportTable");
-
-const total=rows.reduce(
-(sum,r)=>sum+Number(r.amount||0),0
+const total=
+rows.reduce(
+(sum,r)=>sum+Number(r.amount||0),
+0
 );
 
-document.getElementById("reportTotal").textContent=money(total);
-
+document.getElementById("reportTotal")
+.textContent=money(total);
 
 if(!rows.length){
 
@@ -3010,7 +3919,6 @@ No report data found.
 return;
 
 }
-
 
 body.innerHTML=rows.map(r=>`
 
@@ -3034,101 +3942,132 @@ body.innerHTML=rows.map(r=>`
 
 }
 
-
-/* =========================================================
-   CLEAR REPORT
-   ========================================================= */
-
 function clearReport(){
 
 document.getElementById("reportFrom").value="";
-
 document.getElementById("reportTo").value="";
-
 document.getElementById("reportMember").value="";
-
 document.getElementById("reportCollector").value="";
-
 document.getElementById("reportType").value="all";
 
-document.getElementById("reportShare").textContent="0";
-
-document.getElementById("reportSavings").textContent="0";
-
-document.getElementById("reportInstallment").textContent="0";
-
-document.getElementById("reportAdmission").textContent="0";
-
-document.getElementById("reportPassbook").textContent="0";
-
-document.getElementById("reportInsurance").textContent="0";
-
-document.getElementById("reportLoanForm").textContent="0";
-
-document.getElementById("reportOther").textContent="0";
-
-document.getElementById("reportCollectionTotal").textContent="0";
-
-document.getElementById("reportTotal").textContent="0";
+[
+"reportShare",
+"reportSavings",
+"reportInstallment",
+"reportAdmission",
+"reportPassbook",
+"reportInsurance",
+"reportLoanForm",
+"reportOther",
+"reportCollectionTotal",
+"reportTotal"
+].forEach(id=>{
+document.getElementById(id).textContent="0";
+});
 
 document.getElementById("reportTable").innerHTML="";
 
 }
 
-
-/* =========================================================
+/* =========================
    DASHBOARD
-   ========================================================= */
+   ========================= */
 
 function renderDashboard(){
 
-const share=data.collections.reduce((s,c)=>s+Number(c.share||0),0);
+const share=
+data.collections.reduce(
+(s,c)=>s+Number(c.share||0),
+0
+);
 
-const savings=data.collections.reduce((s,c)=>s+Number(c.savings||0),0);
+const savings=
+data.collections.reduce(
+(s,c)=>s+Number(c.savings||0),
+0
+);
 
-const loan=data.loans.reduce((s,l)=>s+Number(l.principal||0),0);
+const loan=
+data.loans.reduce(
+(s,l)=>s+Number(l.principal||0),
+0
+);
 
-const installment=data.collections.reduce((s,c)=>s+Number(c.installment||0),0);
+const installment=
+data.collections.reduce(
+(s,c)=>s+Number(c.installment||0),
+0
+);
 
-const service=data.loans.reduce((s,l)=>s+loanServicePaid(l),0);
+const service=
+data.loans.reduce(
+(s,l)=>s+loanServicePaid(l),
+0
+);
 
-const outstanding=data.loans.reduce((s,l)=>s+loanOutstanding(l),0);
+const outstanding=
+data.loans.reduce(
+(s,l)=>s+loanOutstanding(l),
+0
+);
 
 const t=today();
 
-const todayCollection=data.collections.filter(c=>c.date===t)
-.reduce((s,c)=>s+Number(c.total||0),0);
+const todayCollection=
+data.collections
+.filter(c=>c.date===t)
+.reduce(
+(s,c)=>s+Number(c.total||0),
+0
+);
 
-const todayExpense=data.expenses.filter(e=>e.date===t)
-.reduce((s,e)=>s+Number(e.amount||0),0);
+const todayExpense=
+data.expenses
+.filter(e=>e.date===t)
+.reduce(
+(s,e)=>s+Number(e.amount||0),
+0
+);
 
-document.getElementById("dMembers").textContent=money(data.members.length);
+document.getElementById("dMembers")
+.textContent=
+money(data.members.length);
 
-document.getElementById("dShare").textContent=money(share);
+document.getElementById("dShare")
+.textContent=money(share);
 
-document.getElementById("dSavings").textContent=money(savings);
+document.getElementById("dSavings")
+.textContent=money(savings);
 
-document.getElementById("dLoan").textContent=money(loan);
+document.getElementById("dLoan")
+.textContent=money(loan);
 
-document.getElementById("dInstallment").textContent=money(installment);
+document.getElementById("dInstallment")
+.textContent=money(installment);
 
-document.getElementById("dService").textContent=money(service);
+document.getElementById("dService")
+.textContent=money(service);
 
-document.getElementById("dOutstanding").textContent=money(outstanding);
+document.getElementById("dOutstanding")
+.textContent=money(outstanding);
 
-document.getElementById("dCash").textContent=money(cashBalance());
+document.getElementById("dCash")
+.textContent=money(cashBalance());
 
-document.getElementById("dTodayCollection").textContent=money(todayCollection);
+document.getElementById("dTodayCollection")
+.textContent=money(todayCollection);
 
-document.getElementById("dTodayExpense").textContent=money(todayExpense);
+document.getElementById("dTodayExpense")
+.textContent=money(todayExpense);
 
-document.getElementById("dBank").textContent=money(data.bankBalance);
+document.getElementById("dBank")
+.textContent=money(data.bankBalance);
 
 }
 
-/* =========================================================
+/* =========================
    EXCEL EXPORT
-   ========================================================= */
+   ========================= */
 
 function exportCollectionRows(){
 
@@ -3157,13 +4096,26 @@ const value=Number(amount)||0;
 if(value>0){
 
 rows.push({
+
 Date:c.date,
-"Member Code":memberCode(c.memberId),
-"Member Name":member,
-Collector:collector,
+
+"Member Code":
+memberCode(c.memberId),
+
+"Member Name":
+member,
+
+Collector:
+collector,
+
 Type:"Collection",
-Head:head,
-Amount:value
+
+Head:
+head,
+
+Amount:
+value
+
 });
 
 }
@@ -3176,28 +4128,46 @@ return rows;
 
 }
 
-
 function exportLoanRows(){
 
 return data.loans.map(l=>({
 
 Date:l.date,
+
 "Loan ID":l.id,
-"Member Code":memberCode(l.memberId),
-"Member Name":memberName(l.memberId),
-Principal:Number(l.principal)||0,
-"Service Charge":Number(l.service)||0,
-"Service Charge %":Number(l.rate)||0,
-"Total Payable":Number(l.total)||0,
-"Installments":Number(l.installments)||0,
-"Installment Amount":Number(l.installmentAmount)||0,
-"First Installment Date":l.firstDate||"",
+
+"Member Code":
+memberCode(l.memberId),
+
+"Member Name":
+memberName(l.memberId),
+
+Principal:
+Number(l.principal)||0,
+
+"Service Charge":
+Number(l.service)||0,
+
+"Service Charge %":
+Number(l.rate)||0,
+
+"Total Payable":
+Number(l.total)||0,
+
+Installments:
+Number(l.installments)||0,
+
+"Installment Amount":
+Number(l.installmentAmount)||0,
+
+"First Installment Date":
+l.firstDate||"",
+
 Note:l.note||""
 
 }));
 
 }
-
 
 function exportInstallmentRows(){
 
@@ -3210,12 +4180,23 @@ data.loans.forEach(l=>{
 rows.push({
 
 Date:p.date,
+
 "Loan ID":l.id,
-"Member Code":memberCode(l.memberId),
-"Member Name":memberName(l.memberId),
-"Payment Amount":Number(p.amount)||0,
-Principal:Number(p.principal)||0,
-"Service Charge":Number(p.service)||0
+
+"Member Code":
+memberCode(l.memberId),
+
+"Member Name":
+memberName(l.memberId),
+
+"Payment Amount":
+Number(p.amount)||0,
+
+Principal:
+Number(p.principal)||0,
+
+"Service Charge":
+Number(p.service)||0
 
 });
 
@@ -3227,82 +4208,105 @@ return rows;
 
 }
 
-
 function exportExpenseRows(){
 
 return data.expenses.map(e=>({
 
 Date:e.date,
-"Expense Head":e.head,
-Amount:Number(e.amount)||0,
-Note:e.note||"",
-Payment:e.payment||"Cash"
+
+"Expense Head":
+e.head,
+
+Amount:
+Number(e.amount)||0,
+
+Note:
+e.note||"",
+
+Payment:
+e.payment||"Cash"
 
 }));
 
 }
-
 
 function exportBankTransferRows(){
 
 return data.transfers.map(t=>({
 
 Date:t.date,
-Type:t.type==="deposit"
+
+Type:
+t.type==="deposit"
 ?"Cash to Bank - Deposit"
 :"Bank to Cash - Withdrawal",
-Amount:Number(t.amount)||0,
-Note:t.note||""
+
+Amount:
+Number(t.amount)||0,
+
+Note:
+t.note||""
 
 }));
 
 }
 
-
 function exportAllTransactionRows(){
 
 const rows=[];
-
-
-/* Collections */
 
 exportCollectionRows().forEach(r=>{
 
 rows.push({
 
 Date:r.Date,
-"Member Code":r["Member Code"],
-"Member Name":r["Member Name"],
-Collector:r.Collector,
-Type:r.Type,
-Head:r.Head,
-Amount:r.Amount
+
+"Member Code":
+r["Member Code"],
+
+"Member Name":
+r["Member Name"],
+
+Collector:
+r.Collector,
+
+Type:
+r.Type,
+
+Head:
+r.Head,
+
+Amount:
+r.Amount
 
 });
 
 });
-
-
-/* Loans */
 
 data.loans.forEach(l=>{
 
 rows.push({
 
 Date:l.date,
-"Member Code":memberCode(l.memberId),
-"Member Name":memberName(l.memberId),
+
+"Member Code":
+memberCode(l.memberId),
+
+"Member Name":
+memberName(l.memberId),
+
 Collector:"",
+
 Type:"Loan",
+
 Head:"Loan Disbursement",
-Amount:Number(l.principal)||0
+
+Amount:
+Number(l.principal)||0
 
 });
 
 });
-
-
-/* Loan Installments */
 
 data.loans.forEach(l=>{
 
@@ -3311,87 +4315,106 @@ data.loans.forEach(l=>{
 rows.push({
 
 Date:p.date,
-"Member Code":memberCode(l.memberId),
-"Member Name":memberName(l.memberId),
+
+"Member Code":
+memberCode(l.memberId),
+
+"Member Name":
+memberName(l.memberId),
+
 Collector:"",
+
 Type:"Loan",
+
 Head:"Loan Installment",
-Amount:Number(p.amount)||0
+
+Amount:
+Number(p.amount)||0
 
 });
 
 });
 
 });
-
-
-/* Expenses */
 
 data.expenses.forEach(e=>{
 
 rows.push({
 
 Date:e.date,
+
 "Member Code":"",
+
 "Member Name":"",
+
 Collector:"",
+
 Type:"Expense",
+
 Head:e.head,
-Amount:Number(e.amount)||0
+
+Amount:
+Number(e.amount)||0
 
 });
 
 });
-
-
-/* Bank Transfers */
 
 data.transfers.forEach(t=>{
 
 rows.push({
 
 Date:t.date,
+
 "Member Code":"",
+
 "Member Name":"",
+
 Collector:"",
+
 Type:"Bank Transfer",
-Head:t.type==="deposit"
+
+Head:
+t.type==="deposit"
 ?"Cash to Bank - Deposit"
 :"Bank to Cash - Withdrawal",
-Amount:Number(t.amount)||0
+
+Amount:
+Number(t.amount)||0
 
 });
 
 });
 
-
-return rows.sort((a,b)=>
-String(a.Date).localeCompare(String(b.Date))
+return rows.sort(
+(a,b)=>
+String(a.Date)
+.localeCompare(
+String(b.Date)
+)
 );
 
 }
-
-
 
 async function exportAllTransactionsToExcel(){
 
 if(typeof XLSX==="undefined"){
 
-alert("Excel Export library is not available. Please connect to the internet and try again.");
+alert(
+"Excel Export library is not available. Please connect to the internet and try again."
+);
 
 return;
 
 }
 
-
 const wb=XLSX.utils.book_new();
 
+const allRows=
+exportAllTransactionRows();
 
-/* All Transactions */
-
-const allRows=exportAllTransactionRows();
-
-const wsAll=XLSX.utils.json_to_sheet(allRows);
+const wsAll=
+XLSX.utils.json_to_sheet(allRows);
 
 XLSX.utils.book_append_sheet(
 wb,
@@ -3399,12 +4422,11 @@ wsAll,
 "All Transactions"
 );
 
+const collectionRows=
+exportCollectionRows();
 
-/* Collections */
-
-const collectionRows=exportCollectionRows();
-
-const wsCollections=XLSX.utils.json_to_sheet(
+const wsCollections=
+XLSX.utils.json_to_sheet(
 collectionRows
 );
 
@@ -3414,12 +4436,11 @@ wsCollections,
 "Collections"
 );
 
+const loanRows=
+exportLoanRows();
 
-/* Loans */
-
-const loanRows=exportLoanRows();
-
-const wsLoans=XLSX.utils.json_to_sheet(
+const wsLoans=
+XLSX.utils.json_to_sheet(
 loanRows
 );
 
@@ -3429,12 +4450,11 @@ wsLoans,
 "Loans"
 );
 
+const installmentRows=
+exportInstallmentRows();
 
-/* Loan Installments */
-
-const installmentRows=exportInstallmentRows();
-
-const wsInstallments=XLSX.utils.json_to_sheet(
+const wsInstallments=
+XLSX.utils.json_to_sheet(
 installmentRows
 );
 
@@ -3444,12 +4464,11 @@ wsInstallments,
 "Loan Installments"
 );
 
+const expenseRows=
+exportExpenseRows();
 
-/* Expenses */
-
-const expenseRows=exportExpenseRows();
-
-const wsExpenses=XLSX.utils.json_to_sheet(
+const wsExpenses=
+XLSX.utils.json_to_sheet(
 expenseRows
 );
 
@@ -3459,12 +4478,11 @@ wsExpenses,
 "Expenses"
 );
 
+const transferRows=
+exportBankTransferRows();
 
-/* Bank Transfers */
-
-const transferRows=exportBankTransferRows();
-
-const wsTransfers=XLSX.utils.json_to_sheet(
+const wsTransfers=
+XLSX.utils.json_to_sheet(
 transferRows
 );
 
@@ -3474,20 +4492,25 @@ wsTransfers,
 "Bank Transfers"
 );
 
-
-/* General Ledger */
-
-const ledgerData=ledgerRows().map(r=>({
+const ledgerData=
+ledgerRows().map(r=>({
 
 Date:r.date,
+
 Head:r.head,
+
 Member:r.member,
-"In":Number(r.in)||0,
-"Out":Number(r.out)||0
+
+"In":
+Number(r.in)||0,
+
+"Out":
+Number(r.out)||0
 
 }));
 
-const wsLedger=XLSX.utils.json_to_sheet(
+const wsLedger=
+XLSX.utils.json_to_sheet(
 ledgerData
 );
 
@@ -3497,39 +4520,31 @@ wsLedger,
 "General Ledger"
 );
 
-
-/* Create Excel file */
-
-const excelData=XLSX.write(wb,{
-
+const excelData=
+XLSX.write(
+wb,
+{
 bookType:"xlsx",
 type:"array"
+}
+);
 
-});
-
-
-const blob=new Blob(
+const blob=
+new Blob(
 [excelData],
 {
 type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 }
 );
 
-
-const file=new File(
-
+const file=
+new File(
 [blob],
-
 "Cooperative-Transactions-"+today()+".xlsx",
-
 {
 type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 }
-
 );
-
-
-/* iPhone Share */
 
 if(
 navigator.share &&
@@ -3561,12 +4576,11 @@ return;
 
 }
 
+const url=
+URL.createObjectURL(blob);
 
-/* Fallback */
-
-const url=URL.createObjectURL(blob);
-
-const a=document.createElement("a");
+const a=
+document.createElement("a");
 
 a.href=url;
 
@@ -3589,9 +4603,9 @@ URL.revokeObjectURL(url);
 
 }
 
-/* =========================================================
+/* =========================
    BACKUP
-   ========================================================= */
+   ========================= */
 
 function backupData(){
 
@@ -3602,71 +4616,106 @@ exportedAt:new Date().toISOString(),
 data
 };
 
-const json=JSON.stringify(payload,null,2);
+const json=
+JSON.stringify(
+payload,
+null,
+2
+);
 
-const blob=new Blob(
+const blob=
+new Blob(
 [json],
 {type:"application/json"}
 );
 
-const file=new File(
+const file=
+new File(
 [blob],
 "Cooperative-Backup-"+today()+".json",
 {type:"application/json"}
 );
 
-if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+if(
+navigator.share &&
+navigator.canShare &&
+navigator.canShare({files:[file]})
+){
 
 navigator.share({
+
 files:[file],
+
 title:"Cooperative Backup"
+
 }).catch(()=>{});
 
 }else{
 
-const url=URL.createObjectURL(blob);
-const a=document.createElement("a");
+const url=
+URL.createObjectURL(blob);
+
+const a=
+document.createElement("a");
 
 a.href=url;
-a.download="Cooperative-Backup-"+today()+".json";
+
+a.download=
+"Cooperative-Backup-"+today()+".json";
+
 a.style.display="none";
 
 document.body.appendChild(a);
+
 a.click();
 
 setTimeout(()=>{
+
 a.remove();
+
 URL.revokeObjectURL(url);
+
 },1000);
 
 }
 
 }
-/* =========================================================
+
+/* =========================
    RESTORE
-   ========================================================= */
+   ========================= */
 
 function restoreData(){
 
-const input=document.getElementById("restoreFile");
+const input=
+document.getElementById("restoreFile");
 
 if(!input.files.length){
+
 alert("Please select a backup file.");
+
 return;
+
 }
 
-if(!confirm("Restoring a backup will replace the current data. Continue?"))return;
+if(!confirm(
+"Restoring a backup will replace the current data. Continue?"
+))return;
 
 const file=input.files[0];
-const reader=new FileReader();
+
+const reader=
+new FileReader();
 
 reader.onload=function(){
 
 try{
 
-const parsed=JSON.parse(reader.result);
+const parsed=
+JSON.parse(reader.result);
 
-if(!parsed.data)throw new Error("Invalid backup");
+if(!parsed.data)
+throw new Error("Invalid backup");
 
 data={
 ...blankData(),
@@ -3676,11 +4725,18 @@ collectors:parsed.data.collectors||[],
 collections:parsed.data.collections||[],
 loans:parsed.data.loans||[],
 expenses:parsed.data.expenses||[],
-customExpenseHeads:parsed.data.customExpenseHeads||[],
-transfers:parsed.data.transfers||[]
+customExpenseHeads:
+parsed.data.customExpenseHeads||[],
+transfers:
+parsed.data.transfers||[]
 };
 
+recalculateBankBalance();
+
+rebuildLoanPayments();
+
 saveData();
+
 refreshAll();
 
 alert("Backup restored successfully.");
@@ -3697,16 +4753,19 @@ reader.readAsText(file);
 
 }
 
-
-/* =========================================================
-   CLEAR ALL DATA
-   ========================================================= */
+/* =========================
+   CLEAR ALL
+   ========================= */
 
 function clearAllData(){
 
-if(!confirm("This will permanently delete all accounting data. Make sure you have a backup. Continue?"))return;
+if(!confirm(
+"This will permanently delete all accounting data. Make sure you have a backup. Continue?"
+))return;
 
-if(!confirm("Final confirmation: delete all current data?"))return;
+if(!confirm(
+"Final confirmation: delete all current data?"
+))return;
 
 const savedCustomExpenseHeads=
 Array.isArray(data.customExpenseHeads)
@@ -3715,42 +4774,58 @@ Array.isArray(data.customExpenseHeads)
 
 data=blankData();
 
-data.customExpenseHeads=savedCustomExpenseHeads;
+data.customExpenseHeads=
+savedCustomExpenseHeads;
 
 saveData();
+
 refreshAll();
 
-alert("All accounting data has been cleared. Custom Expense Heads were kept.");
+alert(
+"All accounting data has been cleared. Custom Expense Heads were kept."
+);
 
 }
 
-
-/* =========================================================
-   REFRESH ALL
-   ========================================================= */
+/* =========================
+   REFRESH
+   ========================= */
 
 function refreshAll(){
 
 populateMemberSelects();
+
 populateCollectorSelect();
+
 populateExpenseHeads();
 
 renderDashboard();
+
 renderMembers();
+
 renderCollectors();
+
 renderCollections();
+
 renderLoans();
+
 renderAccount();
+
 renderLedger();
+
 renderCashBook();
+
 renderContra();
+
 renderExpenses();
+
 renderReports();
 
 }
-/* =========================================================
-   ESCAPE HTML
-   ========================================================= */
+
+/* =========================
+   ESCAPE
+   ========================= */
 
 function escapeHtml(value){
 
@@ -3763,17 +4838,16 @@ return String(value??"")
 
 }
 
-
-/* =========================================================
+/* =========================
    ENTER NAVIGATION
-   ========================================================= */
+   ========================= */
 
 const focusOrder={
 
 members:[
 "memberCode",
-"memberName",
-"memberMobile"
+"memberMobile",
+"memberName"
 ],
 
 collection:[
@@ -3818,25 +4892,31 @@ contra:[
 
 function setupEnterNavigation(){
 
-Object.values(focusOrder).forEach(order=>{
+Object.values(focusOrder)
+.forEach(order=>{
 
 order.forEach((id,index)=>{
 
-const el=document.getElementById(id);
+const el=
+document.getElementById(id);
 
 if(!el)return;
 
-el.addEventListener("keydown",function(e){
+el.addEventListener(
+"keydown",
+function(e){
 
 if(e.key!=="Enter")return;
 
 e.preventDefault();
 
-const nextId=order[index+1];
+const nextId=
+order[index+1];
 
 if(nextId){
 
-const next=document.getElementById(nextId);
+const next=
+document.getElementById(nextId);
 
 if(next){
 
@@ -3844,7 +4924,9 @@ next.focus();
 
 if(next.select){
 
-try{next.select();}catch(_){}
+try{
+next.select();
+}catch(_){}
 
 }
 
@@ -3852,85 +4934,113 @@ try{next.select();}catch(_){}
 
 }else{
 
-const saveButton=el.closest(".card")?.querySelector(
+const saveButton=
+el.closest(".card")
+?.querySelector(
 ".btn-green,.btn-blue,.btn-orange"
 );
 
-if(saveButton)saveButton.focus();
+if(saveButton){
+saveButton.focus();
+}
 
 }
 
-});
+}
+);
 
 });
 
 });
-
 
 [
-"colShare","colSavings","colInstallment","colAdmission",
-"colPassbook","colInsurance","colLoanForm","colOther"
+"colShare",
+"colSavings",
+"colInstallment",
+"colAdmission",
+"colPassbook",
+"colInsurance",
+"colLoanForm",
+"colOther"
 ].forEach(id=>{
 
-const el=document.getElementById(id);
+const el=
+document.getElementById(id);
 
 if(el){
 
-el.addEventListener("input",updateCollectionTotal);
+el.addEventListener(
+"input",
+updateCollectionTotal
+);
 
 }
 
 });
 
-
 [
-"loanPrincipal","loanRate","loanInstallments"
+"loanPrincipal",
+"loanRate",
+"loanInstallments"
 ].forEach(id=>{
 
-const el=document.getElementById(id);
+const el=
+document.getElementById(id);
 
 if(el){
 
-el.addEventListener("input",calculateLoan);
+el.addEventListener(
+"input",
+calculateLoan
+);
 
 }
 
 });
 
-
-const expenseAmount=document.getElementById("expenseAmount");
+const expenseAmount=
+document.getElementById("expenseAmount");
 
 if(expenseAmount){
 
-expenseAmount.addEventListener("input",function(){
+expenseAmount.addEventListener(
+"input",
+function(){
 
-this.value=this.value.replace(/[^\d]/g,"");
+this.value=
+this.value.replace(/[^\d]/g,"");
 
-});
+}
+);
 
 }
 
-
-const contraAmount=document.getElementById("contraAmount");
+const contraAmount=
+document.getElementById("contraAmount");
 
 if(contraAmount){
 
-contraAmount.addEventListener("input",function(){
+contraAmount.addEventListener(
+"input",
+function(){
 
-this.value=this.value.replace(/[^\d]/g,"");
+this.value=
+this.value.replace(/[^\d]/g,"");
 
-});
+}
+);
 
 }
 
 }
 
-
-/* =========================================================
+/* =========================
    START
-   ========================================================= */
+   ========================= */
 
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
 
 setToday("collectionDate");
 
@@ -3952,7 +5062,8 @@ setupEnterNavigation();
 
 refreshAll();
 
-});
+}
+);
 
 </script>
 
