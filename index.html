@@ -1659,8 +1659,264 @@ behavior:"smooth"
 });
 
 }
-function renderLoans(){
 
+   function editCollection(id){
+
+const collection=data.collections.find(
+c=>c.id===id
+);
+
+if(!collection)return;
+
+document.getElementById("collectionMember").value=
+collection.memberId;
+
+document.getElementById("collectionCollector").value=
+collection.collectorId||"";
+
+document.getElementById("collectionDate").value=
+dateInputValue(collection.date);
+
+document.getElementById("colShare").value=
+collection.share||"";
+
+document.getElementById("colSavings").value=
+collection.savings||"";
+
+document.getElementById("colInstallment").value=
+collection.installment||"";
+
+document.getElementById("colAdmission").value=
+collection.admission||"";
+
+document.getElementById("colPassbook").value=
+collection.passbook||"";
+
+document.getElementById("colInsurance").value=
+collection.insurance||"";
+
+document.getElementById("colLoanForm").value=
+collection.loanForm||"";
+
+document.getElementById("colOther").value=
+collection.other||"";
+
+updateCollectionTotal();
+
+const saveButton=document.querySelector(
+"#collection .btn-green"
+);
+
+if(saveButton){
+
+saveButton.textContent="Update Collection";
+
+saveButton.onclick=function(){
+updateCollection(id);
+};
+
+}
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+   function updateCollection(id){
+
+const collection=data.collections.find(
+c=>c.id===id
+);
+
+if(!collection)return;
+
+const memberId=
+document.getElementById("collectionMember").value;
+
+const collectorId=
+document.getElementById("collectionCollector").value;
+
+const date=
+validDateOrToday("collectionDate");
+
+if(!memberId){
+
+alert("Please select a member.");
+return;
+
+}
+
+const total=collectionTotal();
+
+if(total<=0){
+
+alert("Enter at least one collection amount.");
+return;
+
+}
+
+const installment=num("colInstallment");
+
+/*
+Temporarily remove this collection from the
+loan calculation before checking the new amount.
+*/
+
+const oldCollection={
+...collection
+};
+
+const collectionIndex=data.collections.findIndex(
+c=>c.id===id
+);
+
+if(collectionIndex===-1)return;
+
+data.collections.splice(collectionIndex,1);
+
+/* Rebuild loan balances without old collection */
+rebuildLoanPayments();
+
+if(installment>0){
+
+const activeLoans=data.loans
+.filter(l=>l.memberId===memberId)
+.filter(l=>loanOutstanding(l)>0);
+
+if(!activeLoans.length){
+
+data.collections.splice(
+collectionIndex,
+0,
+oldCollection
+);
+
+rebuildLoanPayments();
+
+alert("No outstanding loan found for this member.");
+return;
+
+}
+
+const totalOutstanding=activeLoans.reduce(
+(s,l)=>s+loanOutstanding(l),
+0
+);
+
+if(installment>totalOutstanding+0.01){
+
+data.collections.splice(
+collectionIndex,
+0,
+oldCollection
+);
+
+rebuildLoanPayments();
+
+alert(
+"The installment amount is greater than the member's loan outstanding."
+);
+
+return;
+
+}
+
+}
+
+/* Update collection */
+collection.memberId=memberId;
+collection.collectorId=collectorId;
+collection.date=date;
+
+collection.share=num("colShare");
+collection.savings=num("colSavings");
+collection.installment=installment;
+collection.admission=num("colAdmission");
+collection.passbook=num("colPassbook");
+collection.insurance=num("colInsurance");
+collection.loanForm=num("colLoanForm");
+collection.other=num("colOther");
+collection.total=total;
+
+/*
+Put collection back in its original position.
+*/
+data.collections.splice(
+collectionIndex,
+0,
+collection
+);
+
+/* Recalculate all loan payments */
+rebuildLoanPayments();
+
+saveData();
+
+resetCollectionSaveButton();
+
+refreshAll();
+
+alert("Collection updated successfully.");
+
+clearCollectionForm();
+
+}
+   function resetCollectionSaveButton(){
+
+const saveButton=document.querySelector(
+"#collection .btn-green"
+);
+
+if(!saveButton)return;
+
+saveButton.textContent="Save Collection";
+
+saveButton.onclick=function(){
+saveCollection();
+};
+
+}
+   function deleteCollection(id){
+
+const collection=data.collections.find(
+c=>c.id===id
+);
+
+if(!collection)return;
+
+const member=data.members.find(
+m=>m.id===collection.memberId
+);
+
+const memberText=member
+?`${member.code} - ${member.name}`
+:"Unknown Member";
+
+if(!confirm(
+`Delete this collection?\n\n${memberText} - ${money(collection.total)}`
+))return;
+
+/* Delete collection */
+data.collections=data.collections.filter(
+c=>c.id!==id
+);
+
+/*
+Rebuild loan payments so the deleted
+installment is also removed from the loan.
+*/
+rebuildLoanPayments();
+
+saveData();
+
+refreshAll();
+
+alert("Collection deleted successfully.");
+
+}
+   
+function renderLoans(){
 const body=document.getElementById("loanTable");
 
 if(!data.loans.length){
@@ -3482,6 +3738,7 @@ populateExpenseHeads();
 renderDashboard();
 renderMembers();
 renderCollectors();
+renderCollections();
 renderLoans();
 renderAccount();
 renderLedger();
@@ -3491,8 +3748,6 @@ renderExpenses();
 renderReports();
 
 }
-
-
 /* =========================================================
    ESCAPE HTML
    ========================================================= */
