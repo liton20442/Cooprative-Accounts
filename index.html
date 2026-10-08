@@ -1499,7 +1499,7 @@ return(loan.payments||[]).reduce((s,p)=>s+Number(p.service||0),0);
 }
 
 
-   function renderCollections(){
+function renderCollections(){
 
 const body=document.getElementById("collectionTable");
 
@@ -1593,6 +1593,70 @@ Delete
 `;
 
 }).join("");
+
+}
+
+   function editCollection(id){
+
+const collection=data.collections.find(
+c=>c.id===id
+);
+
+if(!collection)return;
+
+document.getElementById("collectionMember").value=
+collection.memberId;
+
+document.getElementById("collectionCollector").value=
+collection.collectorId||"";
+
+document.getElementById("collectionDate").value=
+dateInputValue(collection.date);
+
+document.getElementById("colShare").value=
+collection.share||"";
+
+document.getElementById("colSavings").value=
+collection.savings||"";
+
+document.getElementById("colInstallment").value=
+collection.installment||"";
+
+document.getElementById("colAdmission").value=
+collection.admission||"";
+
+document.getElementById("colPassbook").value=
+collection.passbook||"";
+
+document.getElementById("colInsurance").value=
+collection.insurance||"";
+
+document.getElementById("colLoanForm").value=
+collection.loanForm||"";
+
+document.getElementById("colOther").value=
+collection.other||"";
+
+updateCollectionTotal();
+
+const saveButton=document.querySelector(
+"#collection .btn-green"
+);
+
+if(saveButton){
+
+saveButton.textContent="Update Collection";
+
+saveButton.onclick=function(){
+updateCollection(id);
+};
+
+}
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
 
 }
 function renderLoans(){
