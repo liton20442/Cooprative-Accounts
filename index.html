@@ -144,6 +144,7 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <button class="quick-btn q8" onclick="showPage('collectors')"><span class="quick-icon">🧑‍💼</span>Collectors</button>
 <button class="quick-btn q6" onclick="showPage('contra')"><span class="quick-icon">🔄</span>Bank Transfer</button>
 <button class="quick-btn q5" onclick="showPage('shareTransfer')"><span class="quick-icon">🔁</span>Share Transfer</button>
+<button class="quick-btn q9" onclick="showPage('withdrawal')"><span class="quick-icon">💳</span>Savings Withdrawal</button>
 </div>
 </section>
 
@@ -374,6 +375,99 @@ oninput="renderCollections()">
 </div>
 </section>
 
+<!-- SAVINGS WITHDRAWAL -->
+<section id="withdrawal" class="page">
+<h1>Savings Withdrawal</h1>
+
+<div class="notice">
+Withdraw money only from the member's available Savings balance. The withdrawal will reduce the member's Savings balance and Cash in Hand.
+</div>
+
+<div class="card">
+<div class="form-grid">
+
+<div class="field full">
+<label>Member</label>
+<select id="withdrawalMember" onchange="updateWithdrawalBalance()"></select>
+</div>
+
+<div class="field">
+<label>Date</label>
+<input type="date" id="withdrawalDate" autocomplete="off">
+</div>
+
+<div class="field">
+<label>Available Savings</label>
+<input type="text" id="withdrawalAvailable" readonly>
+</div>
+
+<div class="field">
+<label>Withdrawal Amount</label>
+<input type="text" id="withdrawalAmount" autocomplete="off">
+</div>
+
+<div class="field">
+<label>After Withdrawal</label>
+<input type="text" id="withdrawalAfter" readonly>
+</div>
+
+<div class="field full">
+<label>Note</label>
+<input type="text" id="withdrawalNote" autocomplete="off">
+</div>
+
+</div>
+
+<div class="summary-box">
+<div class="summary-line">
+<span>Available Savings</span>
+<strong id="withdrawalBalancePreview">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Withdrawal Amount</span>
+<strong id="withdrawalAmountPreview">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Remaining Savings</span>
+<strong id="withdrawalAfterPreview">0</strong>
+</div>
+</div>
+
+<div class="actions">
+<button class="btn-orange" onclick="saveSavingsWithdrawal()">Save Withdrawal</button>
+<button class="btn-secondary" onclick="clearSavingsWithdrawalForm()">Clear</button>
+</div>
+</div>
+
+<div class="card">
+<h2>Withdrawal History</h2>
+
+<div class="search-row">
+<input
+id="withdrawalSearch"
+placeholder="Search by member code or name"
+oninput="renderSavingsWithdrawals()">
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Member</th>
+<th>Amount</th>
+<th>Note</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="withdrawalTable"></tbody>
+</table>
+</div>
+</div>
+</section>
+
 <!-- SHARE TRANSFER -->
 <section id="shareTransfer" class="page">
 <h1>Share Transfer</h1>
@@ -475,7 +569,8 @@ oninput="renderShareTransfers()">
 <label>Ledger Head</label>
 <select id="ledgerHead" onchange="renderLedger()">
 <option value="">All Heads</option>
-<option>Share</option><option>Savings</option><option>Loan Disbursement</option>
+<option>Share</option><option>Savings</option><option>Savings Withdrawal</option>
+<option>Loan Disbursement</option>
 <option>Loan Installment</option><option>Service Charge</option><option>Admission Fee</option>
 <option>Pass Book</option><option>Insurance</option><option>Loan Form Sales</option>
 <option>Other Income</option><option>Office Expense</option><option>Stationery</option>
@@ -638,6 +733,7 @@ Record office and operational expenses here. Saved expenses are automatically in
 <option value="all">All Transactions</option>
 <option value="collection">Collection</option>
 <option value="loan">Loan</option>
+<option value="withdrawal">Savings Withdrawal</option>
 <option value="expense">Expense</option>
 </select>
 </div>
@@ -746,6 +842,7 @@ collectors:[],
 collections:[],
 loans:[],
 expenses:[],
+withdrawals:[],
 customExpenseHeads:[],
 transfers:[],
 shareTransfers:[],
@@ -769,6 +866,7 @@ collectors:parsed.collectors||[],
 collections:parsed.collections||[],
 loans:parsed.loans||[],
 expenses:parsed.expenses||[],
+withdrawals:parsed.withdrawals||[],
 customExpenseHeads:parsed.customExpenseHeads||[],
 transfers:parsed.transfers||[],
 shareTransfers:parsed.shareTransfers||[]
@@ -948,6 +1046,11 @@ renderLoans();
 
 if(id==="accounts"){
 renderAccount();
+}
+
+if(id==="withdrawal"){
+updateWithdrawalBalance();
+renderSavingsWithdrawals();
 }
 
 if(id==="shareTransfer"){
@@ -1144,7 +1247,11 @@ const hasShareTransfers=data.shareTransfers.some(
 t=>t.fromMemberId===id||t.toMemberId===id
 );
 
-if(hasCollections||hasLoans||hasShareTransfers){
+const hasWithdrawals=data.withdrawals.some(
+w=>w.memberId===id
+);
+
+if(hasCollections||hasLoans||hasShareTransfers||hasWithdrawals){
 
 alert(
 "This member cannot be deleted because account or loan history exists."
@@ -1285,6 +1392,12 @@ options,
 
 fillSelect(
 "accountMember",
+options,
+"Select Member"
+);
+
+fillSelect(
+"withdrawalMember",
 options,
 "Select Member"
 );
@@ -2384,6 +2497,32 @@ collectedShare-transferredOut+transferredIn
 
 }
 
+function savingsBalance(memberId,excludeWithdrawalId=""){
+
+const collectedSavings=data.collections
+.filter(c=>c.memberId===memberId)
+.reduce(
+(s,c)=>s+Number(c.savings||0),
+0
+);
+
+const withdrawnSavings=data.withdrawals
+.filter(w=>
+w.memberId===memberId &&
+w.id!==excludeWithdrawalId
+)
+.reduce(
+(s,w)=>s+Number(w.amount||0),
+0
+);
+
+return Math.max(
+0,
+collectedSavings-withdrawnSavings
+);
+
+}
+
 function renderAccount(){
 
 const memberId=
@@ -2458,12 +2597,7 @@ const share=
 memberShareBalance(memberId);
 
 const savings=
-data.collections
-.filter(c=>c.memberId===memberId)
-.reduce(
-(s,c)=>s+Number(c.savings||0),
-0
-);
+savingsBalance(memberId);
 
 const installments=
 data.collections
@@ -2594,6 +2728,30 @@ actionId:""
 
 });
 
+/* SAVINGS WITHDRAWAL HISTORY */
+
+data.withdrawals
+.filter(w=>w.memberId===memberId)
+.forEach(w=>{
+
+transactions.push({
+
+date:w.date,
+
+description:"Savings Withdrawal",
+
+amount:w.amount,
+
+details:w.note||"",
+
+actionType:"withdrawal",
+
+actionId:w.id
+
+});
+
+});
+
 /* SHARE TRANSFER HISTORY IN MEMBER ACCOUNT */
 
 data.shareTransfers
@@ -2676,6 +2834,24 @@ Delete
 :""
 }
 
+${
+t.actionType==="withdrawal"
+?`
+<button
+class="btn-small btn-orange"
+onclick="editSavingsWithdrawal('${t.actionId}')">
+Edit
+</button>
+
+<button
+class="btn-small btn-red"
+onclick="deleteSavingsWithdrawal('${t.actionId}')">
+Delete
+</button>
+`
+:""
+}
+
 </td>
 
 </tr>
@@ -2693,6 +2869,459 @@ editCollection(id);
 function deleteAccountCollection(id){
 
 deleteCollection(id);
+
+}
+
+/* =========================
+   SAVINGS WITHDRAWAL
+   ========================= */
+
+function getEditingWithdrawalId(){
+
+return window.editingSavingsWithdrawalId||"";
+
+}
+
+function updateWithdrawalBalance(){
+
+const memberId=
+document.getElementById("withdrawalMember")?.value||"";
+
+const available=
+memberId
+?savingsBalance(memberId,getEditingWithdrawalId())
+:0;
+
+const amountEl=
+document.getElementById("withdrawalAmount");
+
+const amount=
+amountEl
+?Number(
+amountEl.value
+.toString()
+.replace(/,/g,"")
+.replace(/[^\d.-]/g,"")
+)||0
+:0;
+
+const after=
+Math.max(
+0,
+available-amount
+);
+
+const availableEl=
+document.getElementById("withdrawalAvailable");
+
+const afterEl=
+document.getElementById("withdrawalAfter");
+
+const availablePreview=
+document.getElementById("withdrawalBalancePreview");
+
+const amountPreview=
+document.getElementById("withdrawalAmountPreview");
+
+const afterPreview=
+document.getElementById("withdrawalAfterPreview");
+
+if(availableEl){
+availableEl.value=
+available?money(available):"";
+}
+
+if(afterEl){
+afterEl.value=
+amount?money(after):"";
+}
+
+if(availablePreview){
+availablePreview.textContent=
+money(available);
+}
+
+if(amountPreview){
+amountPreview.textContent=
+money(amount);
+}
+
+if(afterPreview){
+afterPreview.textContent=
+money(after);
+}
+
+}
+
+function clearSavingsWithdrawalForm(){
+
+window.editingSavingsWithdrawalId="";
+
+setToday("withdrawalDate");
+
+document.getElementById("withdrawalMember").value="";
+document.getElementById("withdrawalAmount").value="";
+document.getElementById("withdrawalNote").value="";
+
+const button=
+document.querySelector("#withdrawal .btn-orange");
+
+if(button){
+
+button.textContent="Save Withdrawal";
+
+button.onclick=function(){
+saveSavingsWithdrawal();
+};
+
+}
+
+updateWithdrawalBalance();
+
+}
+
+function saveSavingsWithdrawal(){
+
+const memberId=
+document.getElementById("withdrawalMember").value;
+
+const date=
+validDateOrToday("withdrawalDate");
+
+const amount=
+num("withdrawalAmount");
+
+const note=
+document.getElementById("withdrawalNote")
+.value.trim();
+
+if(!memberId){
+
+alert("Please select a member.");
+
+return;
+
+}
+
+if(amount<=0){
+
+alert("Please enter a valid withdrawal amount.");
+
+return;
+
+}
+
+const available=
+savingsBalance(memberId);
+
+if(amount>available+0.01){
+
+alert(
+"The withdrawal amount is greater than the member's available Savings."
+);
+
+return;
+
+}
+
+data.withdrawals.push({
+
+id:uid("SW"),
+
+memberId,
+
+date,
+
+amount,
+
+note,
+
+createdAt:new Date().toISOString()
+
+});
+
+saveData();
+
+refreshAll();
+
+clearSavingsWithdrawalForm();
+
+showPage("withdrawal");
+
+alert("Savings withdrawal saved successfully.");
+
+}
+
+function editSavingsWithdrawal(id){
+
+const withdrawal=
+data.withdrawals.find(w=>w.id===id);
+
+if(!withdrawal)return;
+
+window.editingSavingsWithdrawalId=id;
+
+showPage("withdrawal");
+
+populateMemberSelects();
+
+document.getElementById("withdrawalMember").value=
+withdrawal.memberId;
+
+document.getElementById("withdrawalDate").value=
+dateInputValue(withdrawal.date);
+
+document.getElementById("withdrawalAmount").value=
+withdrawal.amount;
+
+document.getElementById("withdrawalNote").value=
+withdrawal.note||"";
+
+updateWithdrawalBalance();
+
+const button=
+document.querySelector("#withdrawal .btn-orange");
+
+if(button){
+
+button.textContent="Update Withdrawal";
+
+button.onclick=function(){
+updateSavingsWithdrawal(id);
+};
+
+}
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+function updateSavingsWithdrawal(id){
+
+const withdrawal=
+data.withdrawals.find(w=>w.id===id);
+
+if(!withdrawal)return;
+
+const memberId=
+document.getElementById("withdrawalMember").value;
+
+const date=
+validDateOrToday("withdrawalDate");
+
+const amount=
+num("withdrawalAmount");
+
+const note=
+document.getElementById("withdrawalNote")
+.value.trim();
+
+if(!memberId){
+
+alert("Please select a member.");
+
+return;
+
+}
+
+if(amount<=0){
+
+alert("Please enter a valid withdrawal amount.");
+
+return;
+
+}
+
+const available=
+savingsBalance(memberId,id);
+
+if(amount>available+0.01){
+
+alert(
+"The withdrawal amount is greater than the member's available Savings."
+);
+
+return;
+
+}
+
+withdrawal.memberId=memberId;
+withdrawal.date=date;
+withdrawal.amount=amount;
+withdrawal.note=note;
+
+saveData();
+
+window.editingSavingsWithdrawalId="";
+
+resetWithdrawalSaveButton();
+
+refreshAll();
+
+clearSavingsWithdrawalForm();
+
+showPage("withdrawal");
+
+alert("Savings withdrawal updated successfully.");
+
+}
+
+function resetWithdrawalSaveButton(){
+
+const button=
+document.querySelector("#withdrawal .btn-orange");
+
+if(!button)return;
+
+button.textContent="Save Withdrawal";
+
+button.onclick=function(){
+saveSavingsWithdrawal();
+};
+
+}
+
+function deleteSavingsWithdrawal(id){
+
+const withdrawal=
+data.withdrawals.find(w=>w.id===id);
+
+if(!withdrawal)return;
+
+const member=
+data.members.find(
+m=>m.id===withdrawal.memberId
+);
+
+const memberText=member
+?`${member.code} - ${member.name}`
+:"Unknown Member";
+
+if(!confirm(
+`Delete this savings withdrawal?\n\n${memberText}\nAmount: ${money(withdrawal.amount)}`
+))return;
+
+data.withdrawals=
+data.withdrawals.filter(
+w=>w.id!==id
+);
+
+saveData();
+
+refreshAll();
+
+alert("Savings withdrawal deleted successfully.");
+
+}
+
+function renderSavingsWithdrawals(){
+
+const body=
+document.getElementById("withdrawalTable");
+
+if(!body)return;
+
+const search=
+(
+document.getElementById("withdrawalSearch")?.value||""
+)
+.trim()
+.toLowerCase();
+
+const rows=
+data.withdrawals
+.filter(w=>{
+
+if(!search)return true;
+
+const member=
+data.members.find(
+m=>m.id===w.memberId
+);
+
+const code=member?.code||"";
+const name=member?.name||"";
+
+return code.toLowerCase().includes(search)||
+name.toLowerCase().includes(search);
+
+})
+.sort((a,b)=>{
+
+const dateCompare=
+String(b.date).localeCompare(
+String(a.date)
+);
+
+if(dateCompare!==0)return dateCompare;
+
+return String(b.createdAt||"")
+.localeCompare(
+String(a.createdAt||"")
+);
+
+});
+
+if(!rows.length){
+
+body.innerHTML=`
+<tr>
+<td colspan="5" class="empty">
+No savings withdrawal records found.
+</td>
+</tr>`;
+
+return;
+
+}
+
+body.innerHTML=rows.map(w=>{
+
+const member=
+data.members.find(
+m=>m.id===w.memberId
+);
+
+const memberText=member
+?`${member.code} - ${member.name}`
+:"Unknown Member";
+
+return`
+
+<tr>
+
+<td>${escapeHtml(displayDate(w.date))}</td>
+
+<td>${escapeHtml(memberText)}</td>
+
+<td>${money(w.amount)}</td>
+
+<td>${escapeHtml(w.note||"")}</td>
+
+<td>
+
+<button
+class="btn-small btn-orange"
+onclick="editSavingsWithdrawal('${w.id}')">
+Edit
+</button>
+
+<button
+class="btn-small btn-red"
+onclick="deleteSavingsWithdrawal('${w.id}')">
+Delete
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+}).join("");
 
 }
 
@@ -3296,6 +3925,24 @@ out:0
 
 });
 
+data.withdrawals.forEach(w=>{
+
+rows.push({
+
+date:w.date,
+
+head:"Savings Withdrawal",
+
+member:memberName(w.memberId),
+
+in:0,
+
+out:Number(w.amount)||0
+
+});
+
+});
+
 data.shareTransfers.forEach(t=>{
 
 const from=
@@ -3465,6 +4112,23 @@ description:
 in:0,
 
 out:l.principal
+
+});
+
+});
+
+data.withdrawals.forEach(w=>{
+
+rows.push({
+
+date:w.date,
+
+description:
+`Savings Withdrawal - ${memberName(w.memberId)}`,
+
+in:0,
+
+out:Number(w.amount)||0
 
 });
 
@@ -4439,6 +5103,23 @@ amount:p.amount
 
 });
 
+data.withdrawals.forEach(w=>{
+
+rows.push({
+
+date:w.date,
+member:memberName(w.memberId),
+memberId:w.memberId,
+collector:"",
+collectorId:"",
+type:"Withdrawal",
+description:"Savings Withdrawal",
+amount:Number(w.amount)||0
+
+});
+
+});
+
 data.expenses.forEach(e=>{
 
 rows.push({
@@ -4733,10 +5414,22 @@ data.members.reduce(
 0
 );
 
-const savings=
+const savingsCollected=
 data.collections.reduce(
 (s,c)=>s+Number(c.savings||0),
 0
+);
+
+const savingsWithdrawn=
+data.withdrawals.reduce(
+(s,w)=>s+Number(w.amount||0),
+0
+);
+
+const savings=
+Math.max(
+0,
+savingsCollected-savingsWithdrawn
 );
 
 const loan=
@@ -5031,6 +5724,30 @@ t.note||""
 
 }
 
+function exportWithdrawalRows(){
+
+return data.withdrawals.map(w=>({
+
+Date:w.date,
+
+"Member Code":
+memberCode(w.memberId),
+
+"Member Name":
+memberName(w.memberId),
+
+Type:"Savings Withdrawal",
+
+Amount:
+Number(w.amount)||0,
+
+Note:
+w.note||""
+
+}));
+
+}
+
 function exportAllTransactionRows(){
 
 const rows=[];
@@ -5112,6 +5829,31 @@ Amount:
 Number(p.amount)||0
 
 });
+
+});
+
+});
+
+data.withdrawals.forEach(w=>{
+
+rows.push({
+
+Date:w.date,
+
+"Member Code":
+memberCode(w.memberId),
+
+"Member Name":
+memberName(w.memberId),
+
+Collector:"",
+
+Type:"Withdrawal",
+
+Head:"Savings Withdrawal",
+
+Amount:
+Number(w.amount)||0
 
 });
 
@@ -5268,6 +6010,20 @@ XLSX.utils.book_append_sheet(
 wb,
 wsInstallments,
 "Loan Installments"
+);
+
+const withdrawalRows=
+exportWithdrawalRows();
+
+const wsWithdrawals=
+XLSX.utils.json_to_sheet(
+withdrawalRows
+);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsWithdrawals,
+"Savings Withdrawals"
 );
 
 const expenseRows=
@@ -5545,6 +6301,7 @@ collectors:parsed.data.collectors||[],
 collections:parsed.data.collections||[],
 loans:parsed.data.loans||[],
 expenses:parsed.data.expenses||[],
+withdrawals:parsed.data.withdrawals||[],
 customExpenseHeads:
 parsed.data.customExpenseHeads||[],
 transfers:
@@ -5635,6 +6392,10 @@ renderLoans();
 
 renderAccount();
 
+updateWithdrawalBalance();
+
+renderSavingsWithdrawals();
+
 renderShareTransfers();
 
 renderLedger();
@@ -5698,6 +6459,13 @@ loan:[
 "loanInstallments",
 "loanFirstDate",
 "loanNote"
+],
+
+withdrawal:[
+"withdrawalMember",
+"withdrawalDate",
+"withdrawalAmount",
+"withdrawalNote"
 ],
 
 expense:[
@@ -5832,6 +6600,25 @@ calculateLoan
 
 });
 
+const withdrawalAmount=
+document.getElementById("withdrawalAmount");
+
+if(withdrawalAmount){
+
+withdrawalAmount.addEventListener(
+"input",
+function(){
+
+this.value=
+this.value.replace(/[^\d]/g,"");
+
+updateWithdrawalBalance();
+
+}
+);
+
+}
+
 const expenseAmount=
 document.getElementById("expenseAmount");
 
@@ -5896,6 +6683,8 @@ setToday("collectionDate");
 setToday("loanDate");
 
 setToday("loanFirstDate");
+
+setToday("withdrawalDate");
 
 setToday("expenseDate");
 
