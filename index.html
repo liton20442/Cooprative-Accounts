@@ -1498,6 +1498,103 @@ return(loan.payments||[]).reduce((s,p)=>s+Number(p.service||0),0);
 
 }
 
+
+   function renderCollections(){
+
+const body=document.getElementById("collectionTable");
+
+if(!body)return;
+
+const search=(
+document.getElementById("collectionSearch")?.value||""
+).trim().toLowerCase();
+
+const rows=data.collections
+.filter(c=>{
+
+if(!search)return true;
+
+const member=data.members.find(
+m=>m.id===c.memberId
+);
+
+const code=member?.code||"";
+const name=member?.name||"";
+
+return code.toLowerCase().includes(search)||
+name.toLowerCase().includes(search);
+
+})
+.sort((a,b)=>{
+
+const dateCompare=String(b.date).localeCompare(
+String(a.date)
+);
+
+if(dateCompare!==0)return dateCompare;
+
+return String(b.createdAt||"").localeCompare(
+String(a.createdAt||"")
+);
+
+});
+
+if(!rows.length){
+
+body.innerHTML=`
+<tr>
+<td colspan="5" class="empty">
+No collection records found.
+</td>
+</tr>`;
+
+return;
+
+}
+
+body.innerHTML=rows.map(c=>{
+
+const member=data.members.find(
+m=>m.id===c.memberId
+);
+
+const memberText=member
+?`${member.code} - ${member.name}`
+:"Unknown Member";
+
+return`
+<tr>
+
+<td>${escapeHtml(displayDate(c.date))}</td>
+
+<td>${escapeHtml(memberText)}</td>
+
+<td>${escapeHtml(collectorName(c.collectorId))}</td>
+
+<td>${money(c.total)}</td>
+
+<td>
+
+<button
+class="btn-small btn-orange"
+onclick="editCollection('${c.id}')">
+Edit
+</button>
+
+<button
+class="btn-small btn-red"
+onclick="deleteCollection('${c.id}')">
+Delete
+</button>
+
+</td>
+
+</tr>
+`;
+
+}).join("");
+
+}
 function renderLoans(){
 
 const body=document.getElementById("loanTable");
