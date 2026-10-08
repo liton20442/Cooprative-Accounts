@@ -143,6 +143,7 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <button class="quick-btn q8" onclick="showPage('backup')"><span class="quick-icon">💾</span>Backup</button>
 <button class="quick-btn q8" onclick="showPage('collectors')"><span class="quick-icon">🧑‍💼</span>Collectors</button>
 <button class="quick-btn q6" onclick="showPage('contra')"><span class="quick-icon">🔄</span>Bank Transfer</button>
+<button class="quick-btn q5" onclick="showPage('shareTransfer')"><span class="quick-icon">🔁</span>Share Transfer</button>
 </div>
 </section>
 
@@ -368,6 +369,100 @@ oninput="renderCollections()">
 </tr>
 </thead>
 <tbody id="accountTransactions"></tbody>
+</table>
+</div>
+</div>
+</section>
+
+<!-- SHARE TRANSFER -->
+<section id="shareTransfer" class="page">
+<h1>Share Transfer</h1>
+
+<div class="notice">
+Share money cannot be withdrawn. Use this page only to transfer shares from one member to another member.
+</div>
+
+<div class="card">
+<div class="form-grid">
+
+<div class="field">
+<label>Transfer Date</label>
+<input type="date" id="shareTransferDate" autocomplete="off">
+</div>
+
+<div class="field">
+<label>From Member</label>
+<select id="shareTransferFrom" onchange="updateShareTransferBalance()"></select>
+</div>
+
+<div class="field">
+<label>Available Share</label>
+<input type="text" id="shareTransferAvailable" readonly>
+</div>
+
+<div class="field">
+<label>To Member</label>
+<select id="shareTransferTo"></select>
+</div>
+
+<div class="field">
+<label>Transfer Amount</label>
+<input type="text" id="shareTransferAmount" autocomplete="off">
+</div>
+
+<div class="field full">
+<label>Note</label>
+<input type="text" id="shareTransferNote" autocomplete="off">
+</div>
+
+</div>
+
+<div class="summary-box">
+<div class="summary-line">
+<span>From Member Share</span>
+<strong id="shareTransferFromBalance">0</strong>
+</div>
+
+<div class="summary-line">
+<span>Transfer Amount</span>
+<strong id="shareTransferPreview">0</strong>
+</div>
+
+<div class="summary-line">
+<span>After Transfer</span>
+<strong id="shareTransferAfter">0</strong>
+</div>
+</div>
+
+<div class="actions">
+<button class="btn-green" onclick="saveShareTransfer()">Transfer Share</button>
+<button class="btn-secondary" onclick="clearShareTransferForm()">Clear</button>
+</div>
+</div>
+
+<div class="card">
+<h2>Share Transfer History</h2>
+
+<div class="search-row">
+<input
+id="shareTransferSearch"
+placeholder="Search by member code or name"
+oninput="renderShareTransfers()">
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>From Member</th>
+<th>To Member</th>
+<th>Amount</th>
+<th>Note</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="shareTransferTable"></tbody>
 </table>
 </div>
 </div>
@@ -653,6 +748,7 @@ loans:[],
 expenses:[],
 customExpenseHeads:[],
 transfers:[],
+shareTransfers:[],
 bankBalance:0,
 openingCash:0
 };
@@ -674,7 +770,8 @@ collections:parsed.collections||[],
 loans:parsed.loans||[],
 expenses:parsed.expenses||[],
 customExpenseHeads:parsed.customExpenseHeads||[],
-transfers:parsed.transfers||[]
+transfers:parsed.transfers||[],
+shareTransfers:parsed.shareTransfers||[]
 };
 
 }catch(e){
@@ -831,6 +928,7 @@ function refreshPage(id){
 populateMemberSelects();
 populateCollectorSelect();
 populateExpenseHeads();
+populateShareTransferSelects();
 
 if(id==="dashboard")renderDashboard();
 
@@ -850,6 +948,11 @@ renderLoans();
 
 if(id==="accounts"){
 renderAccount();
+}
+
+if(id==="shareTransfer"){
+updateShareTransferBalance();
+renderShareTransfers();
 }
 
 if(id==="ledger")renderLedger();
@@ -1037,7 +1140,11 @@ const hasLoans=data.loans.some(
 l=>l.memberId===id
 );
 
-if(hasCollections||hasLoans){
+const hasShareTransfers=data.shareTransfers.some(
+t=>t.fromMemberId===id||t.toMemberId===id
+);
+
+if(hasCollections||hasLoans||hasShareTransfers){
 
 alert(
 "This member cannot be deleted because account or loan history exists."
@@ -1755,11 +1862,6 @@ Delete
 
 }
 
-/*
-   COLLECTION EDIT
-   Only one editCollection function is used.
-*/
-
 function editCollection(id){
 
 const collection=
@@ -2246,6 +2348,42 @@ body.innerHTML=data.loans.map(l=>`
    ACCOUNTS
    ========================= */
 
+function memberShareBalance(memberId,excludeTransferId=""){
+
+const collectedShare=data.collections
+.filter(c=>c.memberId===memberId)
+.reduce(
+(s,c)=>s+Number(c.share||0),
+0
+);
+
+const transferredOut=data.shareTransfers
+.filter(t=>
+t.fromMemberId===memberId &&
+t.id!==excludeTransferId
+)
+.reduce(
+(s,t)=>s+Number(t.amount||0),
+0
+);
+
+const transferredIn=data.shareTransfers
+.filter(t=>
+t.toMemberId===memberId &&
+t.id!==excludeTransferId
+)
+.reduce(
+(s,t)=>s+Number(t.amount||0),
+0
+);
+
+return Math.max(
+0,
+collectedShare-transferredOut+transferredIn
+);
+
+}
+
 function renderAccount(){
 
 const memberId=
@@ -2317,12 +2455,7 @@ info.innerHTML=`
 /* ACCOUNT SUMMARY */
 
 const share=
-data.collections
-.filter(c=>c.memberId===memberId)
-.reduce(
-(s,c)=>s+Number(c.share||0),
-0
-);
+memberShareBalance(memberId);
 
 const savings=
 data.collections
@@ -2461,6 +2594,43 @@ actionId:""
 
 });
 
+/* SHARE TRANSFER HISTORY IN MEMBER ACCOUNT */
+
+data.shareTransfers
+.filter(t=>
+t.fromMemberId===memberId||
+t.toMemberId===memberId
+)
+.forEach(t=>{
+
+const isOut=t.fromMemberId===memberId;
+
+const otherMember=isOut
+?data.members.find(m=>m.id===t.toMemberId)
+:data.members.find(m=>m.id===t.fromMemberId);
+
+transactions.push({
+
+date:t.date,
+
+description:isOut
+?"Share Transfer Out"
+:"Share Transfer In",
+
+amount:t.amount,
+
+details:
+`${isOut?"To":"From"} ${otherMember
+?otherMember.code+" - "+otherMember.name
+:"Unknown Member"}${t.note?" • "+t.note:""}`,
+
+actionType:"",
+actionId:""
+
+});
+
+});
+
 if(!transactions.length){
 
 body.innerHTML=
@@ -2527,6 +2697,563 @@ deleteCollection(id);
 }
 
 /* =========================
+   SHARE TRANSFER
+   ========================= */
+
+function populateShareTransferSelects(){
+
+const fromSelect=
+document.getElementById("shareTransferFrom");
+
+const toSelect=
+document.getElementById("shareTransferTo");
+
+if(!fromSelect||!toSelect)return;
+
+const currentFrom=fromSelect.value;
+const currentTo=toSelect.value;
+
+const options=data.members.map(m=>({
+id:m.id,
+label:`${m.code} - ${m.name}`
+}));
+
+fromSelect.innerHTML=
+`<option value="">Select From Member</option>`+
+options.map(x=>
+`<option value="${x.id}">${escapeHtml(x.label)}</option>`
+).join("");
+
+toSelect.innerHTML=
+`<option value="">Select To Member</option>`+
+options.map(x=>
+`<option value="${x.id}">${escapeHtml(x.label)}</option>`
+).join("");
+
+if(options.some(x=>x.id===currentFrom)){
+fromSelect.value=currentFrom;
+}
+
+if(options.some(x=>x.id===currentTo)){
+toSelect.value=currentTo;
+}
+
+}
+
+function updateShareTransferBalance(){
+
+const fromId=
+document.getElementById("shareTransferFrom")?.value||"";
+
+const available=
+fromId
+?memberShareBalance(fromId,getEditingShareTransferId())
+:0;
+
+const availableEl=
+document.getElementById("shareTransferAvailable");
+
+const balanceEl=
+document.getElementById("shareTransferFromBalance");
+
+const amountEl=
+document.getElementById("shareTransferAmount");
+
+const previewEl=
+document.getElementById("shareTransferPreview");
+
+const afterEl=
+document.getElementById("shareTransferAfter");
+
+if(availableEl){
+availableEl.value=
+available?money(available):"";
+}
+
+if(balanceEl){
+balanceEl.textContent=
+money(available);
+}
+
+const amount=
+amountEl
+?Number(
+amountEl.value
+.toString()
+.replace(/,/g,"")
+.replace(/[^\d.-]/g,"")
+)||0
+:0;
+
+if(previewEl){
+previewEl.textContent=
+money(amount);
+}
+
+if(afterEl){
+afterEl.textContent=
+money(Math.max(0,available-amount));
+}
+
+}
+
+function getEditingShareTransferId(){
+
+return window.editingShareTransferId||"";
+
+}
+
+function clearShareTransferForm(){
+
+window.editingShareTransferId="";
+
+setToday("shareTransferDate");
+
+document.getElementById("shareTransferFrom").value="";
+document.getElementById("shareTransferTo").value="";
+document.getElementById("shareTransferAmount").value="";
+document.getElementById("shareTransferNote").value="";
+
+const button=
+document.querySelector("#shareTransfer .btn-green");
+
+if(button){
+
+button.textContent="Transfer Share";
+
+button.onclick=function(){
+saveShareTransfer();
+};
+
+}
+
+updateShareTransferBalance();
+
+}
+
+function saveShareTransfer(){
+
+const date=
+validDateOrToday("shareTransferDate");
+
+const fromMemberId=
+document.getElementById("shareTransferFrom").value;
+
+const toMemberId=
+document.getElementById("shareTransferTo").value;
+
+const amount=
+num("shareTransferAmount");
+
+const note=
+document.getElementById("shareTransferNote")
+.value.trim();
+
+if(!fromMemberId){
+
+alert("Please select From Member.");
+
+return;
+
+}
+
+if(!toMemberId){
+
+alert("Please select To Member.");
+
+return;
+
+}
+
+if(fromMemberId===toMemberId){
+
+alert("From Member and To Member cannot be the same.");
+
+return;
+
+}
+
+if(amount<=0){
+
+alert("Please enter a valid transfer amount.");
+
+return;
+
+}
+
+const available=
+memberShareBalance(fromMemberId);
+
+if(amount>available+0.01){
+
+alert(
+"The transfer amount is greater than the member's available share."
+);
+
+return;
+
+}
+
+data.shareTransfers.push({
+
+id:uid("ST"),
+
+date,
+
+fromMemberId,
+
+toMemberId,
+
+amount,
+
+note,
+
+createdAt:
+new Date().toISOString()
+
+});
+
+saveData();
+
+clearShareTransferForm();
+
+refreshAll();
+
+showPage("shareTransfer");
+
+alert("Share transferred successfully.");
+
+}
+
+function editShareTransfer(id){
+
+const transfer=
+data.shareTransfers.find(t=>t.id===id);
+
+if(!transfer)return;
+
+window.editingShareTransferId=id;
+
+showPage("shareTransfer");
+
+populateShareTransferSelects();
+
+document.getElementById("shareTransferDate")
+.value=dateInputValue(transfer.date);
+
+document.getElementById("shareTransferFrom")
+.value=transfer.fromMemberId;
+
+document.getElementById("shareTransferTo")
+.value=transfer.toMemberId;
+
+document.getElementById("shareTransferAmount")
+.value=transfer.amount;
+
+document.getElementById("shareTransferNote")
+.value=transfer.note||"";
+
+updateShareTransferBalance();
+
+const button=
+document.querySelector("#shareTransfer .btn-green");
+
+if(button){
+
+button.textContent="Update Share Transfer";
+
+button.onclick=function(){
+updateShareTransfer(id);
+};
+
+}
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+function updateShareTransfer(id){
+
+const transfer=
+data.shareTransfers.find(t=>t.id===id);
+
+if(!transfer)return;
+
+const date=
+validDateOrToday("shareTransferDate");
+
+const fromMemberId=
+document.getElementById("shareTransferFrom").value;
+
+const toMemberId=
+document.getElementById("shareTransferTo").value;
+
+const amount=
+num("shareTransferAmount");
+
+const note=
+document.getElementById("shareTransferNote")
+.value.trim();
+
+if(!fromMemberId){
+
+alert("Please select From Member.");
+
+return;
+
+}
+
+if(!toMemberId){
+
+alert("Please select To Member.");
+
+return;
+
+}
+
+if(fromMemberId===toMemberId){
+
+alert("From Member and To Member cannot be the same.");
+
+return;
+
+}
+
+if(amount<=0){
+
+alert("Please enter a valid transfer amount.");
+
+return;
+
+}
+
+const available=
+memberShareBalance(
+fromMemberId,
+id
+);
+
+if(amount>available+0.01){
+
+alert(
+"The transfer amount is greater than the member's available share."
+);
+
+return;
+
+}
+
+transfer.date=date;
+transfer.fromMemberId=fromMemberId;
+transfer.toMemberId=toMemberId;
+transfer.amount=amount;
+transfer.note=note;
+
+saveData();
+
+window.editingShareTransferId="";
+
+resetShareTransferSaveButton();
+
+refreshAll();
+
+clearShareTransferForm();
+
+showPage("shareTransfer");
+
+alert("Share transfer updated successfully.");
+
+}
+
+function resetShareTransferSaveButton(){
+
+const button=
+document.querySelector("#shareTransfer .btn-green");
+
+if(!button)return;
+
+button.textContent="Transfer Share";
+
+button.onclick=function(){
+saveShareTransfer();
+};
+
+}
+
+function deleteShareTransfer(id){
+
+const transfer=
+data.shareTransfers.find(t=>t.id===id);
+
+if(!transfer)return;
+
+const fromMember=
+data.members.find(
+m=>m.id===transfer.fromMemberId
+);
+
+const toMember=
+data.members.find(
+m=>m.id===transfer.toMemberId
+);
+
+const fromText=fromMember
+?`${fromMember.code} - ${fromMember.name}`
+:"Unknown Member";
+
+const toText=toMember
+?`${toMember.code} - ${toMember.name}`
+:"Unknown Member";
+
+if(!confirm(
+`Delete this share transfer?\n\n${fromText} → ${toText}\nAmount: ${money(transfer.amount)}`
+))return;
+
+data.shareTransfers=
+data.shareTransfers.filter(
+t=>t.id!==id
+);
+
+saveData();
+
+refreshAll();
+
+alert("Share transfer deleted successfully.");
+
+}
+
+function renderShareTransfers(){
+
+const body=
+document.getElementById("shareTransferTable");
+
+if(!body)return;
+
+const search=
+(
+document.getElementById("shareTransferSearch")?.value||""
+)
+.trim()
+.toLowerCase();
+
+const rows=
+data.shareTransfers
+.filter(t=>{
+
+if(!search)return true;
+
+const from=
+data.members.find(
+m=>m.id===t.fromMemberId
+);
+
+const to=
+data.members.find(
+m=>m.id===t.toMemberId
+);
+
+const fromCode=from?.code||"";
+const fromName=from?.name||"";
+const toCode=to?.code||"";
+const toName=to?.name||"";
+
+return fromCode.toLowerCase().includes(search)||
+fromName.toLowerCase().includes(search)||
+toCode.toLowerCase().includes(search)||
+toName.toLowerCase().includes(search);
+
+})
+.sort((a,b)=>{
+
+const dateCompare=
+String(b.date).localeCompare(
+String(a.date)
+);
+
+if(dateCompare!==0)return dateCompare;
+
+return String(b.createdAt||"")
+.localeCompare(
+String(a.createdAt||"")
+);
+
+});
+
+if(!rows.length){
+
+body.innerHTML=`
+<tr>
+<td colspan="6" class="empty">
+No share transfer records found.
+</td>
+</tr>`;
+
+return;
+
+}
+
+body.innerHTML=rows.map(t=>{
+
+const from=
+data.members.find(
+m=>m.id===t.fromMemberId
+);
+
+const to=
+data.members.find(
+m=>m.id===t.toMemberId
+);
+
+const fromText=from
+?`${from.code} - ${from.name}`
+:"Unknown Member";
+
+const toText=to
+?`${to.code} - ${to.name}`
+:"Unknown Member";
+
+return`
+
+<tr>
+
+<td>${escapeHtml(displayDate(t.date))}</td>
+
+<td>${escapeHtml(fromText)}</td>
+
+<td>${escapeHtml(toText)}</td>
+
+<td>${money(t.amount)}</td>
+
+<td>${escapeHtml(t.note||"")}</td>
+
+<td>
+
+<button
+class="btn-small btn-orange"
+onclick="editShareTransfer('${t.id}')">
+Edit
+</button>
+
+<button
+class="btn-small btn-red"
+onclick="deleteShareTransfer('${t.id}')">
+Delete
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+}).join("");
+
+}
+
+/* =========================
    LEDGER
    ========================= */
 
@@ -2564,6 +3291,31 @@ out:0
 });
 
 }
+
+});
+
+});
+
+data.shareTransfers.forEach(t=>{
+
+const from=
+memberName(t.fromMemberId);
+
+const to=
+memberName(t.toMemberId);
+
+rows.push({
+
+date:t.date,
+
+head:"Share",
+
+member:
+`${from} → ${to}`,
+
+in:0,
+
+out:Number(t.amount)||0
 
 });
 
@@ -3976,8 +4728,8 @@ document.getElementById("reportTable").innerHTML="";
 function renderDashboard(){
 
 const share=
-data.collections.reduce(
-(s,c)=>s+Number(c.share||0),
+data.members.reduce(
+(s,m)=>s+memberShareBalance(m.id),
 0
 );
 
@@ -4251,6 +5003,34 @@ t.note||""
 
 }
 
+function exportShareTransferRows(){
+
+return data.shareTransfers.map(t=>({
+
+Date:t.date,
+
+"From Member Code":
+memberCode(t.fromMemberId),
+
+"From Member Name":
+memberName(t.fromMemberId),
+
+"To Member Code":
+memberCode(t.toMemberId),
+
+"To Member Name":
+memberName(t.toMemberId),
+
+Amount:
+Number(t.amount)||0,
+
+Note:
+t.note||""
+
+}));
+
+}
+
 function exportAllTransactionRows(){
 
 const rows=[];
@@ -4386,6 +5166,32 @@ Number(t.amount)||0
 
 });
 
+data.shareTransfers.forEach(t=>{
+
+rows.push({
+
+Date:t.date,
+
+"Member Code":
+memberCode(t.fromMemberId),
+
+"Member Name":
+memberName(t.fromMemberId),
+
+Collector:"",
+
+Type:"Share Transfer",
+
+Head:
+`Share Transfer to ${memberCode(t.toMemberId)}`,
+
+Amount:
+Number(t.amount)||0
+
+});
+
+});
+
 return rows.sort(
 (a,b)=>
 String(a.Date)
@@ -4490,6 +5296,20 @@ XLSX.utils.book_append_sheet(
 wb,
 wsTransfers,
 "Bank Transfers"
+);
+
+const shareTransferRows=
+exportShareTransferRows();
+
+const wsShareTransfers=
+XLSX.utils.json_to_sheet(
+shareTransferRows
+);
+
+XLSX.utils.book_append_sheet(
+wb,
+wsShareTransfers,
+"Share Transfers"
 );
 
 const ledgerData=
@@ -4611,7 +5431,7 @@ function backupData(){
 
 const payload={
 app:"Cooperative Accounts",
-version:2,
+version:3,
 exportedAt:new Date().toISOString(),
 data
 };
@@ -4728,7 +5548,9 @@ expenses:parsed.data.expenses||[],
 customExpenseHeads:
 parsed.data.customExpenseHeads||[],
 transfers:
-parsed.data.transfers||[]
+parsed.data.transfers||[],
+shareTransfers:
+parsed.data.shareTransfers||[]
 };
 
 recalculateBankBalance();
@@ -4799,6 +5621,8 @@ populateCollectorSelect();
 
 populateExpenseHeads();
 
+populateShareTransferSelects();
+
 renderDashboard();
 
 renderMembers();
@@ -4810,6 +5634,8 @@ renderCollections();
 renderLoans();
 
 renderAccount();
+
+renderShareTransfers();
 
 renderLedger();
 
@@ -4886,6 +5712,14 @@ contra:[
 "contraType",
 "contraAmount",
 "contraNote"
+],
+
+shareTransfer:[
+"shareTransferDate",
+"shareTransferFrom",
+"shareTransferTo",
+"shareTransferAmount",
+"shareTransferNote"
 ]
 
 };
@@ -5032,11 +5866,26 @@ this.value.replace(/[^\d]/g,"");
 
 }
 
+const shareTransferAmount=
+document.getElementById("shareTransferAmount");
+
+if(shareTransferAmount){
+
+shareTransferAmount.addEventListener(
+"input",
+function(){
+
+this.value=
+this.value.replace(/[^\d]/g,"");
+
+updateShareTransferBalance();
+
+}
+);
+
 }
 
-/* =========================
-   START
-   ========================= */
+}
 
 document.addEventListener(
 "DOMContentLoaded",
@@ -5052,11 +5901,15 @@ setToday("expenseDate");
 
 setToday("contraDate");
 
+setToday("shareTransferDate");
+
 populateMemberSelects();
 
 populateCollectorSelect();
 
 populateExpenseHeads();
+
+populateShareTransferSelects();
 
 setupEnterNavigation();
 
