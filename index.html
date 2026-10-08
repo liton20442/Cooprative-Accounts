@@ -1318,7 +1318,80 @@ date:paymentDate
 });
 
 }
+function rebuildLoanPayments(){
 
+/*
+Rebuild loan payments from all collection records.
+This is necessary so Collection Edit/Delete keeps
+Principal and Service Charge allocation correct.
+*/
+
+data.loans.forEach(loan=>{
+loan.payments=[];
+});
+
+/* Process collections in date order */
+const collections=[...data.collections]
+.sort((a,b)=>{
+
+const dateCompare=String(a.date).localeCompare(String(b.date));
+
+if(dateCompare!==0)return dateCompare;
+
+return String(a.createdAt||"").localeCompare(
+String(b.createdAt||"")
+);
+
+});
+
+for(const collection of collections){
+
+const payment=Number(collection.installment)||0;
+
+if(payment<=0)continue;
+
+let remaining=payment;
+
+const activeLoans=data.loans
+.filter(l=>l.memberId===collection.memberId)
+.filter(l=>loanOutstanding(l)>0)
+.sort((a,b)=>{
+
+const dateCompare=String(a.date).localeCompare(
+String(b.date)
+);
+
+if(dateCompare!==0)return dateCompare;
+
+return String(a.createdAt||"").localeCompare(
+String(b.createdAt||"")
+);
+
+});
+
+for(const loan of activeLoans){
+
+if(remaining<=0)break;
+
+const outstanding=loanOutstanding(loan);
+
+if(outstanding<=0)continue;
+
+const pay=Math.min(remaining,outstanding);
+
+allocateInstallment(
+loan,
+pay,
+collection.date
+);
+
+remaining-=pay;
+
+}
+
+}
+
+}
 function calculateLoan(){
 
 const principal=num("loanPrincipal");
