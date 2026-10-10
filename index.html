@@ -2419,44 +2419,31 @@ return(loan.payments||[])
 
 function renderLoans(){
 
-const body=
-document.getElementById("loanTable");
+const body=document.getElementById("loanTable");
 
 if(!data.loans.length){
-
-body.innerHTML=
-`<tr><td colspan="8" class="empty">No loans found.</td></tr>`;
-
+body.innerHTML=`<tr><td colspan="9" class="empty">No loans found.</td></tr>`;
 return;
-
 }
 
 body.innerHTML=data.loans.map(l=>`
-
 <tr>
-
 <td>${escapeHtml(l.id)}</td>
-
 <td>${escapeHtml(memberName(l.memberId))}</td>
-
 <td>${escapeHtml(displayDate(l.date))}</td>
-
 <td>${money(l.principal)}</td>
-
 <td>${money(l.service)}</td>
-
 <td>${money(l.total)}</td>
-
 <td>${money(loanPaid(l))}</td>
-
 <td>${money(loanOutstanding(l))}</td>
-
+<td>
+<button class="btn-small btn-orange" onclick="editLoan('${l.id}')">Edit</button>
+<button class="btn-small btn-red" onclick="deleteLoan('${l.id}')">Delete</button>
+</td>
 </tr>
-
 `).join("");
 
 }
-
 /* =========================
    ACCOUNTS
    ========================= */
