@@ -2386,6 +2386,8 @@ clearLoanForm();
 
 function clearLoanForm(){
 
+window.editingLoanId="";
+
 document.getElementById("loanPrincipal").value="";
 document.getElementById("loanRate").value="10";
 document.getElementById("loanInstallments").value="";
@@ -2397,8 +2399,107 @@ document.getElementById("loanNote").value="";
 setToday("loanDate");
 setToday("loanFirstDate");
 
+const button=document.querySelector("#loan .btn-blue");
+if(button){
+button.textContent="Save Loan";
+button.onclick=function(){saveLoan();};
+}
+
 calculateLoan();
 
+}
+
+function editLoan(id){
+
+const loan=data.loans.find(l=>l.id===id);
+if(!loan)return;
+
+window.editingLoanId=id;
+
+populateMemberSelects();
+document.getElementById("loanMember").value=loan.memberId;
+document.getElementById("loanDate").value=dateInputValue(loan.date);
+document.getElementById("loanPrincipal").value=loan.principal;
+document.getElementById("loanRate").value=loan.rate??0;
+document.getElementById("loanInstallments").value=loan.installments;
+document.getElementById("loanFirstDate").value=dateInputValue(loan.firstDate);
+document.getElementById("loanNote").value=loan.note||"";
+
+calculateLoan();
+
+const button=document.querySelector("#loan .btn-blue");
+if(button){
+button.textContent="Update Loan";
+button.onclick=function(){updateLoan(id);};
+}
+
+showPage("loan");
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function updateLoan(id){
+
+const loan=data.loans.find(l=>l.id===id);
+if(!loan)return;
+
+const memberId=document.getElementById("loanMember").value;
+const date=validDateOrToday("loanDate");
+const principal=num("loanPrincipal");
+const rate=Number(document.getElementById("loanRate").value.toString().replace(/,/g,""))||0;
+const installments=Number(document.getElementById("loanInstallments").value)||0;
+const firstDate=validDateOrToday("loanFirstDate");
+const note=document.getElementById("loanNote").value.trim();
+
+if(!memberId||principal<=0||installments<=0){
+alert("Please complete Member, Loan Principal and Number of Installments.");
+return;
+}
+
+const service=principal*rate/100;
+const total=principal+service;
+
+if(!confirm("Update this loan? Related installment allocations will be recalculated from collection history.")){
+return;
+}
+
+loan.memberId=memberId;
+loan.date=date;
+loan.principal=principal;
+loan.rate=rate;
+loan.service=service;
+loan.total=total;
+loan.installments=installments;
+loan.installmentAmount=total/installments;
+loan.firstDate=firstDate;
+loan.note=note;
+
+rebuildLoanPayments();
+saveData();
+refreshAll();
+clearLoanForm();
+showPage("loan");
+alert("Loan updated successfully. Installment allocations have been recalculated.");
+}
+
+function deleteLoan(id){
+
+const loan=data.loans.find(l=>l.id===id);
+if(!loan)return;
+
+if(!confirm("Delete this loan? Any member installment collections will remain recorded, and allocations will be recalculated against the member's remaining loans.")){
+return;
+}
+
+data.loans=data.loans.filter(l=>l.id!==id);
+
+if(window.editingLoanId===id){
+clearLoanForm();
+}
+
+rebuildLoanPayments();
+saveData();
+refreshAll();
+alert("Loan deleted. Related installment allocations have been recalculated.");
 }
 
 function loanPaid(loan){
@@ -2721,8 +2822,8 @@ amount:l.principal,
 details:
 `Principal ${money(l.principal)} • Service ${money(l.service)} • Total ${money(l.total)}`,
 
-actionType:"",
-actionId:""
+actionType:"loan",
+actionId:l.id
 
 });
 
@@ -2846,6 +2947,24 @@ Edit
 <button
 class="btn-small btn-red"
 onclick="deleteSavingsWithdrawal('${t.actionId}')">
+Delete
+</button>
+`
+:""
+}
+
+${
+t.actionType==="loan"
+?`
+<button
+class="btn-small btn-orange"
+onclick="editLoan('${t.actionId}')">
+Edit
+</button>
+
+<button
+class="btn-small btn-red"
+onclick="deleteLoan('${t.actionId}')">
 Delete
 </button>
 `
