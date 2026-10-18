@@ -55,10 +55,10 @@ button{min-height:48px;border:0;border-radius:12px;padding:10px 15px;font-weight
 .btn-small{min-height:40px;padding:7px 11px;font-size:14px}
 .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
 .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat-card{border-radius:17px;padding:15px;color:#fff;min-height:108px;display:flex;
-flex-direction:column;justify-content:space-between;box-shadow:0 5px 13px rgba(15,23,42,.12)}
-.stat-card .label{font-size:14px;font-weight:700;opacity:.95}
-.stat-card .value{font-size:23px;font-weight:850;margin-top:8px}
+.stat-card{border-radius:15px;padding:11px 12px;color:#fff;min-height:82px;display:flex;
+flex-direction:column;justify-content:flex-start;gap:4px;box-shadow:0 4px 10px rgba(15,23,42,.10)}
+.stat-card .label{font-size:13px;font-weight:700;opacity:.95;line-height:1.2}
+.stat-card .value{font-size:21px;font-weight:850;margin-top:0;line-height:1.15;overflow-wrap:anywhere}
 .c1{background:linear-gradient(135deg,#0f766e,#0e7490)}
 .c2{background:linear-gradient(135deg,#2563eb,#1d4ed8)}
 .c3{background:linear-gradient(135deg,#16a34a,#15803d)}
@@ -95,7 +95,7 @@ th{background:#f8fafc;font-size:15px;font-weight:800}td{font-size:15px}
 footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 @media(max-width:620px){.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}main{padding:12px}h1{font-size:24px}}
 @media(max-width:390px){html,body{font-size:16px}.dashboard-grid,.quick-grid{grid-template-columns:1fr 1fr;gap:9px}
-.stat-card{min-height:100px;padding:12px}.stat-card .value{font-size:20px}.quick-btn{min-height:76px}}
+.stat-card{min-height:76px;padding:10px}.stat-card .value{font-size:19px}.quick-btn{min-height:76px}}
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -165,8 +165,7 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <div class="form-grid">
 <div class="field">
 <label for="balanceHistoryMember">Member Code / Name</label>
-<input id="balanceHistoryMember" list="balanceHistoryMembers" placeholder="Enter member code or name" oninput="renderBalanceHistory()" autocomplete="off">
-<datalist id="balanceHistoryMembers"></datalist>
+<select id="balanceHistoryMember" onchange="renderBalanceHistory()"><option value="">Select Member Code / Name</option></select>
 </div>
 <div class="field">
 <label for="balanceHistoryYear">Financial Year (July–June)</label>
@@ -5574,31 +5573,31 @@ document.getElementById("reportTable").innerHTML="";
    MEMBER BALANCE HISTORY (FINANCIAL YEAR: JULY–JUNE)
    ========================= */
 function setupBalanceHistory(){
-const input=document.getElementById("balanceHistoryMember");
-const list=document.getElementById("balanceHistoryMembers");
-const select=document.getElementById("balanceHistoryYear");
-if(!input||!list||!select)return;
-list.innerHTML=data.members.map(m=>`<option value="${escapeHtml(m.code)}">${escapeHtml(m.name||"")}</option>`).join("");
+const selectMember=document.getElementById("balanceHistoryMember");
+const selectYear=document.getElementById("balanceHistoryYear");
+if(!selectMember||!selectYear)return;
+const previousMember=selectMember.value;
+const previousYear=selectYear.value;
+const members=[...data.members].sort((a,b)=>String(a.code||"").localeCompare(String(b.code||""),undefined,{numeric:true}));
+selectMember.innerHTML='<option value="">Select Member Code / Name</option>'+members.map(m=>`<option value="${escapeHtml(m.id)}">${escapeHtml(m.code||"")} — ${escapeHtml(m.name||"Name not set")}</option>`).join("");
+if(previousMember && members.some(m=>String(m.id)===previousMember))selectMember.value=previousMember;
+
+// Financial years begin at 2026–2027. Always include the current FY and the next FY,
+// so the next financial year appears automatically as the calendar advances.
 const now=new Date();
 const currentStartYear=now.getMonth()>=6?now.getFullYear():now.getFullYear()-1;
-const previous=select.value;
+const lastYear=Math.max(2027,currentStartYear+1);
 const years=[];
-for(let y=currentStartYear+1;y>=Math.max(2000,currentStartYear-15);y--){
- years.push(`<option value="${y}">${y}–${y+1}</option>`);
-}
-select.innerHTML=years.join("");
-if(previous && [...select.options].some(o=>o.value===previous))select.value=previous;
-else select.value=String(currentStartYear);
+for(let y=2026;y<=lastYear;y++)years.push(`<option value="${y}">${y}–${y+1}</option>`);
+selectYear.innerHTML=years.join("");
+if(previousYear && years.some(o=>o.includes(`value="${previousYear}"`)))selectYear.value=previousYear;
+else selectYear.value=String(Math.max(2026,Math.min(currentStartYear,lastYear)));
 }
 
 function balanceHistoryMemberMatch(){
-const query=(document.getElementById("balanceHistoryMember")?.value||"").trim().toLowerCase();
-if(!query)return null;
-return data.members.find(m=>String(m.code||"").toLowerCase()===query)
- || data.members.find(m=>String(m.name||"").toLowerCase()===query)
- || data.members.find(m=>String(m.code||"").toLowerCase().includes(query))
- || data.members.find(m=>String(m.name||"").toLowerCase().includes(query))
- || null;
+const selectedId=document.getElementById("balanceHistoryMember")?.value||"";
+if(!selectedId)return null;
+return data.members.find(m=>String(m.id)===selectedId)||null;
 }
 
 function historyShareBalanceAt(memberId,cutoff){
@@ -5628,7 +5627,7 @@ const rows=document.getElementById("balanceHistoryRows");
 if(!input||!yearSelect||!info||!summary||!rows)return;
 const member=balanceHistoryMemberMatch();
 if(!member){
- info.textContent=input.value.trim()?"No matching member found. Please enter a valid Member Code or Name.":"Search a member by code or name to view monthly balances.";
+ info.textContent=input.value?"No matching member found. Please select a valid Member Code or Name.":"Select a member by code or name to view monthly balances.";
  summary.innerHTML="";
  rows.innerHTML='<tr><td colspan="3" class="empty">Select a member to view history.</td></tr>';
  return;
