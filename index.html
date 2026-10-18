@@ -141,6 +141,7 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <h2>Quick Actions</h2>
 <div class="quick-grid">
 <button class="quick-btn q1" onclick="showPage('members')"><span class="quick-icon">👥</span>Members</button>
+<button class="quick-btn q7" onclick="showPage('balanceHistory')"><span class="quick-icon">📅</span>Member Balance History</button>
 <button class="quick-btn q2" onclick="showPage('collection')"><span class="quick-icon">💰</span>Collection</button>
 <button class="quick-btn q3" onclick="showPage('loan')"><span class="quick-icon">🏦</span>Loan</button>
 <button class="quick-btn q4" onclick="showPage('accounts')"><span class="quick-icon">📒</span>Accounts</button>
@@ -154,6 +155,35 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <button class="quick-btn q5" onclick="showPage('shareTransfer')"><span class="quick-icon">🔁</span>Share Transfer</button>
 <button class="quick-btn q9" onclick="showPage('withdrawal')"><span class="quick-icon">💳</span>Savings Withdrawal</button>
    <button class="quick-btn q7" onclick="showPage('reports')"><span class="quick-icon">📊</span>Reports</button>
+</div>
+</section>
+
+
+<section id="balanceHistory" class="page">
+<h1>Member Balance History</h1>
+<div class="card">
+<div class="form-grid">
+<div class="field">
+<label for="balanceHistoryMember">Member Code / Name</label>
+<input id="balanceHistoryMember" list="balanceHistoryMembers" placeholder="Enter member code or name" oninput="renderBalanceHistory()" autocomplete="off">
+<datalist id="balanceHistoryMembers"></datalist>
+</div>
+<div class="field">
+<label for="balanceHistoryYear">Financial Year (July–June)</label>
+<select id="balanceHistoryYear" onchange="renderBalanceHistory()"></select>
+</div>
+</div>
+<div id="balanceHistoryMemberInfo" class="notice" style="margin-top:14px">Search a member by code or name to view monthly balances.</div>
+<div id="balanceHistorySummary"></div>
+</div>
+<div class="card">
+<h2 style="margin-top:0">Monthly Closing Balances</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Month / Balance Date</th><th>Share Balance</th><th>Savings Balance</th></tr></thead>
+<tbody id="balanceHistoryRows"><tr><td colspan="3" class="empty">Select a member to view history.</td></tr></tbody>
+</table>
+</div>
 </div>
 </section>
 
@@ -1070,6 +1100,11 @@ populateExpenseHeads();
 populateShareTransferSelects();
 
 if(id==="dashboard")renderDashboard();
+
+if(id==="balanceHistory"){
+setupBalanceHistory();
+renderBalanceHistory();
+}
 
 if(id==="members")renderMembers();
 
@@ -5533,6 +5568,101 @@ document.getElementById(id).textContent="0";
 
 document.getElementById("reportTable").innerHTML="";
 
+}
+
+/* =========================
+   MEMBER BALANCE HISTORY (FINANCIAL YEAR: JULY–JUNE)
+   ========================= */
+function setupBalanceHistory(){
+const input=document.getElementById("balanceHistoryMember");
+const list=document.getElementById("balanceHistoryMembers");
+const select=document.getElementById("balanceHistoryYear");
+if(!input||!list||!select)return;
+list.innerHTML=data.members.map(m=>`<option value="${escapeHtml(m.code)}">${escapeHtml(m.name||"")}</option>`).join("");
+const now=new Date();
+const currentStartYear=now.getMonth()>=6?now.getFullYear():now.getFullYear()-1;
+const previous=select.value;
+const years=[];
+for(let y=currentStartYear+1;y>=Math.max(2000,currentStartYear-15);y--){
+ years.push(`<option value="${y}">${y}–${y+1}</option>`);
+}
+select.innerHTML=years.join("");
+if(previous && [...select.options].some(o=>o.value===previous))select.value=previous;
+else select.value=String(currentStartYear);
+}
+
+function balanceHistoryMemberMatch(){
+const query=(document.getElementById("balanceHistoryMember")?.value||"").trim().toLowerCase();
+if(!query)return null;
+return data.members.find(m=>String(m.code||"").toLowerCase()===query)
+ || data.members.find(m=>String(m.name||"").toLowerCase()===query)
+ || data.members.find(m=>String(m.code||"").toLowerCase().includes(query))
+ || data.members.find(m=>String(m.name||"").toLowerCase().includes(query))
+ || null;
+}
+
+function historyShareBalanceAt(memberId,cutoff){
+const collected=data.collections.filter(c=>c.memberId===memberId&&c.date&&c.date<=cutoff)
+ .reduce((sum,c)=>sum+Number(c.share||0),0);
+const transfersOut=data.shareTransfers.filter(t=>t.fromMemberId===memberId&&t.date&&t.date<=cutoff)
+ .reduce((sum,t)=>sum+Number(t.amount||0),0);
+const transfersIn=data.shareTransfers.filter(t=>t.toMemberId===memberId&&t.date&&t.date<=cutoff)
+ .reduce((sum,t)=>sum+Number(t.amount||0),0);
+return Math.max(0,collected-transfersOut+transfersIn);
+}
+
+function historySavingsBalanceAt(memberId,cutoff){
+const collected=data.collections.filter(c=>c.memberId===memberId&&c.date&&c.date<=cutoff)
+ .reduce((sum,c)=>sum+Number(c.savings||0),0);
+const withdrawn=data.withdrawals.filter(w=>w.memberId===memberId&&w.date&&w.date<=cutoff)
+ .reduce((sum,w)=>sum+Number(w.amount||0),0);
+return Math.max(0,collected-withdrawn);
+}
+
+function renderBalanceHistory(){
+const input=document.getElementById("balanceHistoryMember");
+const yearSelect=document.getElementById("balanceHistoryYear");
+const info=document.getElementById("balanceHistoryMemberInfo");
+const summary=document.getElementById("balanceHistorySummary");
+const rows=document.getElementById("balanceHistoryRows");
+if(!input||!yearSelect||!info||!summary||!rows)return;
+const member=balanceHistoryMemberMatch();
+if(!member){
+ info.textContent=input.value.trim()?"No matching member found. Please enter a valid Member Code or Name.":"Search a member by code or name to view monthly balances.";
+ summary.innerHTML="";
+ rows.innerHTML='<tr><td colspan="3" class="empty">Select a member to view history.</td></tr>';
+ return;
+}
+const startYear=Number(yearSelect.value);
+if(!startYear)return;
+info.innerHTML=`<strong>${escapeHtml(member.code||"")}</strong> — ${escapeHtml(member.name||"")}<br>Financial Year: ${startYear}–${startYear+1} (1 July ${startYear} to 30 June ${startYear+1})`;
+const now=today();
+const months=[6,7,8,9,10,11,0,1,2,3,4,5];
+const names=["July","August","September","October","November","December","January","February","March","April","May","June"];
+const values=[];
+let html="";
+for(let i=0;i<12;i++){
+ const y=i<6?startYear:startYear+1;
+ const m=months[i];
+ const lastDay=new Date(y,m+1,0).getDate();
+ const monthEnd=`${y}-${pad2(m+1)}-${pad2(lastDay)}`;
+ if(monthEnd>now){
+   html+=`<tr><td>${names[i]} ${y}<br><span style="color:var(--muted);font-size:13px">${displayDate(monthEnd)}</span></td><td>—</td><td>—</td></tr>`;
+   continue;
+ }
+ const cutoff=monthEnd>now?now:monthEnd;
+ const share=historyShareBalanceAt(member.id,cutoff);
+ const savings=historySavingsBalanceAt(member.id,cutoff);
+ values.push({share,savings});
+ const dateLabel=monthEnd===now?"As of today":displayDate(monthEnd);
+ html+=`<tr><td>${names[i]} ${y}<br><span style="color:var(--muted);font-size:13px">${dateLabel}</span></td><td>${money(share)}</td><td>${money(savings)}</td></tr>`;
+}
+rows.innerHTML=html;
+if(values.length){
+ const avgShare=values.reduce((s,v)=>s+v.share,0)/values.length;
+ const avgSavings=values.reduce((s,v)=>s+v.savings,0)/values.length;
+ summary.innerHTML=`<div class="summary-box"><div class="summary-line"><span>Average Share Balance (${values.length} month${values.length===1?"":"s"})</span><strong>${money(avgShare)}</strong></div><div class="summary-line"><span>Average Savings Balance (${values.length} month${values.length===1?"":"s"})</span><strong>${money(avgSavings)}</strong></div></div>`;
+}else summary.innerHTML="";
 }
 
 /* =========================
