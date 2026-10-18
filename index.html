@@ -59,6 +59,7 @@ button{min-height:48px;border:0;border-radius:12px;padding:10px 15px;font-weight
 flex-direction:column;justify-content:flex-start;gap:4px;box-shadow:0 4px 10px rgba(15,23,42,.10)}
 .stat-card .label{font-size:13px;font-weight:700;opacity:.95;line-height:1.2}
 .stat-card .value{font-size:21px;font-weight:850;margin-top:0;line-height:1.15;overflow-wrap:anywhere}
+.profit-stat-card{gap:0}.profit-stat-card .profit-breakdown{display:flex;justify-content:space-between;gap:4px;margin-top:3px;font-size:9px;line-height:1.1;white-space:nowrap;opacity:.96}.profit-stat-card .profit-breakdown b{font-weight:800}
 .c1{background:linear-gradient(135deg,#0f766e,#0e7490)}
 .c2{background:linear-gradient(135deg,#2563eb,#1d4ed8)}
 .c3{background:linear-gradient(135deg,#16a34a,#15803d)}
@@ -124,7 +125,7 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <div class="stat-card c6"><div class="label">Bank Balance</div><div class="value" id="dBank">0</div></div>
 <div class="stat-card c2"><div class="label">Total Collection</div><div class="value" id="dTotalCollection">0</div></div>
 <div class="stat-card c7"><div class="label">Total Expenses</div><div class="value" id="dTotalExpenses">0</div></div>
-<div class="stat-card c3"><div class="label">Total Profit</div><div class="value" id="dTotalProfit">0</div></div>
+<div class="stat-card c3 profit-stat-card"><div class="label">Total Profit</div><div class="value" id="dTotalProfit">0</div><div class="profit-breakdown"><span>Share: <b id="dShareProfit">0</b></span><span>Savings: <b id="dSavingsProfit">0</b></span></div></div>
 <div class="stat-card c2"><div class="label">Total Share</div><div class="value" id="dShare">0</div></div>
 <div class="stat-card c3"><div class="label">Total Savings</div><div class="value" id="dSavings">0</div></div>
 <div class="stat-card c4"><div class="label">Loan Disbursed</div><div class="value" id="dLoan">0</div></div>
@@ -5809,7 +5810,10 @@ data.withdrawals.reduce(
 0
 );
 
-const profitTotal=(data.profitDistributions||[]).reduce((sum,p)=>sum+Number(p.shareProfit||0)+Number(p.savingsProfit||0),0);
+const profitRows=data.profitDistributions||[];
+const shareProfitTotal=profitRows.reduce((sum,p)=>sum+Number(p.shareProfit||0),0);
+const savingsProfitTotal=profitRows.reduce((sum,p)=>sum+Number(p.savingsProfit||0),0);
+const profitTotal=shareProfitTotal+savingsProfitTotal;
 
 const savings=
 Math.max(
@@ -5904,6 +5908,10 @@ document.getElementById("dTotalExpenses")
 
 const profitCard=document.getElementById("dTotalProfit");
 if(profitCard)profitCard.textContent=money(profitTotal);
+const shareProfitCard=document.getElementById("dShareProfit");
+if(shareProfitCard)shareProfitCard.textContent=money(shareProfitTotal);
+const savingsProfitCard=document.getElementById("dSavingsProfit");
+if(savingsProfitCard)savingsProfitCard.textContent=money(savingsProfitTotal);
 
 document.getElementById("dTodayCollection")
 .textContent=money(todayCollection);
