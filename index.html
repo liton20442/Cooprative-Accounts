@@ -124,6 +124,7 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <div class="stat-card c6"><div class="label">Bank Balance</div><div class="value" id="dBank">0</div></div>
 <div class="stat-card c2"><div class="label">Total Collection</div><div class="value" id="dTotalCollection">0</div></div>
 <div class="stat-card c7"><div class="label">Total Expenses</div><div class="value" id="dTotalExpenses">0</div></div>
+<div class="stat-card c3"><div class="label">Total Profit</div><div class="value" id="dTotalProfit">0</div></div>
 <div class="stat-card c2"><div class="label">Total Share</div><div class="value" id="dShare">0</div></div>
 <div class="stat-card c3"><div class="label">Total Savings</div><div class="value" id="dSavings">0</div></div>
 <div class="stat-card c4"><div class="label">Loan Disbursed</div><div class="value" id="dLoan">0</div></div>
@@ -142,6 +143,7 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <div class="quick-grid">
 <button class="quick-btn q1" onclick="showPage('members')"><span class="quick-icon">👥</span>Members</button>
 <button class="quick-btn q7" onclick="showPage('balanceHistory')"><span class="quick-icon">📅</span>Member Balance History</button>
+<button class="quick-btn q3" onclick="showPage('profitDistribution')"><span class="quick-icon">📈</span>Profit Distribution</button>
 <button class="quick-btn q2" onclick="showPage('collection')"><span class="quick-icon">💰</span>Collection</button>
 <button class="quick-btn q3" onclick="showPage('loan')"><span class="quick-icon">🏦</span>Loan</button>
 <button class="quick-btn q4" onclick="showPage('accounts')"><span class="quick-icon">📒</span>Accounts</button>
@@ -155,6 +157,29 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <button class="quick-btn q5" onclick="showPage('shareTransfer')"><span class="quick-icon">🔁</span>Share Transfer</button>
 <button class="quick-btn q9" onclick="showPage('withdrawal')"><span class="quick-icon">💳</span>Savings Withdrawal</button>
    <button class="quick-btn q7" onclick="showPage('reports')"><span class="quick-icon">📊</span>Reports</button>
+</div>
+</section>
+
+
+<section id="profitDistribution" class="page">
+<h1>Profit Distribution</h1>
+<div class="card">
+<h2>Give Member Profit</h2>
+<div class="form-grid">
+<div class="field"><label for="profitDate">Date</label><input type="date" id="profitDate"></div>
+<div class="field"><label for="profitMember">Member Code / Name</label><select id="profitMember"><option value="">Select Member Code / Name</option></select></div>
+<div class="field"><label for="profitShare">Share Profit</label><input id="profitShare" type="text" inputmode="text" value="0" oninput="updateProfitTotal()"></div>
+<div class="field"><label for="profitSavings">Savings Profit</label><input id="profitSavings" type="text" inputmode="text" value="0" oninput="updateProfitTotal()"></div>
+<div class="field"><label>Total Profit (credited to Savings)</label><input id="profitTotal" type="text" value="0" readonly></div>
+<div class="field"><label for="profitNote">Note (optional)</label><input id="profitNote" type="text"></div>
+</div>
+<p style="margin:10px 0;color:var(--muted)">Share Profit and Savings Profit are both added to the member's Savings Balance.</p>
+<div class="actions"><button class="btn-green" onclick="saveProfitDistribution()">Save Profit</button><button class="btn-secondary" onclick="clearProfitForm()">Clear</button></div>
+</div>
+<div class="card">
+<h2>Profit Distribution History</h2>
+<div class="summary-box"><div class="summary-line"><span>Total Profit Distributed</span><strong id="profitHistoryTotal">0</strong></div></div>
+<div class="table-wrap"><table><thead><tr><th>Date</th><th>Member</th><th>Share Profit</th><th>Savings Profit</th><th>Total Profit</th><th>Note</th></tr></thead><tbody id="profitHistoryRows"></tbody></table></div>
 </div>
 </section>
 
@@ -915,6 +940,7 @@ withdrawals:[],
 customExpenseHeads:[],
 transfers:[],
 shareTransfers:[],
+profitDistributions:[],
 bankBalance:0,
 openingCash:0
 };
@@ -938,7 +964,8 @@ expenses:parsed.expenses||[],
 withdrawals:parsed.withdrawals||[],
 customExpenseHeads:parsed.customExpenseHeads||[],
 transfers:parsed.transfers||[],
-shareTransfers:parsed.shareTransfers||[]
+shareTransfers:parsed.shareTransfers||[],
+profitDistributions:parsed.profitDistributions||[]
 };
 
 }catch(e){
@@ -1096,8 +1123,15 @@ populateMemberSelects();
 populateCollectorSelect();
 populateExpenseHeads();
 populateShareTransferSelects();
+populateProfitMemberSelect();
 
 if(id==="dashboard")renderDashboard();
+
+if(id==="profitDistribution"){
+setToday("profitDate");
+renderProfitDistributions();
+updateProfitTotal();
+}
 
 if(id==="balanceHistory"){
 setupBalanceHistory();
@@ -2677,10 +2711,11 @@ w.id!==excludeWithdrawalId
 (s,w)=>s+Number(w.amount||0),
 0
 );
+const profitAdded=(data.profitDistributions||[]).filter(p=>p.memberId===memberId).reduce((sum,p)=>sum+Number(p.shareProfit||0)+Number(p.savingsProfit||0),0);
 
 return Math.max(
 0,
-collectedSavings-withdrawnSavings
+collectedSavings+profitAdded-withdrawnSavings
 );
 
 }
@@ -4103,6 +4138,11 @@ out:0
 
 });
 
+});
+
+(data.profitDistributions||[]).forEach(p=>{
+const total=Number(p.shareProfit||0)+Number(p.savingsProfit||0);
+if(total>0) rows.push({date:p.date,head:"Profit Distribution",member:memberName(p.memberId),in:total,out:0});
 });
 
 data.withdrawals.forEach(w=>{
@@ -5614,7 +5654,9 @@ const collected=data.collections.filter(c=>c.memberId===memberId&&c.date&&c.date
  .reduce((sum,c)=>sum+Number(c.savings||0),0);
 const withdrawn=data.withdrawals.filter(w=>w.memberId===memberId&&w.date&&w.date<=cutoff)
  .reduce((sum,w)=>sum+Number(w.amount||0),0);
-return Math.max(0,collected-withdrawn);
+const profitAdded=(data.profitDistributions||[]).filter(p=>p.memberId===memberId&&p.date&&p.date<=cutoff)
+ .reduce((sum,p)=>sum+Number(p.shareProfit||0)+Number(p.savingsProfit||0),0);
+return Math.max(0,collected+profitAdded-withdrawn);
 }
 
 function renderBalanceHistory(){
@@ -5666,6 +5708,50 @@ if(values.length){
 }
 
 /* =========================
+   PROFIT DISTRIBUTION
+   ========================= */
+function populateProfitMemberSelect(){
+ const select=document.getElementById("profitMember");
+ if(!select)return;
+ const previous=select.value;
+ select.innerHTML='<option value="">Select Member Code / Name</option>'+data.members.map(m=>`<option value="${escapeHtml(String(m.id))}">${escapeHtml(m.code||m.memberCode||m.id||"")} - ${escapeHtml(m.name||"Name not set")}</option>`).join("");
+ if(previous&&data.members.some(m=>String(m.id)===previous))select.value=previous;
+}
+function updateProfitTotal(){
+ const read=id=>Number(String(document.getElementById(id)?.value||"0").replace(/,/g,"").replace(/[^\d.-]/g,""))||0;
+ const total=Math.max(0,read("profitShare"))+Math.max(0,read("profitSavings"));
+ const out=document.getElementById("profitTotal");if(out)out.value=money(total);
+}
+function clearProfitForm(){
+ document.getElementById("profitMember").value="";
+ document.getElementById("profitShare").value="0";
+ document.getElementById("profitSavings").value="0";
+ document.getElementById("profitNote").value="";
+ setToday("profitDate");updateProfitTotal();
+}
+function saveProfitDistribution(){
+ const memberId=document.getElementById("profitMember").value;
+ const date=validDateOrToday("profitDate");
+ const read=id=>Number(String(document.getElementById(id).value||"0").replace(/,/g,"").replace(/[^\d.-]/g,""))||0;
+ const shareProfit=read("profitShare"), savingsProfit=read("profitSavings");
+ if(!memberId){alert("Please select a member.");return;}
+ if(shareProfit<0||savingsProfit<0||shareProfit+savingsProfit<=0){alert("Please enter a valid profit amount.");return;}
+ if(!confirm("Save total profit "+money(shareProfit+savingsProfit)+" to this member's Savings Balance?"))return;
+ if(!Array.isArray(data.profitDistributions))data.profitDistributions=[];
+ data.profitDistributions.push({id:uid("PROFIT-"),date,memberId,shareProfit,savingsProfit,note:document.getElementById("profitNote").value.trim()});
+ saveData();refreshAll();renderProfitDistributions();clearProfitForm();
+ alert("Profit saved and added to the member's Savings Balance.");
+}
+function renderProfitDistributions(){
+ const body=document.getElementById("profitHistoryRows");if(!body)return;
+ const rows=[...(data.profitDistributions||[])].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+ const total=rows.reduce((sum,p)=>sum+Number(p.shareProfit||0)+Number(p.savingsProfit||0),0);
+ const totalEl=document.getElementById("profitHistoryTotal");if(totalEl)totalEl.textContent=money(total);
+ if(!rows.length){body.innerHTML='<tr><td colspan="6" class="empty">No profit distributed yet.</td></tr>';return;}
+ body.innerHTML=rows.map(p=>`<tr><td>${escapeHtml(displayDate(p.date))}</td><td>${escapeHtml(memberName(p.memberId))}</td><td>${money(p.shareProfit)}</td><td>${money(p.savingsProfit)}</td><td>${money(Number(p.shareProfit||0)+Number(p.savingsProfit||0))}</td><td>${escapeHtml(p.note||"")}</td></tr>`).join("");
+}
+
+/* =========================
    DASHBOARD
    ========================= */
 
@@ -5689,10 +5775,12 @@ data.withdrawals.reduce(
 0
 );
 
+const profitTotal=(data.profitDistributions||[]).reduce((sum,p)=>sum+Number(p.shareProfit||0)+Number(p.savingsProfit||0),0);
+
 const savings=
 Math.max(
 0,
-savingsCollected-savingsWithdrawn
+savingsCollected+profitTotal-savingsWithdrawn
 );
 
 const loan=
@@ -5779,6 +5867,9 @@ document.getElementById("dTotalCollection")
 
 document.getElementById("dTotalExpenses")
 .textContent=money(totalExpenses);
+
+const profitCard=document.getElementById("dTotalProfit");
+if(profitCard)profitCard.textContent=money(profitTotal);
 
 document.getElementById("dTodayCollection")
 .textContent=money(todayCollection);
@@ -6588,7 +6679,8 @@ parsed.data.customExpenseHeads||[],
 transfers:
 parsed.data.transfers||[],
 shareTransfers:
-parsed.data.shareTransfers||[]
+parsed.data.shareTransfers||[],
+profitDistributions:parsed.data.profitDistributions||[]
 };
 
 recalculateBankBalance();
@@ -6660,6 +6752,7 @@ populateCollectorSelect();
 populateExpenseHeads();
 
 populateShareTransferSelects();
+populateProfitMemberSelect();
 
 renderDashboard();
 
