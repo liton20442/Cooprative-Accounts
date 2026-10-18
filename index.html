@@ -642,17 +642,12 @@ oninput="renderShareTransfers()">
 <div class="card">
 <div class="field">
 <label>Ledger Head</label>
-<select id="ledgerHead" onchange="renderLedger()">
+<div style="display:flex;gap:8px;align-items:center">
+<select id="ledgerHead" onchange="renderLedger()" style="flex:1;min-width:0">
 <option value="">All Heads</option>
-<option>Share</option><option>Savings</option><option>Savings Withdrawal</option>
-<option>Loan Disbursement</option>
-<option>Loan Installment</option><option>Service Charge</option><option>Admission Fee</option>
-<option>Pass Book</option><option>Insurance</option><option>Loan Form Sales</option>
-<option>Other Income</option><option>Office Expense</option><option>Stationery</option>
-<option>Transport</option><option>Salary/Honorarium</option><option>Electricity/Water/Internet</option>
-<option>Office Rent</option><option>Repair & Maintenance</option><option>Bank Charges</option>
-<option>Meeting/Training</option><option>Other Expense</option>
 </select>
+<button type="button" class="btn-secondary" onclick="addLedgerHead()" style="white-space:nowrap">+ Add Head</button>
+</div>
 </div>
 </div>
 
@@ -939,6 +934,7 @@ loans:[],
 expenses:[],
 withdrawals:[],
 customExpenseHeads:[],
+customLedgerHeads:[],
 transfers:[],
 shareTransfers:[],
 profitDistributions:[],
@@ -964,6 +960,7 @@ loans:parsed.loans||[],
 expenses:parsed.expenses||[],
 withdrawals:parsed.withdrawals||[],
 customExpenseHeads:parsed.customExpenseHeads||[],
+customLedgerHeads:parsed.customLedgerHeads||[],
 transfers:parsed.transfers||[],
 shareTransfers:parsed.shareTransfers||[],
 profitDistributions:parsed.profitDistributions||[]
@@ -4142,8 +4139,11 @@ out:0
 });
 
 (data.profitDistributions||[]).forEach(p=>{
-const total=Number(p.shareProfit||0)+Number(p.savingsProfit||0);
-if(total>0) rows.push({date:p.date,head:"Profit Distribution",member:memberName(p.memberId),in:total,out:0});
+const member=memberName(p.memberId);
+const shareProfit=Number(p.shareProfit||0);
+const savingsProfit=Number(p.savingsProfit||0);
+if(shareProfit>0) rows.push({date:p.date,head:"Share Profit",member,in:shareProfit,out:0});
+if(savingsProfit>0) rows.push({date:p.date,head:"Savings Profit",member,in:savingsProfit,out:0});
 });
 
 data.withdrawals.forEach(w=>{
@@ -4253,8 +4253,47 @@ return rows.sort(
 
 }
 
+function ledgerHeadOptions(){
+const fixedHeads=[
+"Share","Savings","Savings Withdrawal","Loan Disbursement","Loan Installment",
+"Service Charge","Admission Fee","Pass Book","Insurance","Loan Form Sales",
+"Other Income","Share Profit","Savings Profit",
+...defaultExpenseHeads,
+...(data.customExpenseHeads||[])
+];
+const existingRows=ledgerRows().map(row=>row.head);
+return [...new Set([...fixedHeads,...existingRows,...(data.customLedgerHeads||[])])]
+.filter(Boolean)
+.sort((a,b)=>a.localeCompare(b));
+}
+
+function populateLedgerHeads(){
+const select=document.getElementById("ledgerHead");
+if(!select)return;
+const current=select.value;
+const heads=ledgerHeadOptions();
+select.innerHTML='<option value="">All Heads</option>'+heads.map(head=>`<option value="${escapeHtml(head)}">${escapeHtml(head)}</option>`).join("");
+select.value=heads.includes(current)?current:"";
+}
+
+function addLedgerHead(){
+const entered=prompt("Enter new Ledger Head:");
+if(entered===null)return;
+const clean=entered.trim();
+if(!clean){alert("Please enter a Ledger Head.");return;}
+const exists=ledgerHeadOptions().some(head=>head.toLowerCase()===clean.toLowerCase());
+if(exists){alert("This Ledger Head already exists.");return;}
+if(!Array.isArray(data.customLedgerHeads))data.customLedgerHeads=[];
+data.customLedgerHeads.push(clean);
+saveData();
+populateLedgerHeads();
+document.getElementById("ledgerHead").value=clean;
+renderLedger();
+}
+
 function renderLedger(){
 
+populateLedgerHeads();
 const selected=document.getElementById("ledgerHead").value;
 const rows=ledgerRows().filter(r=>!selected||r.head===selected);
 const body=document.getElementById("ledgerTable");
@@ -6718,6 +6757,8 @@ expenses:parsed.data.expenses||[],
 withdrawals:parsed.data.withdrawals||[],
 customExpenseHeads:
 parsed.data.customExpenseHeads||[],
+customLedgerHeads:
+parsed.data.customLedgerHeads||[],
 transfers:
 parsed.data.transfers||[],
 shareTransfers:
