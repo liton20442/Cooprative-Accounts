@@ -172,7 +172,7 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <select id="balanceHistoryYear" onchange="renderBalanceHistory()"></select>
 </div>
 </div>
-<div id="balanceHistoryMemberInfo" class="notice" style="margin-top:14px">Search a member by code or name to view monthly balances.</div>
+<div id="balanceHistoryMemberInfo" style="margin-top:10px"></div>
 <div id="balanceHistorySummary"></div>
 </div>
 <div class="card">
@@ -5644,11 +5644,8 @@ for(let i=0;i<12;i++){
  const y=i<6?startYear:startYear+1;
  const m=months[i];
  const lastDay=new Date(y,m+1,0).getDate();
- const monthStart=`${y}-${pad2(m+1)}-01`;
  const monthEnd=`${y}-${pad2(m+1)}-${pad2(lastDay)}`;
- // Future months stay blank. For the current month, show the balance as of today;
- // for completed months, show the closing balance on the last day.
- if(monthStart>now){
+ if(monthEnd>now){
    html+=`<tr><td>${names[i]} ${y}<br><span style="color:var(--muted);font-size:13px">${displayDate(monthEnd)}</span></td><td>—</td><td>—</td></tr>`;
    continue;
  }
@@ -5656,7 +5653,7 @@ for(let i=0;i<12;i++){
  const share=historyShareBalanceAt(member.id,cutoff);
  const savings=historySavingsBalanceAt(member.id,cutoff);
  values.push({share,savings});
- const dateLabel=cutoff===now?"As of today":displayDate(monthEnd);
+ const dateLabel=monthEnd===now?"As of today":displayDate(monthEnd);
  html+=`<tr><td>${names[i]} ${y}<br><span style="color:var(--muted);font-size:13px">${dateLabel}</span></td><td>${money(share)}</td><td>${money(savings)}</td></tr>`;
 }
 rows.innerHTML=html;
