@@ -81,6 +81,12 @@ th{background:#f8fafc;font-size:15px;font-weight:800}td{font-size:15px}
 .badge{display:inline-block;padding:5px 9px;border-radius:20px;background:#e0f2fe;color:#075985;font-size:13px;font-weight:750}
 .empty{text-align:center;color:var(--muted);padding:22px}
 .search-row{display:flex;gap:9px;margin-bottom:12px}.search-row input{flex:1}
+.cashbook-search-row{display:flex;align-items:flex-end;gap:10px;width:100%}
+.cashbook-date-field{flex:1;min-width:0}
+.cashbook-date-field input{width:100%;min-width:0}
+.cashbook-search-buttons{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.cashbook-search-buttons button{white-space:nowrap}
+@media(max-width:390px){.cashbook-search-row{gap:6px}.cashbook-search-buttons{gap:5px}.cashbook-search-buttons button{padding:9px 10px;font-size:13px}}
 .notice{padding:12px 14px;background:#ecfeff;border-left:4px solid #0891b2;border-radius:10px;margin-bottom:15px;font-size:15px}
 .summary-box{background:#f8fafc;border:1px solid var(--border);border-radius:13px;padding:13px;margin-top:13px}
 .summary-line{display:flex;justify-content:space-between;gap:15px;padding:7px 0;border-bottom:1px dashed #cbd5e1}
@@ -614,12 +620,12 @@ oninput="renderShareTransfers()">
 <section id="cashbook" class="page">
 <h1>Cash Book</h1>
 <div class="card">
-<div class="form-grid">
-<div class="field">
+<div class="cashbook-search-row">
+<div class="field cashbook-date-field">
 <label for="cashBookSearchDate">Select Date</label>
 <input type="date" id="cashBookSearchDate" autocomplete="off">
 </div>
-<div class="field" style="display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap">
+<div class="cashbook-search-buttons">
 <button class="btn" type="button" onclick="searchCashBook()">Search</button>
 <button class="btn-secondary" type="button" onclick="clearCashBookSearch()">Show All</button>
 </div>
