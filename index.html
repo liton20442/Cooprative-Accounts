@@ -594,6 +594,13 @@ oninput="renderShareTransfers()">
 </div>
 </div>
 
+<div class="card" id="ledgerFilteredSummary">
+<div class="summary-line"><span>Filtered Entries</span><strong id="ledgerFilteredCount">0</strong></div>
+<div class="summary-line"><span>Total In</span><strong id="ledgerFilteredIn">0</strong></div>
+<div class="summary-line"><span>Total Out</span><strong id="ledgerFilteredOut">0</strong></div>
+<div class="summary-line"><span>Net Total (In − Out)</span><strong id="ledgerFilteredNet">0</strong></div>
+</div>
+
 <div class="card">
 <div class="table-wrap">
 <table>
@@ -4153,45 +4160,32 @@ return rows.sort(
 
 function renderLedger(){
 
-const selected=
-document.getElementById("ledgerHead").value;
+const selected=document.getElementById("ledgerHead").value;
+const rows=ledgerRows().filter(r=>!selected||r.head===selected);
+const body=document.getElementById("ledgerTable");
 
-const rows=
-ledgerRows()
-.filter(
-r=>!selected||r.head===selected
-);
+const totalIn=rows.reduce((sum,r)=>sum+(Number(r.in)||0),0);
+const totalOut=rows.reduce((sum,r)=>sum+(Number(r.out)||0),0);
 
-const body=
-document.getElementById("ledgerTable");
+document.getElementById("ledgerFilteredCount").textContent=rows.length;
+document.getElementById("ledgerFilteredIn").textContent=money(totalIn);
+document.getElementById("ledgerFilteredOut").textContent=money(totalOut);
+document.getElementById("ledgerFilteredNet").textContent=money(totalIn-totalOut);
 
 if(!rows.length){
-
-body.innerHTML=
-`<tr><td colspan="5" class="empty">No ledger entries found.</td></tr>`;
-
+body.innerHTML=`<tr><td colspan="5" class="empty">No ledger entries found.</td></tr>`;
 return;
-
 }
 
 body.innerHTML=rows.map(r=>`
-
 <tr>
-
 <td>${escapeHtml(displayDate(r.date))}</td>
-
 <td>${escapeHtml(r.head)}</td>
-
 <td>${escapeHtml(r.member)}</td>
-
 <td>${r.in?money(r.in):""}</td>
-
 <td>${r.out?money(r.out):""}</td>
-
 </tr>
-
 `).join("");
-
 }
 
 /* =========================
