@@ -172,7 +172,6 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <select id="balanceHistoryYear" onchange="renderBalanceHistory()"></select>
 </div>
 </div>
-<div id="balanceHistoryMemberInfo" style="margin-top:10px"></div>
 <div id="balanceHistorySummary"></div>
 </div>
 <div class="card">
@@ -5624,17 +5623,17 @@ const yearSelect=document.getElementById("balanceHistoryYear");
 const info=document.getElementById("balanceHistoryMemberInfo");
 const summary=document.getElementById("balanceHistorySummary");
 const rows=document.getElementById("balanceHistoryRows");
-if(!input||!yearSelect||!info||!summary||!rows)return;
+if(!input||!yearSelect||!summary||!rows)return;
 const member=balanceHistoryMemberMatch();
 if(!member){
- info.textContent=input.value?"No matching member found. Please select a valid Member Code or Name.":"Select a member by code or name to view monthly balances.";
+ if(info)info.textContent="";
  summary.innerHTML="";
  rows.innerHTML='<tr><td colspan="3" class="empty">Select a member to view history.</td></tr>';
  return;
 }
 const startYear=Number(yearSelect.value);
 if(!startYear)return;
-info.innerHTML=`<strong>${escapeHtml(member.code||"")}</strong> — ${escapeHtml(member.name||"")}<br>Financial Year: ${startYear}–${startYear+1} (1 July ${startYear} to 30 June ${startYear+1})`;
+if(info)info.innerHTML="";
 const now=today();
 const months=[6,7,8,9,10,11,0,1,2,3,4,5];
 const names=["July","August","September","October","November","December","January","February","March","April","May","June"];
@@ -5644,8 +5643,10 @@ for(let i=0;i<12;i++){
  const y=i<6?startYear:startYear+1;
  const m=months[i];
  const lastDay=new Date(y,m+1,0).getDate();
+ const monthStart=`${y}-${pad2(m+1)}-01`;
  const monthEnd=`${y}-${pad2(m+1)}-${pad2(lastDay)}`;
- if(monthEnd>now){
+ // Future months have no balance yet. For the current month, calculate through today's date.
+ if(monthStart>now){
    html+=`<tr><td>${names[i]} ${y}<br><span style="color:var(--muted);font-size:13px">${displayDate(monthEnd)}</span></td><td>—</td><td>—</td></tr>`;
    continue;
  }
@@ -5653,7 +5654,7 @@ for(let i=0;i<12;i++){
  const share=historyShareBalanceAt(member.id,cutoff);
  const savings=historySavingsBalanceAt(member.id,cutoff);
  values.push({share,savings});
- const dateLabel=monthEnd===now?"As of today":displayDate(monthEnd);
+ const dateLabel=(monthStart<=now&&monthEnd>=now)?`As of ${displayDate(now)}`:displayDate(monthEnd);
  html+=`<tr><td>${names[i]} ${y}<br><span style="color:var(--muted);font-size:13px">${dateLabel}</span></td><td>${money(share)}</td><td>${money(savings)}</td></tr>`;
 }
 rows.innerHTML=html;
