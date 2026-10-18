@@ -5644,8 +5644,11 @@ for(let i=0;i<12;i++){
  const y=i<6?startYear:startYear+1;
  const m=months[i];
  const lastDay=new Date(y,m+1,0).getDate();
+ const monthStart=`${y}-${pad2(m+1)}-01`;
  const monthEnd=`${y}-${pad2(m+1)}-${pad2(lastDay)}`;
- if(monthEnd>now){
+ // Future months stay blank. For the current month, show the balance as of today;
+ // for completed months, show the closing balance on the last day.
+ if(monthStart>now){
    html+=`<tr><td>${names[i]} ${y}<br><span style="color:var(--muted);font-size:13px">${displayDate(monthEnd)}</span></td><td>—</td><td>—</td></tr>`;
    continue;
  }
@@ -5653,7 +5656,7 @@ for(let i=0;i<12;i++){
  const share=historyShareBalanceAt(member.id,cutoff);
  const savings=historySavingsBalanceAt(member.id,cutoff);
  values.push({share,savings});
- const dateLabel=monthEnd===now?"As of today":displayDate(monthEnd);
+ const dateLabel=cutoff===now?"As of today":displayDate(monthEnd);
  html+=`<tr><td>${names[i]} ${y}<br><span style="color:var(--muted);font-size:13px">${dateLabel}</span></td><td>${money(share)}</td><td>${money(savings)}</td></tr>`;
 }
 rows.innerHTML=html;
