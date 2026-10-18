@@ -174,12 +174,12 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <div class="field"><label for="profitNote">Note (optional)</label><input id="profitNote" type="text"></div>
 </div>
 <p style="margin:10px 0;color:var(--muted)">Share Profit and Savings Profit are both added to the member's Savings Balance.</p>
-<div class="actions"><button class="btn-green" onclick="saveProfitDistribution()">Save Profit</button><button class="btn-secondary" onclick="clearProfitForm()">Clear</button></div>
+<div class="actions"><button class="btn-green" id="saveProfitButton" onclick="saveProfitDistribution()">Save Profit</button><button class="btn-secondary" onclick="clearProfitForm()">Clear</button></div>
 </div>
 <div class="card">
 <h2>Profit Distribution History</h2>
 <div class="summary-box"><div class="summary-line"><span>Total Profit Distributed</span><strong id="profitHistoryTotal">0</strong></div></div>
-<div class="table-wrap"><table><thead><tr><th>Date</th><th>Member</th><th>Share Profit</th><th>Savings Profit</th><th>Total Profit</th><th>Note</th></tr></thead><tbody id="profitHistoryRows"></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Date</th><th>Member</th><th>Share Profit</th><th>Savings Profit</th><th>Total Profit</th><th>Note</th><th>Action</th></tr></thead><tbody id="profitHistoryRows"></tbody></table></div>
 </div>
 </section>
 
@@ -5722,7 +5722,10 @@ function updateProfitTotal(){
  const total=Math.max(0,read("profitShare"))+Math.max(0,read("profitSavings"));
  const out=document.getElementById("profitTotal");if(out)out.value=money(total);
 }
+let editingProfitId=null;
 function clearProfitForm(){
+ editingProfitId=null;
+ const saveButton=document.getElementById("saveProfitButton");if(saveButton)saveButton.textContent="Save Profit";
  document.getElementById("profitMember").value="";
  document.getElementById("profitShare").value="0";
  document.getElementById("profitSavings").value="0";
@@ -5736,19 +5739,50 @@ function saveProfitDistribution(){
  const shareProfit=read("profitShare"), savingsProfit=read("profitSavings");
  if(!memberId){alert("Please select a member.");return;}
  if(shareProfit<0||savingsProfit<0||shareProfit+savingsProfit<=0){alert("Please enter a valid profit amount.");return;}
- if(!confirm("Save total profit "+money(shareProfit+savingsProfit)+" to this member's Savings Balance?"))return;
+ if(!confirm((editingProfitId?"Update":"Save")+" total profit "+money(shareProfit+savingsProfit)+" to this member's Savings Balance?"))return;
  if(!Array.isArray(data.profitDistributions))data.profitDistributions=[];
- data.profitDistributions.push({id:uid("PROFIT-"),date,memberId,shareProfit,savingsProfit,note:document.getElementById("profitNote").value.trim()});
+ const record={date,memberId,shareProfit,savingsProfit,note:document.getElementById("profitNote").value.trim()};
+ const wasEditing=!!editingProfitId;
+ if(editingProfitId){
+   const index=data.profitDistributions.findIndex(p=>String(p.id)===String(editingProfitId));
+   if(index<0){alert("This profit record was not found.");clearProfitForm();return;}
+   data.profitDistributions[index]={...data.profitDistributions[index],...record};
+ }else{
+   data.profitDistributions.push({id:uid("PROFIT-"),...record});
+ }
  saveData();refreshAll();renderProfitDistributions();clearProfitForm();
- alert("Profit saved and added to the member's Savings Balance.");
+ alert("Profit record "+(wasEditing?"updated":"saved")+" successfully. Total profit is included in the member's Savings Balance.");
 }
 function renderProfitDistributions(){
  const body=document.getElementById("profitHistoryRows");if(!body)return;
  const rows=[...(data.profitDistributions||[])].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
  const total=rows.reduce((sum,p)=>sum+Number(p.shareProfit||0)+Number(p.savingsProfit||0),0);
  const totalEl=document.getElementById("profitHistoryTotal");if(totalEl)totalEl.textContent=money(total);
- if(!rows.length){body.innerHTML='<tr><td colspan="6" class="empty">No profit distributed yet.</td></tr>';return;}
- body.innerHTML=rows.map(p=>`<tr><td>${escapeHtml(displayDate(p.date))}</td><td>${escapeHtml(memberName(p.memberId))}</td><td>${money(p.shareProfit)}</td><td>${money(p.savingsProfit)}</td><td>${money(Number(p.shareProfit||0)+Number(p.savingsProfit||0))}</td><td>${escapeHtml(p.note||"")}</td></tr>`).join("");
+ if(!rows.length){body.innerHTML='<tr><td colspan="7" class="empty">No profit distributed yet.</td></tr>';return;}
+ body.innerHTML=rows.map(p=>`<tr><td>${escapeHtml(displayDate(p.date))}</td><td>${escapeHtml(memberName(p.memberId))}</td><td>${money(p.shareProfit)}</td><td>${money(p.savingsProfit)}</td><td>${money(Number(p.shareProfit||0)+Number(p.savingsProfit||0))}</td><td>${escapeHtml(p.note||"")}</td><td><button class="btn-secondary" type="button" onclick="editProfitDistribution('${escapeHtml(String(p.id))}')">Edit</button> <button class="btn-red" type="button" onclick="deleteProfitDistribution('${escapeHtml(String(p.id))}')">Delete</button></td></tr>`).join("");
+}
+function editProfitDistribution(id){
+ const p=(data.profitDistributions||[]).find(item=>String(item.id)===String(id));
+ if(!p){alert("Profit record not found.");return;}
+ editingProfitId=p.id;
+ populateProfitMemberSelect();
+ document.getElementById("profitDate").value=p.date||today();
+ document.getElementById("profitMember").value=String(p.memberId);
+ document.getElementById("profitShare").value=String(Number(p.shareProfit)||0);
+ document.getElementById("profitSavings").value=String(Number(p.savingsProfit)||0);
+ document.getElementById("profitNote").value=p.note||"";
+ updateProfitTotal();
+ const saveButton=document.getElementById("saveProfitButton");if(saveButton)saveButton.textContent="Update Profit";
+ document.getElementById("profitDistribution").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function deleteProfitDistribution(id){
+ const p=(data.profitDistributions||[]).find(item=>String(item.id)===String(id));
+ if(!p){alert("Profit record not found.");return;}
+ if(!confirm("Delete this profit record of "+memberName(p.memberId)+" for "+money(Number(p.shareProfit||0)+Number(p.savingsProfit||0))+"? This amount will be removed from the member's Savings Balance."))return;
+ data.profitDistributions=data.profitDistributions.filter(item=>String(item.id)!==String(id));
+ if(String(editingProfitId)===String(id))clearProfitForm();
+ saveData();refreshAll();renderProfitDistributions();
+ alert("Profit record deleted and the member's Savings Balance recalculated.");
 }
 
 /* =========================
