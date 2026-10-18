@@ -614,6 +614,19 @@ oninput="renderShareTransfers()">
 <section id="cashbook" class="page">
 <h1>Cash Book</h1>
 <div class="card">
+<div class="form-grid">
+<div class="field">
+<label for="cashBookSearchDate">Select Date</label>
+<input type="date" id="cashBookSearchDate" autocomplete="off">
+</div>
+<div class="field" style="display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap">
+<button class="btn" type="button" onclick="searchCashBook()">Search</button>
+<button class="btn-secondary" type="button" onclick="clearCashBookSearch()">Show All</button>
+</div>
+</div>
+<div id="cashBookFilterMessage" class="notice" style="display:none;margin-top:10px"></div>
+</div>
+<div class="card">
 <div class="summary-line"><span>Opening Balance</span><strong id="cashOpening">0</strong></div>
 <div class="summary-line"><span>Total Cash In</span><strong id="cashIn">0</strong></div>
 <div class="summary-line"><span>Total Cash Out</span><strong id="cashOut">0</strong></div>
@@ -4327,79 +4340,78 @@ return balance;
 
 }
 
-function renderCashBook(){
-
-const rows=cashRows();
-
-let balance=
-Number(data.openingCash)||0;
-
-document.getElementById("cashOpening")
-.textContent=
-money(data.openingCash);
-
-const totalIn=
-rows.reduce(
-(s,r)=>s+Number(r.in||0),
-0
-);
-
-const totalOut=
-rows.reduce(
-(s,r)=>s+Number(r.out||0),
-0
-);
-
-document.getElementById("cashIn")
-.textContent=
-money(totalIn);
-
-document.getElementById("cashOut")
-.textContent=
-money(totalOut);
-
-document.getElementById("cashBalance")
-.textContent=
-money(cashBalance());
-
-const body=
-document.getElementById("cashTable");
-
-if(!rows.length){
-
-body.innerHTML=
-`<tr><td colspan="5" class="empty">No cash transactions found.</td></tr>`;
-
+function searchCashBook(){
+const date=document.getElementById("cashBookSearchDate").value;
+if(!date){
+alert("Please select a date first.");
 return;
-
+}
+renderCashBook();
 }
 
-body.innerHTML=rows.map(r=>{
+function clearCashBookSearch(){
+document.getElementById("cashBookSearchDate").value="";
+renderCashBook();
+}
 
-balance+=Number(r.in||0);
+function renderCashBook(){
+const allRows=cashRows();
+const selectedDate=document.getElementById("cashBookSearchDate")?.value||"";
+const rows=selectedDate?allRows.filter(r=>r.date===selectedDate):allRows;
+let runningBalance=Number(data.openingCash)||0;
+const balances=[];
 
-balance-=Number(r.out||0);
+allRows.forEach(r=>{
+runningBalance+=Number(r.in||0);
+runningBalance-=Number(r.out||0);
+balances.push(runningBalance);
+});
 
-return`
+const balanceByRow=new Map();
+allRows.forEach((r,i)=>balanceByRow.set(r,balances[i]));
 
+const totalIn=rows.reduce((sum,r)=>sum+Number(r.in||0),0);
+const totalOut=rows.reduce((sum,r)=>sum+Number(r.out||0),0);
+let balanceAtDate=Number(data.openingCash)||0;
+if(selectedDate){
+allRows.forEach(r=>{
+if(r.date<=selectedDate){
+balanceAtDate+=Number(r.in||0);
+balanceAtDate-=Number(r.out||0);
+}
+});
+}else{
+balanceAtDate=runningBalance;
+}
+
+document.getElementById("cashOpening").textContent=money(data.openingCash);
+document.getElementById("cashIn").textContent=money(totalIn);
+document.getElementById("cashOut").textContent=money(totalOut);
+document.getElementById("cashBalance").textContent=money(balanceAtDate);
+
+const message=document.getElementById("cashBookFilterMessage");
+if(selectedDate){
+message.style.display="block";
+message.textContent="Showing transactions for "+displayDate(selectedDate)+". Cash in hand is the closing balance up to this date.";
+}else{
+message.style.display="none";
+message.textContent="";
+}
+
+const body=document.getElementById("cashTable");
+if(!rows.length){
+body.innerHTML=`<tr><td colspan="5" class="empty">No cash transactions found${selectedDate?" for "+escapeHtml(displayDate(selectedDate)):""}.</td></tr>`;
+return;
+}
+body.innerHTML=rows.map(r=>`
 <tr>
-
 <td>${escapeHtml(displayDate(r.date))}</td>
-
 <td>${escapeHtml(r.description)}</td>
-
 <td>${r.in?money(r.in):""}</td>
-
 <td>${r.out?money(r.out):""}</td>
-
-<td>${money(balance)}</td>
-
+<td>${money(balanceByRow.get(r)??0)}</td>
 </tr>
-
-`;
-
-}).join("");
-
+`).join("");
 }
 
 /* =========================
