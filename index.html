@@ -121,6 +121,8 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <div class="dashboard-grid">
 <div class="stat-card c1"><div class="label">Total Members</div><div class="value" id="dMembers">0</div></div>
 <div class="stat-card c8"><div class="label">Cash in Hand</div><div class="value" id="dCash">0</div></div>
+<div class="stat-card c2"><div class="label">Total Collection</div><div class="value" id="dTotalCollection">0</div></div>
+<div class="stat-card c7"><div class="label">Total Expenses</div><div class="value" id="dTotalExpenses">0</div></div>
 <div class="stat-card c2"><div class="label">Total Share</div><div class="value" id="dShare">0</div></div>
 <div class="stat-card c3"><div class="label">Total Savings</div><div class="value" id="dSavings">0</div></div>
 <div class="stat-card c4"><div class="label">Loan Disbursed</div><div class="value" id="dLoan">0</div></div>
@@ -5605,6 +5607,18 @@ data.expenses
 0
 );
 
+const totalCollection=
+data.collections.reduce(
+(s,c)=>s+Number(c.total||0),
+0
+);
+
+const totalExpenses=
+data.expenses.reduce(
+(s,e)=>s+Number(e.amount||0),
+0
+);
+
 document.getElementById("dMembers")
 .textContent=
 money(data.members.length);
@@ -5629,6 +5643,12 @@ document.getElementById("dOutstanding")
 
 document.getElementById("dCash")
 .textContent=money(cashBalance());
+
+document.getElementById("dTotalCollection")
+.textContent=money(totalCollection);
+
+document.getElementById("dTotalExpenses")
+.textContent=money(totalExpenses);
 
 document.getElementById("dTodayCollection")
 .textContent=money(todayCollection);
