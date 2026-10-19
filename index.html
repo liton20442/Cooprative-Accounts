@@ -694,7 +694,6 @@ oninput="renderShareTransfers()">
 <button class="btn-secondary" type="button" onclick="clearCashBookSearch()">Show All</button>
 </div>
 </div>
-<div id="cashBookFilterMessage" class="notice" style="display:none;margin-top:10px"></div>
 </div>
 <div class="card">
 <div class="summary-line"><span>Opening Balance</span><strong id="cashOpening">0</strong></div>
@@ -4517,17 +4516,6 @@ document.getElementById("cashOpening").textContent=money(openingAtStart);
 document.getElementById("cashIn").textContent=money(totalIn);
 document.getElementById("cashOut").textContent=money(totalOut);
 document.getElementById("cashBalance").textContent=money(balanceAtEnd);
-const message=document.getElementById("cashBookFilterMessage");
-const hasFilter=!!(fromDate||toDate||selectedType!=="all");
-if(hasFilter){
-const dateLabel=fromDate||toDate?(fromDate?displayDate(fromDate):"Beginning")+" to "+(toDate?displayDate(toDate):"Today"):"All dates";
-const typeLabel=selectedType==="in"?"Cash In":selectedType==="out"?"Cash Out":"All transactions";
-message.style.display="block";
-message.textContent="Showing "+typeLabel+" from "+dateLabel+". Totals below are for the filtered transactions.";
-}else{
-message.style.display="none";
-message.textContent="";
-}
 const body=document.getElementById("cashTable");
 if(!rows.length){
 body.innerHTML=`<tr><td colspan="5" class="empty">No cash transactions found for the selected filters.</td></tr>`;
