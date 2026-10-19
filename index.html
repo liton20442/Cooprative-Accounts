@@ -240,8 +240,19 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
    
 /* Hide Home button on Dashboard only */
 
+
+/* Hide Home button on Dashboard */
 body.dashboard-active .home-btn:not(#logoutButton) {
   display: none !important;
+}
+
+/* Show Logout only on Dashboard */
+#logoutButton {
+  display: none;
+}
+
+body.dashboard-active #logoutButton {
+  display: inline-block;
 }
 
 
