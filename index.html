@@ -243,6 +243,30 @@ body.dashboard-active .home-btn {
   display: none !important;
 }
 
+  
+/* Compact Today's Summary */
+#dashboard .card:has(#dTodayCollection) {
+  max-width: 480px;
+  padding: 12px 16px;
+  margin-top: 10px;
+  margin-bottom: 14px;
+}
+
+#dashboard .card:has(#dTodayCollection) .summary-line {
+  padding: 7px 0;
+  font-size: 14px;
+  gap: 16px;
+}
+
+#dashboard .card:has(#dTodayCollection) .summary-line strong {
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+#dashboard h2 {
+  margin-bottom: 8px;
+}
+ 
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
