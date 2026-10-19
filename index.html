@@ -237,6 +237,12 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
   }
 }
 
+   
+/* Hide Home button on Dashboard only */
+body.dashboard-active .home-btn {
+  display: none !important;
+}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -1257,6 +1263,10 @@ document.querySelectorAll(".page")
 const page=document.getElementById(id);
 
 if(page)page.classList.add("active");
+   document.body.classList.toggle(
+  "dashboard-active",
+  id === "dashboard"
+);
 
 /* Hide Home button only on Dashboard */
 document.querySelectorAll(".home-btn").forEach(btn=>{
