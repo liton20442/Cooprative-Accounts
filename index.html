@@ -82,12 +82,13 @@ th{background:#f8fafc;font-size:15px;font-weight:800}td{font-size:15px}
 .badge{display:inline-block;padding:5px 9px;border-radius:20px;background:#e0f2fe;color:#075985;font-size:13px;font-weight:750}
 .empty{text-align:center;color:var(--muted);padding:22px}
 .search-row{display:flex;gap:9px;margin-bottom:12px}.search-row input{flex:1}
-.cashbook-search-row{display:flex;align-items:flex-end;gap:10px;width:100%}
-.cashbook-date-field{flex:1;min-width:0}
-.cashbook-date-field input{width:100%;min-width:0}
+.cashbook-search-row{display:flex;align-items:flex-end;gap:10px;width:100%;flex-wrap:wrap}
+.cashbook-date-field{flex:1 1 145px;min-width:125px}
+.cashbook-date-field input,.cashbook-type-field select{width:100%;min-width:0}
+.cashbook-type-field{flex:0 1 130px;min-width:110px}
 .cashbook-search-buttons{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .cashbook-search-buttons button{white-space:nowrap}
-@media(max-width:390px){.cashbook-search-row{gap:6px}.cashbook-search-buttons{gap:5px}.cashbook-search-buttons button{padding:9px 10px;font-size:13px}}
+@media(max-width:390px){.cashbook-search-row{gap:7px}.cashbook-date-field{flex:1 1 42%;min-width:0}.cashbook-type-field{flex:1 1 100%;min-width:0}.cashbook-search-buttons{gap:5px;width:100%}.cashbook-search-buttons button{flex:1;padding:9px 10px;font-size:13px}}
 .notice{padding:12px 14px;background:#ecfeff;border-left:4px solid #0891b2;border-radius:10px;margin-bottom:15px;font-size:15px}
 .summary-box{background:#f8fafc;border:1px solid var(--border);border-radius:13px;padding:13px;margin-top:13px}
 .summary-line{display:flex;justify-content:space-between;gap:15px;padding:7px 0;border-bottom:1px dashed #cbd5e1}
@@ -169,8 +170,8 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 <div class="form-grid">
 <div class="field"><label for="profitDate">Date</label><input type="date" id="profitDate"></div>
 <div class="field"><label for="profitMember">Member Code / Name</label><select id="profitMember"><option value="">Select Member Code / Name</option></select></div>
-<div class="field"><label for="profitShare">Share Profit</label><input id="profitShare" type="text" inputmode="text" autocomplete="off" value="0" oninput="updateProfitTotal()"></div>
-<div class="field"><label for="profitSavings">Savings Profit</label><input id="profitSavings" type="text" inputmode="text" autocomplete="off" value="0" oninput="updateProfitTotal()"></div>
+<div class="field"><label for="profitShare">Share Profit</label><input id="profitShare" type="text" inputmode="text" value="0" oninput="updateProfitTotal()"></div>
+<div class="field"><label for="profitSavings">Savings Profit</label><input id="profitSavings" type="text" inputmode="text" value="0" oninput="updateProfitTotal()"></div>
 <div class="field"><label>Total Profit (credited to Savings)</label><input id="profitTotal" type="text" value="0" readonly></div>
 <div class="field"><label for="profitNote">Note (optional)</label><input id="profitNote" type="text"></div>
 </div>
@@ -673,8 +674,20 @@ oninput="renderShareTransfers()">
 <div class="card">
 <div class="cashbook-search-row">
 <div class="field cashbook-date-field">
-<label for="cashBookSearchDate">Select Date</label>
-<input type="date" id="cashBookSearchDate" autocomplete="off">
+<label for="cashBookFromDate">From Date</label>
+<input type="date" id="cashBookFromDate" autocomplete="off">
+</div>
+<div class="field cashbook-date-field">
+<label for="cashBookToDate">To Date</label>
+<input type="date" id="cashBookToDate" autocomplete="off">
+</div>
+<div class="field cashbook-type-field">
+<label for="cashBookType">Transaction</label>
+<select id="cashBookType">
+<option value="all">All</option>
+<option value="in">Cash In</option>
+<option value="out">Cash Out</option>
+</select>
 </div>
 <div class="cashbook-search-buttons">
 <button class="btn" type="button" onclick="searchCashBook()">Search</button>
@@ -4462,66 +4475,62 @@ return balance;
 }
 
 function searchCashBook(){
-const date=document.getElementById("cashBookSearchDate").value;
-if(!date){
-alert("Please select a date first.");
+const fromDate=document.getElementById("cashBookFromDate").value;
+const toDate=document.getElementById("cashBookToDate").value;
+if(fromDate && toDate && fromDate>toDate){
+alert("From Date cannot be later than To Date.");
 return;
 }
 renderCashBook();
 }
 
 function clearCashBookSearch(){
-document.getElementById("cashBookSearchDate").value="";
+document.getElementById("cashBookFromDate").value="";
+document.getElementById("cashBookToDate").value="";
+document.getElementById("cashBookType").value="all";
 renderCashBook();
 }
 
 function renderCashBook(){
 const allRows=cashRows();
-const selectedDate=document.getElementById("cashBookSearchDate")?.value||"";
-const rows=selectedDate?allRows.filter(r=>r.date===selectedDate):allRows;
+const fromDate=document.getElementById("cashBookFromDate")?.value||"";
+const toDate=document.getElementById("cashBookToDate")?.value||"";
+const selectedType=document.getElementById("cashBookType")?.value||"all";
+const dateRows=allRows.filter(r=>(!fromDate||r.date>=fromDate)&&(!toDate||r.date<=toDate));
+const rows=dateRows.filter(r=>selectedType==="in"?Number(r.in||0)!==0:selectedType==="out"?Number(r.out||0)!==0:true);
 let runningBalance=Number(data.openingCash)||0;
-const balances=[];
-
+const balanceByRow=new Map();
 allRows.forEach(r=>{
 runningBalance+=Number(r.in||0);
 runningBalance-=Number(r.out||0);
-balances.push(runningBalance);
+balanceByRow.set(r,runningBalance);
 });
-
-const balanceByRow=new Map();
-allRows.forEach((r,i)=>balanceByRow.set(r,balances[i]));
-
 const totalIn=rows.reduce((sum,r)=>sum+Number(r.in||0),0);
 const totalOut=rows.reduce((sum,r)=>sum+Number(r.out||0),0);
-let balanceAtDate=Number(data.openingCash)||0;
-if(selectedDate){
-allRows.forEach(r=>{
-if(r.date<=selectedDate){
-balanceAtDate+=Number(r.in||0);
-balanceAtDate-=Number(r.out||0);
+let openingAtStart=Number(data.openingCash)||0;
+if(fromDate){
+allRows.forEach(r=>{if(r.date<fromDate){openingAtStart+=Number(r.in||0)-Number(r.out||0);}});
 }
-});
-}else{
-balanceAtDate=runningBalance;
-}
-
-document.getElementById("cashOpening").textContent=money(data.openingCash);
+let balanceAtEnd=Number(data.openingCash)||0;
+allRows.forEach(r=>{if(!toDate||r.date<=toDate){balanceAtEnd+=Number(r.in||0)-Number(r.out||0);}});
+document.getElementById("cashOpening").textContent=money(openingAtStart);
 document.getElementById("cashIn").textContent=money(totalIn);
 document.getElementById("cashOut").textContent=money(totalOut);
-document.getElementById("cashBalance").textContent=money(balanceAtDate);
-
+document.getElementById("cashBalance").textContent=money(balanceAtEnd);
 const message=document.getElementById("cashBookFilterMessage");
-if(selectedDate){
+const hasFilter=!!(fromDate||toDate||selectedType!=="all");
+if(hasFilter){
+const dateLabel=fromDate||toDate?(fromDate?displayDate(fromDate):"Beginning")+" to "+(toDate?displayDate(toDate):"Today"):"All dates";
+const typeLabel=selectedType==="in"?"Cash In":selectedType==="out"?"Cash Out":"All transactions";
 message.style.display="block";
-message.textContent="Showing transactions for "+displayDate(selectedDate)+". Cash in hand is the closing balance up to this date.";
+message.textContent="Showing "+typeLabel+" from "+dateLabel+". Totals below are for the filtered transactions.";
 }else{
 message.style.display="none";
 message.textContent="";
 }
-
 const body=document.getElementById("cashTable");
 if(!rows.length){
-body.innerHTML=`<tr><td colspan="5" class="empty">No cash transactions found${selectedDate?" for "+escapeHtml(displayDate(selectedDate)):""}.</td></tr>`;
+body.innerHTML=`<tr><td colspan="5" class="empty">No cash transactions found for the selected filters.</td></tr>`;
 return;
 }
 body.innerHTML=rows.map(r=>`
@@ -6945,14 +6954,6 @@ shareTransfer:[
 "shareTransferTo",
 "shareTransferAmount",
 "shareTransferNote"
-],
-
-profitDistribution:[
-"profitDate",
-"profitMember",
-"profitShare",
-"profitSavings",
-"profitNote"
 ]
 
 };
