@@ -1248,6 +1248,7 @@ return parsed||today();
 
 }
 
+
 function showPage(id){
 
 document.querySelectorAll(".page")
@@ -1256,6 +1257,11 @@ document.querySelectorAll(".page")
 const page=document.getElementById(id);
 
 if(page)page.classList.add("active");
+
+/* Hide Home button only on Dashboard */
+document.querySelectorAll(".home-btn").forEach(btn=>{
+  btn.style.display = id === "dashboard" ? "none" : "";
+});
 
 window.scrollTo({
 top:0,
