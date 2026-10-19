@@ -239,9 +239,11 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
 
    
 /* Hide Home button on Dashboard only */
-body.dashboard-active .home-btn {
+
+body.dashboard-active .home-btn:not(#logoutButton) {
   display: none !important;
 }
+
 
   
 /* Compact Today's Summary */
@@ -266,12 +268,136 @@ body.dashboard-active .home-btn {
 #dashboard h2 {
   margin-bottom: 8px;
 }
- 
+
+/* Login Screen */
+.login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #f0fdfa;
+  box-sizing: border-box;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 12px 35px rgba(15, 118, 110, 0.12);
+  box-sizing: border-box;
+}
+
+.login-card h1 {
+  color: #0f766e;
+  font-size: 26px;
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.login-card > p {
+  color: #64748b;
+  text-align: center;
+  margin: 0 0 24px;
+}
+
+.login-card label {
+  display: block;
+  margin: 14px 0 6px;
+  font-weight: 600;
+}
+
+.login-card input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font: inherit;
+}
+
+#loginButton {
+  width: 100%;
+  margin-top: 18px;
+  padding: 13px;
+  background: #0f766e;
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#loginMessage {
+  min-height: 18px;
+  margin: 10px 0 0;
+  color: #b91c1c;
+  font-size: 14px;
+}
+
+body:not(.authenticated) .app {
+  display: none !important;
+}
+
+body.authenticated #loginScreen {
+  display: none !important;
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 22px;
+  }
+
+  .login-card h1 {
+    font-size: 23px;
+  }
+}
+
+   
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
+   
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <h1>Cooperative Accounts</h1>
+    <p id="loginSubtitle">Please login to continue</p>
+
+    <form id="loginForm">
+      <label for="loginUsername">Username</label>
+      <input
+        type="text"
+        id="loginUsername"
+        placeholder="Enter username"
+        autocomplete="username"
+        required
+      >
+
+      <label for="loginPassword">Password</label>
+      <input
+        type="password"
+        id="loginPassword"
+        placeholder="Enter password"
+        autocomplete="current-password"
+        required
+      >
+
+      <p id="loginMessage" role="alert"></p>
+
+      <button type="submit" id="loginButton">
+        Login
+      </button>
+    </form>
+  </div>
+</div>
+<!-- END LOGIN SCREEN -->
+
 <div class="app">
 
 <header>
@@ -281,6 +407,16 @@ body.dashboard-active .home-btn {
 <div class="app-subtitle"> Collection & Accounts</div>
 </div>
 <button class="home-btn" onclick="showPage('dashboard')">Home</button>
+   
+<button
+  id="logoutButton"
+  class="home-btn"
+  type="button"
+  onclick="logoutApp()"
+>
+  Logout
+</button>
+
 </div>
 </header>
 
@@ -7349,6 +7485,178 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
       console.warn('Offline support could not be enabled:', err);
     });
   });
+}
+</script>
+
+<script>
+/* Cooperative Accounts Login System */
+(function () {
+  const AUTH_KEY = "cooperativeAccountsAuthV1";
+
+  async function hashPassword(password) {
+    if (!window.crypto || !window.crypto.subtle) {
+      throw new Error(
+        "Secure login requires opening the app through HTTPS."
+      );
+    }
+
+    const data = new TextEncoder().encode(password);
+    const hash = await crypto.subtle.digest("SHA-256", data);
+
+    return Array.from(new Uint8Array(hash))
+      .map(function (byte) {
+        return byte.toString(16).padStart(2, "0");
+      })
+      .join("");
+  }
+
+  function getAuth() {
+    try {
+      return JSON.parse(localStorage.getItem(AUTH_KEY) || "null");
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function setupLogin() {
+    const screen = document.getElementById("loginScreen");
+    const form = document.getElementById("loginForm");
+    const usernameInput = document.getElementById("loginUsername");
+    const passwordInput = document.getElementById("loginPassword");
+    const subtitle = document.getElementById("loginSubtitle");
+    const button = document.getElementById("loginButton");
+    const message = document.getElementById("loginMessage");
+
+    if (!screen || !form || !usernameInput || !passwordInput) {
+      console.error("Login screen elements were not found.");
+      return;
+    }
+
+    function showMessage(text) {
+      message.textContent = text;
+    }
+
+    function updateMode() {
+      const auth = getAuth();
+      const firstSetup = !auth;
+
+      subtitle.textContent = firstSetup
+        ? "Create your first login"
+        : "Please login to continue";
+
+      button.textContent = firstSetup ? "Create Login" : "Login";
+
+      usernameInput.autocomplete = firstSetup
+        ? "username"
+        : "username";
+
+      passwordInput.autocomplete = firstSetup
+        ? "new-password"
+        : "current-password";
+
+      passwordInput.minLength = firstSetup ? 6 : 1;
+    }
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      showMessage("");
+
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+      const auth = getAuth();
+
+      if (!username || !password) {
+        showMessage("Enter your username and password.");
+        return;
+      }
+
+      if (!auth && password.length < 6) {
+        showMessage("Password must be at least 6 characters.");
+        return;
+      }
+
+      button.disabled = true;
+
+      try {
+        const passwordHash = await hashPassword(password);
+
+        if (!auth) {
+          localStorage.setItem(
+            AUTH_KEY,
+            JSON.stringify({
+              username: username,
+              passwordHash: passwordHash
+            })
+          );
+
+          document.body.classList.add("authenticated");
+          usernameInput.value = "";
+          passwordInput.value = "";
+          showMessage("");
+
+          if (typeof showPage === "function") {
+            showPage("dashboard");
+          }
+
+          return;
+        }
+
+        if (
+          username.toLowerCase() === auth.username.toLowerCase() &&
+          passwordHash === auth.passwordHash
+        ) {
+          document.body.classList.add("authenticated");
+          usernameInput.value = "";
+          passwordInput.value = "";
+          showMessage("");
+
+          if (typeof showPage === "function") {
+            showPage("dashboard");
+          }
+        } else {
+          showMessage("Incorrect username or password.");
+          passwordInput.value = "";
+          passwordInput.focus();
+        }
+      } catch (error) {
+        showMessage(
+          error.message ||
+          "Login could not be completed. Please try again."
+        );
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    updateMode();
+
+    /* A page refresh requires login again. */
+    document.body.classList.remove("authenticated");
+  }
+
+  document.addEventListener("DOMContentLoaded", setupLogin);
+})();
+</script>
+
+<script>
+function logoutApp() {
+  if (!confirm("Are you sure you want to logout?")) {
+    return;
+  }
+
+  document.body.classList.remove("authenticated");
+
+  const password = document.getElementById("loginPassword");
+  const username = document.getElementById("loginUsername");
+  const message = document.getElementById("loginMessage");
+
+  if (password) password.value = "";
+  if (username) username.value = "";
+  if (message) message.textContent = "";
+
+  if (typeof showPage === "function") {
+    showPage("dashboard");
+  }
 }
 </script>
 
