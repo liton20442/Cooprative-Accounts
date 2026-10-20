@@ -390,26 +390,50 @@ body.authenticated #loginScreen {
 
  
 .username-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  position: relative;
+  width: 100%;
 }
 
 .username-wrapper input {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-#removeUsernameButton {
-  padding: 10px 12px;
+.username-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #fff;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
-  background: #f8fafc;
-  color: #b91c1c;
-  cursor: pointer;
-  font: inherit;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
-  
+
+.username-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.username-option:hover {
+  background: #f0fdfa;
+}
+
+.username-remove {
+  border: none;
+  background: transparent;
+  color: #b91c1c;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 6px;
+}
+
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -425,27 +449,22 @@ body.authenticated #loginScreen {
     
 <form id="loginForm">
   
+
 <label for="loginUsername">Username</label>
 
 <div class="username-wrapper">
   <input
     type="text"
     id="loginUsername"
-    list="loginUsernameOptions"
     placeholder="Choose your username"
     autocomplete="off"
     autocapitalize="none"
     spellcheck="false"
     required
   >
-  <button
-    type="button"
-    id="removeUsernameButton"
-    onclick="removeUsernameSuggestion()"
-  >Remove</button>
+  <div id="usernameDropdown" class="username-dropdown"></div>
 </div>
 
-<datalist id="loginUsernameOptions"></datalist>
 
 
   
@@ -7964,6 +7983,85 @@ function removeUsernameSuggestion() {
     usernameInput.focus();
   }
 }
+</script>
+
+<script>
+(function () {
+  const AUTH_KEY = "cooperativeAccountsAuthV1";
+  const HIDDEN_KEY = "cooperativeAccountsHiddenUsernameV1";
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById("loginUsername");
+    const dropdown = document.getElementById("usernameDropdown");
+
+    if (!input || !dropdown) return;
+
+    function renderUsername() {
+      dropdown.replaceChildren();
+
+      let auth = null;
+      let hiddenUsername = "";
+
+      try {
+        auth = JSON.parse(localStorage.getItem(AUTH_KEY) || "null");
+        hiddenUsername = localStorage.getItem(HIDDEN_KEY) || "";
+      } catch (error) {}
+
+      if (
+        !auth ||
+        !auth.username ||
+        auth.username === hiddenUsername
+      ) {
+        dropdown.style.display = "none";
+        return;
+      }
+
+      const row = document.createElement("div");
+      row.className = "username-option";
+
+      const name = document.createElement("span");
+      name.textContent = auth.username;
+      name.style.flex = "1";
+      name.addEventListener("click", function () {
+        input.value = auth.username;
+        dropdown.style.display = "none";
+      });
+
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "username-remove";
+      remove.textContent = "×";
+      remove.setAttribute("aria-label", "Remove username suggestion");
+
+      remove.addEventListener("click", function (event) {
+        event.stopPropagation();
+
+        if (confirm("Remove this username from the dropdown?")) {
+          localStorage.setItem(HIDDEN_KEY, auth.username);
+          input.value = "";
+          dropdown.style.display = "none";
+        }
+      });
+
+      row.appendChild(name);
+      row.appendChild(remove);
+      dropdown.appendChild(row);
+      dropdown.style.display = "block";
+    }
+
+    input.addEventListener("focus", renderUsername);
+    input.addEventListener("click", renderUsername);
+
+    document.addEventListener("click", function (event) {
+      if (
+        !input.contains(event.target) &&
+        !dropdown.contains(event.target)
+      ) {
+        dropdown.style.display = "none";
+      }
+    });
+  });
+})();
 </script>
 
 </body>
