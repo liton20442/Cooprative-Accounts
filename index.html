@@ -7860,19 +7860,7 @@ function updateMode() {
   }
 
  
-document.addEventListener("DOMContentLoaded", function () {
-  document.body.classList.add("authenticated");
-
-  const screen = document.getElementById("loginScreen");
-  if (screen) {
-    screen.style.display = "none";
-  }
-
-  if (typeof showPage === "function") {
-    showPage("dashboard");
-  }
-});
-
+document.addEventListener("DOMContentLoaded", setupLogin);
 })();
 </script>
 
