@@ -466,6 +466,28 @@ body.authenticated #loginScreen {
   width: 18%;
 }
 
+
+/* Members entry form - single row */
+#members .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1.5fr;
+  gap: 12px;
+}
+
+#members .form-grid > .field {
+  grid-column: auto !important;
+  min-width: 0;
+}
+
+#members .form-grid > .field.full {
+  grid-column: auto !important;
+}
+
+#members .form-grid input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
