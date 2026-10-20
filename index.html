@@ -388,7 +388,28 @@ body.authenticated #loginScreen {
   font: inherit;
 }
 
-   
+ 
+.username-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.username-wrapper input {
+  flex: 1;
+  min-width: 0;
+}
+
+#removeUsernameButton {
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #b91c1c;
+  cursor: pointer;
+  font: inherit;
+}
+  
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -403,7 +424,10 @@ body.authenticated #loginScreen {
 
     
 <form id="loginForm">
-  <label for="loginUsername">Username</label>
+  
+<label for="loginUsername">Username</label>
+
+<div class="username-wrapper">
   <input
     type="text"
     id="loginUsername"
@@ -414,7 +438,15 @@ body.authenticated #loginScreen {
     spellcheck="false"
     required
   >
-  <datalist id="loginUsernameOptions"></datalist>
+  <button
+    type="button"
+    id="removeUsernameButton"
+    onclick="removeUsernameSuggestion()"
+  >Remove</button>
+</div>
+
+<datalist id="loginUsernameOptions"></datalist>
+
 
   
 <label for="loginPassword">Password</label>
@@ -7914,6 +7946,22 @@ function toggleLoginPassword() {
   } else {
     password.type = "password";
     button.textContent = "Show";
+  }
+}
+</script>
+
+<script>
+function removeUsernameSuggestion() {
+  const list = document.getElementById("loginUsernameOptions");
+  const usernameInput = document.getElementById("loginUsername");
+
+  if (list) {
+    list.replaceChildren();
+  }
+
+  if (usernameInput) {
+    usernameInput.value = "";
+    usernameInput.focus();
   }
 }
 </script>
