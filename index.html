@@ -387,7 +387,12 @@ body.authenticated #loginScreen {
         
 <input
   type="text"
+  
+<label for="loginUsername">Username</label>
+<input
+  type="text"
   id="loginUsername"
+  list="loginUsernameOptions"
   placeholder="Choose your username"
   autocomplete="off"
   autocapitalize="none"
@@ -395,10 +400,15 @@ body.authenticated #loginScreen {
   required
 >
 <datalist id="loginUsernameOptions"></datalist>
-        placeholder="Enter username"
-        autocomplete="username"
-        required
-      >
+
+<label for="loginPassword">Password</label>
+<input
+  type="password"
+  id="loginPassword"
+  placeholder="Enter password"
+  autocomplete="current-password"
+  required
+>
 
       <label for="loginPassword">Password</label>
       <input
