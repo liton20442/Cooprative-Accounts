@@ -8007,14 +8007,15 @@ function removeUsernameSuggestion() {
         hiddenUsername = localStorage.getItem(HIDDEN_KEY) || "";
       } catch (error) {}
 
-      if (
-        !auth ||
-        !auth.username ||
-        auth.username === hiddenUsername
-      ) {
-        dropdown.style.display = "none";
-        return;
-      }
+     
+if (
+  !auth ||
+  !auth.username ||
+  localStorage.getItem(HIDDEN_KEY) === auth.username
+) {
+  dropdown.style.display = "none";
+  return;
+}
 
       const row = document.createElement("div");
       row.className = "username-option";
