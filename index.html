@@ -367,6 +367,27 @@ body.authenticated #loginScreen {
   }
 }
 
+.password-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.password-wrapper input {
+  flex: 1;
+  min-width: 0;
+}
+
+.password-toggle {
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #0f766e;
+  cursor: pointer;
+  font: inherit;
+}
+
    
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
@@ -395,7 +416,9 @@ body.authenticated #loginScreen {
   >
   <datalist id="loginUsernameOptions"></datalist>
 
-  <label for="loginPassword">Password</label>
+  
+<label for="loginPassword">Password</label>
+<div class="password-wrapper">
   <input
     type="password"
     id="loginPassword"
@@ -403,6 +426,13 @@ body.authenticated #loginScreen {
     autocomplete="current-password"
     required
   >
+  <button
+    type="button"
+    class="password-toggle"
+    onclick="toggleLoginPassword()"
+  >Show</button>
+</div>
+
 
   <p id="loginMessage" role="alert"></p>
 
@@ -7867,6 +7897,25 @@ if (usernameList) {
     });
   });
 })();
+</script>
+
+<script>
+function toggleLoginPassword() {
+  const password = document.getElementById("loginPassword");
+  const button = document.querySelector(
+    '#loginForm .password-toggle'
+  );
+
+  if (!password || !button) return;
+
+  if (password.type === "password") {
+    password.type = "text";
+    button.textContent = "Hide";
+  } else {
+    password.type = "password";
+    button.textContent = "Show";
+  }
+}
 </script>
 
 </body>
