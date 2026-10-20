@@ -434,6 +434,38 @@ body.authenticated #loginScreen {
 }
 
 
+/* Members table column widths */
+#memberTable {
+  font-size: 13px;
+}
+
+#members .table-wrap table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+#members .table-wrap th:nth-child(1),
+#members .table-wrap td:nth-child(1) {
+  width: 20%;
+}
+
+#members .table-wrap th:nth-child(2),
+#members .table-wrap td:nth-child(2) {
+  width: 35%;
+  overflow-wrap: anywhere;
+}
+
+#members .table-wrap th:nth-child(3),
+#members .table-wrap td:nth-child(3) {
+  width: 27%;
+  overflow-wrap: anywhere;
+}
+
+#members .table-wrap th:nth-child(4),
+#members .table-wrap td:nth-child(4) {
+  width: 18%;
+}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
