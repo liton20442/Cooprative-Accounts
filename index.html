@@ -380,51 +380,37 @@ body.authenticated #loginScreen {
     <h1>Cooperative Accounts</h1>
     <p id="loginSubtitle">Please login to continue</p>
 
-    <form id="loginForm">
-      <label for="loginUsername">Username</label>
-      <input
-        type="text"
-        
-<input
-  type="text"
-  
-<label for="loginUsername">Username</label>
-<input
-  type="text"
-  id="loginUsername"
-  list="loginUsernameOptions"
-  placeholder="Choose your username"
-  autocomplete="off"
-  autocapitalize="none"
-  spellcheck="false"
-  required
->
-<datalist id="loginUsernameOptions"></datalist>
+    
+<form id="loginForm">
+  <label for="loginUsername">Username</label>
+  <input
+    type="text"
+    id="loginUsername"
+    list="loginUsernameOptions"
+    placeholder="Choose your username"
+    autocomplete="off"
+    autocapitalize="none"
+    spellcheck="false"
+    required
+  >
+  <datalist id="loginUsernameOptions"></datalist>
 
-<label for="loginPassword">Password</label>
-<input
-  type="password"
-  id="loginPassword"
-  placeholder="Enter password"
-  autocomplete="current-password"
-  required
->
+  <label for="loginPassword">Password</label>
+  <input
+    type="password"
+    id="loginPassword"
+    placeholder="Enter password"
+    autocomplete="current-password"
+    required
+  >
 
-      <label for="loginPassword">Password</label>
-      <input
-        type="password"
-        id="loginPassword"
-        placeholder="Enter password"
-        autocomplete="current-password"
-        required
-      >
+  <p id="loginMessage" role="alert"></p>
 
-      <p id="loginMessage" role="alert"></p>
+  <button type="submit" id="loginButton">
+    Login
+  </button>
+</form>
 
-      <button type="submit" id="loginButton">
-        Login
-      </button>
-    </form>
   </div>
 </div>
 <!-- END LOGIN SCREEN -->
