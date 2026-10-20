@@ -488,10 +488,6 @@ body.authenticated #loginScreen {
   box-sizing: border-box;
 }
 
-/* TEMPORARILY HIDE LOGIN */
-#loginScreen {
-  display: none !important;
-}
 
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
@@ -7863,7 +7859,20 @@ function updateMode() {
     document.body.classList.remove("authenticated");
   }
 
-  document.addEventListener("DOMContentLoaded", setupLogin);
+ 
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.classList.add("authenticated");
+
+  const screen = document.getElementById("loginScreen");
+  if (screen) {
+    screen.style.display = "none";
+  }
+
+  if (typeof showPage === "function") {
+    showPage("dashboard");
+  }
+});
+
 })();
 </script>
 
