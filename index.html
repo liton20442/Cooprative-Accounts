@@ -384,7 +384,17 @@ body.authenticated #loginScreen {
       <label for="loginUsername">Username</label>
       <input
         type="text"
-        id="loginUsername"
+        
+<input
+  type="text"
+  id="loginUsername"
+  placeholder="Choose your username"
+  autocomplete="off"
+  autocapitalize="none"
+  spellcheck="false"
+  required
+>
+<datalist id="loginUsernameOptions"></datalist>
         placeholder="Enter username"
         autocomplete="username"
         required
@@ -474,9 +484,68 @@ body.authenticated #loginScreen {
 <button class="quick-btn q6" onclick="showPage('contra')"><span class="quick-icon">🔄</span>Bank Transfer</button>
 <button class="quick-btn q5" onclick="showPage('shareTransfer')"><span class="quick-icon">🔁</span>Share Transfer</button>
 <button class="quick-btn q9" onclick="showPage('withdrawal')"><span class="quick-icon">💳</span>Savings Withdrawal</button>
-   <button class="quick-btn q7" onclick="showPage('reports')"><span class="quick-icon">📊</span>Reports</button>
+<button class="quick-btn q7" onclick="showPage('reports')"><span class="quick-icon">📊</span>Reports</button>
+<button class="quick-btn q4" onclick="showPage('loginSettings')"><span class="quick-icon">🔐</span>Login Settings</button>
 </div>
 </section>
+
+<!-- LOGIN SETTINGS PAGE -->
+<section id="loginSettings" class="page">
+  <h1>Login Settings</h1>
+
+  <div class="card">
+    <h2>Change Username & Password</h2>
+    <p>Verify your current password before making changes.</p>
+
+    <form id="loginSettingsForm">
+      <label for="currentLoginPassword">Current Password</label>
+      <input
+        type="password"
+        id="currentLoginPassword"
+        autocomplete="current-password"
+        required
+      >
+
+      <label for="newLoginUsername">New Username</label>
+      <input
+        type="text"
+        id="newLoginUsername"
+        placeholder="Enter your own username"
+        autocomplete="off"
+        autocapitalize="none"
+        spellcheck="false"
+        required
+      >
+
+      <label for="newLoginPassword">New Password</label>
+      <input
+        type="password"
+        id="newLoginPassword"
+        placeholder="At least 6 characters"
+        autocomplete="new-password"
+        minlength="6"
+        required
+      >
+
+      <label for="confirmLoginPassword">Confirm New Password</label>
+      <input
+        type="password"
+        id="confirmLoginPassword"
+        autocomplete="new-password"
+        minlength="6"
+        required
+      >
+
+      <p id="loginSettingsMessage" role="alert"></p>
+
+      <button type="submit">Save Changes</button>
+      <button type="button" onclick="showPage('dashboard')">
+        Cancel
+      </button>
+    </form>
+  </div>
+</section>
+<!-- END LOGIN SETTINGS PAGE -->
 
 
 <section id="profitDistribution" class="page">
@@ -7547,26 +7616,39 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
       message.textContent = text;
     }
 
-    function updateMode() {
-      const auth = getAuth();
-      const firstSetup = !auth;
+   
+function updateMode() {
+  const auth = getAuth();
+  const firstSetup = !auth;
 
-      subtitle.textContent = firstSetup
-        ? "Create your first login"
-        : "Please login to continue";
+  subtitle.textContent = firstSetup
+    ? "Create your first login"
+    : "Please login to continue";
 
-      button.textContent = firstSetup ? "Create Login" : "Login";
+  button.textContent = firstSetup
+    ? "Create Login"
+    : "Login";
 
-      usernameInput.autocomplete = firstSetup
-        ? "username"
-        : "username";
+  usernameInput.setAttribute("autocomplete", "off");
+  passwordInput.autocomplete = firstSetup
+    ? "new-password"
+    : "current-password";
 
-      passwordInput.autocomplete = firstSetup
-        ? "new-password"
-        : "current-password";
+  passwordInput.minLength = firstSetup ? 6 : 1;
 
-      passwordInput.minLength = firstSetup ? 6 : 1;
+  const usernameList =
+    document.getElementById("loginUsernameOptions");
+
+  if (usernameList) {
+    usernameList.replaceChildren();
+
+    if (auth && auth.username) {
+      const option = document.createElement("option");
+      option.value = auth.username;
+      usernameList.appendChild(option);
     }
+  }
+}
 
     form.addEventListener("submit", async function (event) {
       event.preventDefault();
@@ -7669,6 +7751,126 @@ function logoutApp() {
     showPage("dashboard");
   }
 }
+</script>
+
+<script>
+/* Login Settings: change username and password */
+(function () {
+  const AUTH_KEY = "cooperativeAccountsAuthV1";
+
+  async function hashLoginSettingsPassword(password) {
+    if (!window.crypto || !window.crypto.subtle) {
+      throw new Error("Please open the app using HTTPS.");
+    }
+
+    const data = new TextEncoder().encode(password);
+    const hash = await crypto.subtle.digest("SHA-256", data);
+
+    return Array.from(new Uint8Array(hash))
+      .map(function (byte) {
+        return byte.toString(16).padStart(2, "0");
+      })
+      .join("");
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("loginSettingsForm");
+    if (!form) return;
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const message = document.getElementById("loginSettingsMessage");
+      const currentPassword =
+        document.getElementById("currentLoginPassword").value;
+      const newUsername =
+        document.getElementById("newLoginUsername").value.trim();
+      const newPassword =
+        document.getElementById("newLoginPassword").value;
+      const confirmPassword =
+        document.getElementById("confirmLoginPassword").value;
+      const submitButton = form.querySelector(
+        'button[type="submit"]'
+      );
+
+      message.style.color = "#b91c1c";
+      message.textContent = "";
+
+      if (!newUsername) {
+        message.textContent = "Enter a new username.";
+        return;
+      }
+
+      if (newPassword.length < 6) {
+        message.textContent =
+          "New password must be at least 6 characters.";
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        message.textContent = "New passwords do not match.";
+        return;
+      }
+
+      let auth;
+
+      try {
+        auth = JSON.parse(
+          localStorage.getItem(AUTH_KEY) || "null"
+        );
+      } catch (error) {
+        auth = null;
+      }
+
+      if (!auth || !auth.passwordHash) {
+        message.textContent = "Login information was not found.";
+        return;
+      }
+
+      submitButton.disabled = true;
+
+      try {
+        const currentHash =
+          await hashLoginSettingsPassword(currentPassword);
+
+        if (currentHash !== auth.passwordHash) {
+          message.textContent = "Current password is incorrect.";
+          return;
+        }
+
+        const newHash =
+          await hashLoginSettingsPassword(newPassword);
+
+        localStorage.setItem(
+          AUTH_KEY,
+          JSON.stringify({
+            username: newUsername,
+            passwordHash: newHash
+          })
+        );
+const usernameList =
+  document.getElementById("loginUsernameOptions");
+
+if (usernameList) {
+  usernameList.replaceChildren();
+
+  const option = document.createElement("option");
+  option.value = newUsername;
+  usernameList.appendChild(option);
+}
+        form.reset();
+        message.style.color = "#0f766e";
+        message.textContent =
+          "Username and password changed successfully.";
+      } catch (error) {
+        message.textContent =
+          error.message || "Could not save the changes.";
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+  });
+})();
 </script>
 
 </body>
