@@ -8008,7 +8008,11 @@ function removeUsernameSuggestion() {
       } catch (error) {}
 
      
-if (!auth || !auth.username) {
+if (
+  !auth ||
+  !auth.username ||
+  localStorage.getItem(HIDDEN_KEY) === auth.username
+) {
   dropdown.style.display = "none";
   return;
 }
@@ -8046,13 +8050,13 @@ if (!auth || !auth.username) {
       dropdown.style.display = "block";
     }
 
-    input.addEventListener("focus", function () {
-  localStorage.removeItem(HIDDEN_KEY);
-  renderUsername();
-});
+    input.addEventListener("focus", renderUsername);
+input.addEventListener("click", renderUsername);
 
-input.addEventListener("click", function () {
-  localStorage.removeItem(HIDDEN_KEY);
+input.addEventListener("input", function () {
+  if (input.value.trim() !== "") {
+    localStorage.removeItem(HIDDEN_KEY);
+  }
   renderUsername();
 });
     input.addEventListener("click", renderUsername);
