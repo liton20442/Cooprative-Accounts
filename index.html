@@ -541,6 +541,23 @@ body.authenticated #loginScreen {
     box-sizing: border-box !important;
   }
 }
+/* Laptop - Member Balance History input widths */
+@media screen and (min-width: 700px) {
+  #balanceHistory .form-grid {
+    grid-template-columns: 320px 200px !important;
+  }
+
+  #balanceHistory .form-grid .field {
+    min-width: 0;
+  }
+
+  #balanceHistory .form-grid select {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+   
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
