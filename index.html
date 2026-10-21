@@ -634,7 +634,7 @@ body.authenticated #loginScreen {
 @media screen and (min-width: 700px) {
   #collection .form-grid {
   grid-template-columns: 170px 170px 170px !important;
-    column-gap: 20px !important;
+    column-gap: 12px !important;
     row-gap: 10px !important;
     justify-content: start !important;
   }
@@ -648,7 +648,7 @@ body.authenticated #loginScreen {
     max-width: 170px;
   }
 }
-   /* Laptop - Collection top row spacing */
+  /* Laptop - Collection top row spacing fix */
 @media screen and (min-width: 700px) {
   #collection .form-grid {
     column-gap: 24px !important;
@@ -657,8 +657,19 @@ body.authenticated #loginScreen {
   #collection .form-grid > .field:has(#collectionMember),
   #collection .form-grid > .field:has(#collectionCollector),
   #collection .form-grid > .field:has(#collectionDate) {
-    margin-right: 0 !important;
+    width: 170px !important;
+    max-width: 170px !important;
     min-width: 0 !important;
+    justify-self: start !important;
+    box-sizing: border-box !important;
+  }
+
+  #collection #collectionMember,
+  #collection #collectionCollector,
+  #collection #collectionDate {
+    width: 170px !important;
+    max-width: 170px !important;
+    box-sizing: border-box !important;
   }
 }
 </style>
