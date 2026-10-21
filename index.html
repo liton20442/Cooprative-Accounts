@@ -567,7 +567,23 @@ body.authenticated #loginScreen {
     box-sizing: border-box;
   }
 }
-   
+
+   /* Laptop - Collection Amount Fields */
+@media screen and (min-width: 700px) {
+  #collection #colShare,
+  #collection #colSavings,
+  #collection #colInstallment,
+  #collection #colAdmission,
+  #collection #colPassbook,
+  #collection #colInsurance,
+  #collection #colLoanForm,
+  #collection #colOther {
+    width: 140px !important;
+    max-width: 140px !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
