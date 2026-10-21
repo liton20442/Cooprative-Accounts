@@ -531,6 +531,16 @@ body.authenticated #loginScreen {
     box-sizing: border-box;
   }
 }
+   /* Laptop Member Search width fix */
+@media screen and (min-width: 700px) {
+  #members .card .search-row input#memberSearch {
+    width: 300px !important;
+    max-width: 300px !important;
+    min-width: 0 !important;
+    flex: 0 0 300px !important;
+    box-sizing: border-box !important;
+  }
+}
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
