@@ -648,6 +648,19 @@ body.authenticated #loginScreen {
     max-width: 170px;
   }
 }
+   /* Laptop - Collection top row spacing */
+@media screen and (min-width: 700px) {
+  #collection .form-grid {
+    column-gap: 24px !important;
+  }
+
+  #collection .form-grid > .field:has(#collectionMember),
+  #collection .form-grid > .field:has(#collectionCollector),
+  #collection .form-grid > .field:has(#collectionDate) {
+    margin-right: 0 !important;
+    min-width: 0 !important;
+  }
+}
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
