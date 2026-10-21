@@ -498,7 +498,20 @@ body.authenticated #loginScreen {
     gap: 12px;
   }
 }
+/* Mobile field order */
+@media (max-width: 699px) {
+  #members .form-grid > .field:nth-child(1) {
+    order: 1;
+  }
 
+  #members .form-grid > .field:nth-child(2) {
+    order: 3;
+  }
+
+  #members .form-grid > .field:nth-child(3) {
+    order: 2;
+  }
+}
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
