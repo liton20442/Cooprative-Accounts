@@ -630,18 +630,13 @@ body.authenticated #loginScreen {
   }
 }
    
-/* Laptop - Collection equal column gaps */
+/* Laptop - Collection compact columns */
 @media screen and (min-width: 700px) {
   #collection .form-grid {
-    column-gap: 6px !important;
-    row-gap: 8px !important;
+    grid-template-columns: 140px 140px 140px !important;
+    column-gap: 12px !important;
+    row-gap: 10px !important;
     justify-content: start !important;
-    justify-items: start !important;
-  }
-
-  #collection .form-grid > .field {
-    margin: 0 !important;
-    min-width: 0 !important;
   }
 }
 </style>
