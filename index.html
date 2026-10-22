@@ -1303,6 +1303,63 @@ main {
 /* Settings form should remain compact */
 #loginSettingsForm { width: 100%; max-width: 520px; }
 #loginSettingsForm input { width: 100%; box-sizing: border-box; }
+
+
+/* FINAL DASHBOARD VISUAL FIX: intentionally high-specificity overrides */
+#dashboard .dashboard-grid .stat-card {
+  border: 1px solid rgba(255,255,255,.35) !important;
+  border-radius: 15px !important;
+  box-shadow: 0 5px 14px rgba(15,23,42,.13) !important;
+  padding: 15px 16px !important;
+  min-width: 0 !important;
+}
+#dashboard .dashboard-grid .stat-card .label {
+  color: #ffffff !important;
+  font-weight: 750 !important;
+  line-height: 1.3 !important;
+}
+#dashboard .dashboard-grid .stat-card .value {
+  color: #ffffff !important;
+  font-weight: 850 !important;
+  line-height: 1.2 !important;
+}
+#dashboard .dashboard-grid .stat-card.c1 { background: linear-gradient(135deg,#0f766e,#14b8a6) !important; }
+#dashboard .dashboard-grid .stat-card.c2 { background: linear-gradient(135deg,#15803d,#4ade80) !important; }
+#dashboard .dashboard-grid .stat-card.c3 { background: linear-gradient(135deg,#1d4ed8,#38bdf8) !important; }
+#dashboard .dashboard-grid .stat-card.c4 { background: linear-gradient(135deg,#6d28d9,#a78bfa) !important; }
+#dashboard .dashboard-grid .stat-card.c5 { background: linear-gradient(135deg,#0e7490,#22d3ee) !important; }
+#dashboard .dashboard-grid .stat-card.c6 { background: linear-gradient(135deg,#b45309,#fbbf24) !important; }
+#dashboard .dashboard-grid .stat-card.c7 { background: linear-gradient(135deg,#334155,#64748b) !important; }
+#dashboard .dashboard-grid .stat-card.c8 { background: linear-gradient(135deg,#be123c,#fb7185) !important; }
+#dashboard .dashboard-grid .profit-stat-card .profit-breakdown,
+#dashboard .dashboard-grid .profit-stat-card .profit-breakdown b { color: #ffffff !important; }
+#dashboard .quick-grid .quick-btn {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  border: 1px solid rgba(255,255,255,.35) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 5px 13px rgba(15,23,42,.14) !important;
+}
+#dashboard .quick-grid .quick-btn.q1 { background: linear-gradient(135deg,#0f766e,#0e7490) !important; }
+#dashboard .quick-grid .quick-btn.q2 { background: linear-gradient(135deg,#15803d,#16a34a) !important; }
+#dashboard .quick-grid .quick-btn.q3 { background: linear-gradient(135deg,#1d4ed8,#2563eb) !important; }
+#dashboard .quick-grid .quick-btn.q4 { background: linear-gradient(135deg,#6d28d9,#7c3aed) !important; }
+#dashboard .quick-grid .quick-btn.q5 { background: linear-gradient(135deg,#0e7490,#0891b2) !important; }
+#dashboard .quick-grid .quick-btn.q6 { background: linear-gradient(135deg,#b45309,#d97706) !important; }
+#dashboard .quick-grid .quick-btn.q7 { background: linear-gradient(135deg,#334155,#475569) !important; }
+#dashboard .quick-grid .quick-btn.q8 { background: linear-gradient(135deg,#7e22ce,#9333ea) !important; }
+#dashboard .quick-grid .quick-btn.q9 { background: linear-gradient(135deg,#b91c1c,#dc2626) !important; }
+#dashboard > h2 { color: #0f766e !important; border-left-color: #0f766e !important; }
+@media (min-width: 900px) {
+  #dashboard .dashboard-grid { grid-template-columns: repeat(4,minmax(0,1fr)) !important; gap: 15px !important; }
+  #dashboard .quick-grid { grid-template-columns: repeat(5,minmax(0,1fr)) !important; gap: 14px !important; }
+}
+@media (max-width: 620px) {
+  #dashboard .dashboard-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 9px !important; }
+  #dashboard .quick-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 9px !important; }
+  #dashboard .dashboard-grid .stat-card { padding: 10px !important; }
+}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
