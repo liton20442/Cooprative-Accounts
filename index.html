@@ -1055,6 +1055,85 @@ footer {
   }
 }
 
+
+/* ===== Final page layout consistency fixes ===== */
+.app {
+  max-width: 1400px;
+}
+
+/* Keep desktop forms aligned and prevent fields stretching across the page. */
+@media (min-width: 900px) {
+  .form-grid {
+    grid-template-columns: repeat(3, minmax(0, 260px));
+    justify-content: start;
+    align-items: start;
+    gap: 16px;
+  }
+}
+
+@media (min-width: 621px) and (max-width: 899px) {
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 260px));
+    justify-content: start;
+    align-items: start;
+    gap: 14px;
+  }
+}
+
+.form-grid > .field {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Standalone selectors and settings forms should also have a comfortable width. */
+.page > .card > .field {
+  width: 100%;
+  max-width: 420px;
+}
+
+#loginSettingsForm {
+  max-width: 520px;
+}
+
+#loginSettingsForm input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Restore the intended colorful quick-action buttons. */
+.quick-btn.q1 { background: #0f766e; color: #fff; border-color: #0f766e; }
+.quick-btn.q2 { background: #16a34a; color: #fff; border-color: #16a34a; }
+.quick-btn.q3 { background: #2563eb; color: #fff; border-color: #2563eb; }
+.quick-btn.q4 { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+.quick-btn.q5 { background: #0891b2; color: #fff; border-color: #0891b2; }
+.quick-btn.q6 { background: #d97706; color: #fff; border-color: #d97706; }
+.quick-btn.q7 { background: #475569; color: #fff; border-color: #475569; }
+.quick-btn.q8 { background: #9333ea; color: #fff; border-color: #9333ea; }
+.quick-btn.q9 { background: #dc2626; color: #fff; border-color: #dc2626; }
+
+.quick-btn:hover {
+  color: #fff;
+  filter: brightness(1.06);
+}
+
+/* Keep form cards and history/table cards visually consistent. */
+.page > .card {
+  min-width: 0;
+}
+.table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
