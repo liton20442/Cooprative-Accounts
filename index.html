@@ -674,6 +674,32 @@ body.authenticated #loginScreen {
     box-sizing: border-box !important;
   }
 }
+   
+/* Collection page - Laptop first row */
+@media screen and (min-width: 700px) {
+  #collection .form-grid {
+    grid-template-columns: 220px 220px 220px !important;
+    gap: 16px !important;
+    justify-content: start !important;
+  }
+
+  #collection .form-grid > .field.full {
+    grid-column: auto !important;
+    width: 220px !important;
+    min-width: 0 !important;
+  }
+
+  #collection .form-grid > .field {
+    min-width: 0 !important;
+  }
+
+  #collection .form-grid select,
+  #collection .form-grid input {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
