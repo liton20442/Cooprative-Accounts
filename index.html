@@ -630,81 +630,12 @@ body.authenticated #loginScreen {
   }
 }
    
-/* Laptop - Collection compact columns */
-@media screen and (min-width: 700px) {
-  #collection .form-grid {
-  grid-template-columns: 170px 170px 170px !important;
-    column-gap: 12px !important;
-    row-gap: 10px !important;
-    justify-content: start !important;
-  }
-}
-   /* Laptop - Member & Collector same row */
-@media screen and (min-width: 700px) {
-  #collection .form-grid > .field:has(#collectionMember),
-  #collection .form-grid > .field:has(#collectionCollector) {
-    grid-column: auto !important;
-    width: 170px;
-    max-width: 170px;
-  }
-}
-/* Laptop - Collection top row layout */
-@media screen and (min-width: 700px) {
-  #collection .form-grid {
-    grid-template-columns: 170px 170px 170px !important;
-    column-gap: 24px !important;
-    row-gap: 10px !important;
-    justify-content: start !important;
-  }
 
-  #collection .form-grid > .field.full:has(#collectionMember),
-  #collection .form-grid > .field.full:has(#collectionCollector) {
-    grid-column: auto !important;
-    width: 170px !important;
-    max-width: 170px !important;
-    min-width: 0 !important;
-  }
-
-  #collection #collectionMember,
-  #collection #collectionCollector,
-  #collection #collectionDate {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-  }
-}
-   
-/* Collection page - Laptop first row */
+/* Laptop - Collection form layout */
 @media screen and (min-width: 700px) {
   #collection .form-grid {
     grid-template-columns: 220px 220px 220px !important;
-    gap: 16px !important;
-    justify-content: start !important;
-  }
-
-  #collection .form-grid > .field.full {
-    grid-column: auto !important;
-    width: 220px !important;
-    min-width: 0 !important;
-  }
-
-  #collection .form-grid > .field {
-    min-width: 0 !important;
-  }
-
-  #collection .form-grid select,
-  #collection .form-grid input {
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-}
-
-/* Collection - laptop spacing correction */
-@media screen and (min-width: 700px) {
-  #collection .form-grid {
-    grid-template-columns: 220px 220px 220px !important;
-    column-gap: 24px !important;
+    column-gap: 20px !important;
     row-gap: 12px !important;
     justify-content: start !important;
     align-items: start !important;
@@ -713,12 +644,10 @@ body.authenticated #loginScreen {
   #collection .form-grid > .field.full:has(#collectionMember),
   #collection .form-grid > .field.full:has(#collectionCollector) {
     grid-column: auto !important;
-    width: 220px !important;
-    min-width: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
   }
 
+  #collection .form-grid > .field:has(#collectionMember),
+  #collection .form-grid > .field:has(#collectionCollector),
   #collection .form-grid > .field:has(#collectionDate) {
     width: 220px !important;
     min-width: 0 !important;
@@ -729,14 +658,13 @@ body.authenticated #loginScreen {
   #collection #collectionMember,
   #collection #collectionCollector,
   #collection #collectionDate {
-    display: block !important;
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
-    margin: 0 !important;
     box-sizing: border-box !important;
   }
 }
+
 
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
