@@ -700,6 +700,44 @@ body.authenticated #loginScreen {
   }
 }
 
+/* Collection - laptop spacing correction */
+@media screen and (min-width: 700px) {
+  #collection .form-grid {
+    grid-template-columns: 220px 220px 220px !important;
+    column-gap: 24px !important;
+    row-gap: 12px !important;
+    justify-content: start !important;
+    align-items: start !important;
+  }
+
+  #collection .form-grid > .field.full:has(#collectionMember),
+  #collection .form-grid > .field.full:has(#collectionCollector) {
+    grid-column: auto !important;
+    width: 220px !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  #collection .form-grid > .field:has(#collectionDate) {
+    width: 220px !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  #collection #collectionMember,
+  #collection #collectionCollector,
+  #collection #collectionDate {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
