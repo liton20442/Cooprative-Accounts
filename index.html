@@ -624,28 +624,56 @@ body.authenticated #loginScreen {
    
 
 /* Laptop - Collection form layout */
+
+/* Laptop - Collection form layout */
 @media screen and (min-width: 700px) {
   #collection .form-grid {
-    grid-template-columns: repeat(4, minmax(0, 140px)) !important;
+    grid-template-columns: repeat(3, minmax(0, 220px)) !important;
     column-gap: 10px !important;
     row-gap: 12px !important;
     justify-content: start !important;
     align-items: start !important;
   }
 
-  
-  #collection .form-grid > .field:has(#collectionMember),
-  #collection .form-grid > .field:has(#collectionCollector),
-  #collection .form-grid > .field:has(#collectionDate) {
+  #collection .collection-top-field {
+    grid-column: auto !important;
     width: 220px !important;
     min-width: 0 !important;
     margin: 0 !important;
     box-sizing: border-box !important;
   }
 
-  #collection #collectionMember,
-  #collection #collectionCollector,
-  #collection #collectionDate {
+  #collection .collection-top-field select,
+  #collection .collection-top-field input {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  #collection .form-grid > .field:has(#colShare),
+  #collection .form-grid > .field:has(#colSavings),
+  #collection .form-grid > .field:has(#colInstallment),
+  #collection .form-grid > .field:has(#colAdmission),
+  #collection .form-grid > .field:has(#colPassbook),
+  #collection .form-grid > .field:has(#colInsurance),
+  #collection .form-grid > .field:has(#colLoanForm),
+  #collection .form-grid > .field:has(#colOther) {
+    grid-column: auto !important;
+    width: 140px !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  #collection #colShare,
+  #collection #colSavings,
+  #collection #colInstallment,
+  #collection #colAdmission,
+  #collection #colPassbook,
+  #collection #colInsurance,
+  #collection #colLoanForm,
+  #collection #colOther {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
@@ -653,6 +681,26 @@ body.authenticated #loginScreen {
   }
 }
 
+
+/* Collection amount fields - 2 rows on laptop */
+@media screen and (min-width: 700px) {
+  #collection .form-grid {
+    grid-template-columns: repeat(3, 220px) !important;
+  }
+
+  #collection .form-grid > .field:has(#colShare),
+  #collection .form-grid > .field:has(#colSavings),
+  #collection .form-grid > .field:has(#colInstallment),
+  #collection .form-grid > .field:has(#colAdmission),
+  #collection .form-grid > .field:has(#colPassbook),
+  #collection .form-grid > .field:has(#colInsurance),
+  #collection .form-grid > .field:has(#colLoanForm),
+  #collection .form-grid > .field:has(#colOther) {
+    grid-column: auto !important;
+    width: 140px !important;
+    min-width: 0 !important;
+  }
+}
 
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
