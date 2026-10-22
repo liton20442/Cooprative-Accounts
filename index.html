@@ -1660,6 +1660,78 @@ main {
   #members .table-wrap table { min-width:480px; }
 }
 
+
+/* Compact refinement for Members page */
+#members .card {
+  padding: 15px 17px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+}
+#members .card:first-of-type {
+  max-width: 760px;
+  box-sizing: border-box;
+}
+#members .card:nth-of-type(2) {
+  max-width: 1050px;
+  box-sizing: border-box;
+}
+#members .form-grid {
+  gap: 10px !important;
+  max-width: 100%;
+}
+#members .form-grid > .field { min-width: 0; }
+#members .field label {
+  margin-bottom: 5px;
+  font-size: 12px;
+}
+#members .form-grid input {
+  min-height: 38px;
+  padding: 8px 10px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+#members .actions {
+  margin-top: 12px;
+  padding-top: 11px;
+  gap: 8px;
+}
+#members .actions button {
+  min-height: 36px;
+  padding: 7px 14px;
+  font-size: 13px;
+}
+#members .card h2 {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+#members .search-row { margin-bottom: 11px; }
+#members .search-row input#memberSearch {
+  min-height: 37px;
+  padding: 8px 10px;
+  max-width: 310px !important;
+  flex: 0 1 310px !important;
+  font-size: 13px;
+}
+#members .table-wrap thead th { padding: 10px 10px; }
+#members .table-wrap tbody td { padding: 9px 10px; }
+@media (min-width: 700px) {
+  #members .form-grid {
+    grid-template-columns: 135px minmax(190px, 1.2fr) minmax(170px, 1fr) !important;
+    gap: 12px !important;
+  }
+}
+@media (max-width: 699px) {
+  #members .card:first-of-type,
+  #members .card:nth-of-type(2) { max-width: 100%; }
+  #members .card { padding: 13px; }
+  #members .form-grid { gap: 9px !important; }
+  #members .form-grid input { min-height: 39px; }
+  #members .search-row input#memberSearch {
+    width: 100% !important; max-width: 100% !important; flex: 1 1 100% !important;
+  }
+  #members .table-wrap th, #members .table-wrap td { padding: 8px 7px; }
+}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
