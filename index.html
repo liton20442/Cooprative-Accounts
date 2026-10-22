@@ -1861,6 +1861,37 @@ body.column-resizing,body.column-resizing *{cursor:col-resize!important;user-sel
 .ca-resize-target.ca-resize-card{min-width:180px;min-height:90px;}
 body.ca-element-resizing,body.ca-element-resizing *{user-select:none!important;}
 body.ca-element-resizing{cursor:nwse-resize!important;}
+
+/* Member entry: keep fields and action buttons in one compact row on desktop */
+@media (min-width: 700px) {
+  #members .card:first-of-type { margin-bottom: 8px !important; }
+  #members .card:first-of-type .form-grid {
+    display: grid !important;
+    grid-template-columns: minmax(125px, 170px) minmax(180px, 1fr) minmax(170px, 220px) auto !important;
+    align-items: end;
+    column-gap: 10px !important;
+    row-gap: 6px !important;
+  }
+  #members .member-entry-actions {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: end;
+    gap: 6px !important;
+    margin: 0 !important;
+    white-space: nowrap;
+  }
+  #members .member-entry-actions button {
+    min-height: 40px !important;
+    padding: 8px 12px !important;
+    white-space: nowrap;
+  }
+}
+#members .card { margin-bottom: 8px; }
+#members .card h2 { margin-top: 8px; }
+@media (max-width: 699px) {
+  #members .member-entry-actions { margin-top: 2px !important; }
+}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -2122,12 +2153,11 @@ body.ca-element-resizing{cursor:nwse-resize!important;}
 <label>Mobile Number</label>
 <input id="memberMobile" autocomplete="off">
 </div>
-   
-</div>
 
-<div class="actions">
-<button class="btn-green" onclick="saveMember()">Save Member</button>
+<div class="actions member-entry-actions">
+<button class="btn-green" onclick="saveMember()">Save</button>
 <button class="btn-secondary" onclick="clearMemberForm()">Clear</button>
+</div>
 </div>
 </div>
 
