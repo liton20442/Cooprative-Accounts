@@ -1520,6 +1520,146 @@ main {
 #dashboard .quick-label { min-width:0; flex:1; }
 @media (min-width:621px) and (max-width:1000px) { #dashboard .quick-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 12px; } }
 @media (max-width:620px) { #dashboard .quick-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 10px; } #dashboard .quick-btn { min-height:58px; padding:10px 4px; gap:8px; font-size:12px; } #dashboard .quick-icon-wrap { flex-basis:24px; width:24px; height:24px; } #dashboard .quick-icon-wrap svg { width:21px; height:21px; } }
+
+
+/* Members page — refined professional layout; functionality unchanged */
+#members > h1 {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+  letter-spacing:-.35px;
+}
+#members > h1::before {
+  content:"";
+  display:inline-block;
+  width:4px;
+  height:27px;
+  border-radius:4px;
+  background:#0f766e;
+}
+#members .card {
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  box-shadow:0 3px 12px rgba(15,23,42,.045);
+  padding:20px;
+  margin-bottom:18px;
+  background:#fff;
+}
+#members .card:first-of-type {
+  border-top:3px solid #0f766e;
+}
+#members .form-grid {
+  max-width:100%;
+  gap:16px;
+  align-items:end;
+}
+#members .field label {
+  display:block;
+  margin-bottom:7px;
+  color:#374151;
+  font-size:13px;
+  font-weight:650;
+  letter-spacing:.1px;
+}
+#members .form-grid input,
+#members .search-row input#memberSearch {
+  min-height:43px;
+  padding:10px 12px;
+  border:1px solid #d1d5db;
+  border-radius:9px;
+  background:#fff;
+  color:#111827;
+  font-size:14px;
+  transition:border-color .18s ease, box-shadow .18s ease;
+}
+#members .form-grid input:focus,
+#members .search-row input#memberSearch:focus {
+  outline:none;
+  border-color:#0f766e;
+  box-shadow:0 0 0 3px rgba(15,118,110,.11);
+}
+#members .actions {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:18px;
+  padding-top:15px;
+  border-top:1px solid #f0f2f4;
+}
+#members .actions button {
+  min-height:40px;
+  border-radius:9px;
+  padding:9px 18px;
+  font-weight:600;
+}
+#members .card h2 {
+  margin:0 0 15px;
+  font-size:17px;
+  font-weight:700;
+  color:#111827;
+}
+#members .search-row {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:16px;
+}
+#members .search-row input#memberSearch {
+  width:min(100%,380px) !important;
+  max-width:380px !important;
+  min-width:0 !important;
+  flex:1 1 280px !important;
+  box-sizing:border-box !important;
+}
+#members .table-wrap {
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  overflow:auto;
+  background:#fff;
+}
+#members .table-wrap table {
+  border-collapse:separate;
+  border-spacing:0;
+  margin:0;
+}
+#members .table-wrap thead th {
+  background:#f8fafc;
+  color:#475569;
+  font-size:12px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.35px;
+  padding:13px 12px;
+  border-bottom:1px solid #e2e8f0;
+}
+#members .table-wrap tbody td {
+  padding:12px;
+  border-bottom:1px solid #eef2f6;
+  vertical-align:middle;
+  line-height:1.45;
+}
+#members .table-wrap tbody tr:last-child td { border-bottom:0; }
+#members .table-wrap tbody tr:hover td { background:#fbfdfd; }
+#members .table-wrap td:first-child { font-weight:650; color:#0f766e; }
+@media (min-width:700px) {
+  #members .form-grid {
+    grid-template-columns:minmax(150px, .7fr) minmax(220px, 1.2fr) minmax(200px, 1fr) !important;
+    gap:18px;
+  }
+}
+@media (max-width:699px) {
+  #members .card { padding:15px; border-radius:12px; }
+  #members .form-grid { max-width:100%; gap:13px; }
+  #members .form-grid input { min-height:44px; }
+  #members .actions { gap:8px; }
+  #members .actions button { flex:1 1 auto; }
+  #members .search-row input#memberSearch { width:100% !important; max-width:100% !important; flex-basis:100% !important; }
+  #members .table-wrap th, #members .table-wrap td { padding:10px 8px; }
+  #members .table-wrap table { min-width:480px; }
+}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
