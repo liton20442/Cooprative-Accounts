@@ -1845,6 +1845,12 @@ main {
   #members > .card:nth-of-type(2) .table-wrap tbody td { padding: 5px 6px !important; font-size: 12px !important; }
   #members > .card:nth-of-type(2) .table-wrap thead th { padding: 5px 6px !important; }
 }
+
+/* Resizable columns: drag a table header's right edge */
+.table-col-resize-handle{position:absolute;top:0;right:-3px;width:7px;height:100%;cursor:col-resize;z-index:5;touch-action:none;user-select:none}
+.table-col-resize-handle:hover,.table-col-resize-handle.dragging{background:rgba(15,118,110,.35)}
+th.resizable-col{position:relative!important}
+body.column-resizing,body.column-resizing *{cursor:col-resize!important;user-select:none!important}
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -9487,5 +9493,72 @@ input.addEventListener("input", function () {
 })();
 </script>
 
+<script>
+/* Enable mouse-drag column resizing on every table, including tables rendered later. */
+(function(){
+  const MIN_COL_WIDTH = 48;
+  function setupTable(table){
+    if(!table || table.dataset.columnResizeReady === '1') return;
+    const headRow = table.tHead && table.tHead.rows.length ? table.tHead.rows[0] : table.querySelector('tr');
+    if(!headRow) return;
+    const headers = Array.from(headRow.cells);
+    if(headers.length < 2) return;
+    table.dataset.columnResizeReady = '1';
+    const key = 'caTableColumnWidthsV1:' + (table.id || table.getAttribute('data-table-key') ||
+      (table.closest('.page')?.id || 'table') + ':' + Array.from(document.querySelectorAll('table')).indexOf(table));
+    let colgroup = table.querySelector(':scope > colgroup');
+    if(!colgroup){
+      colgroup = document.createElement('colgroup');
+      table.insertBefore(colgroup, table.firstChild);
+    }
+    while(colgroup.children.length < headers.length) colgroup.appendChild(document.createElement('col'));
+    while(colgroup.children.length > headers.length) colgroup.lastElementChild.remove();
+    const saved = (()=>{try{return JSON.parse(localStorage.getItem(key)||'null')}catch(e){return null}})();
+    headers.forEach((th,i)=>{
+      const col=colgroup.children[i];
+      const measured=Math.round(th.getBoundingClientRect().width || 100);
+      const width=(saved && Number(saved[i])>=MIN_COL_WIDTH) ? Number(saved[i]) : measured;
+      col.style.width=width+'px';
+      th.classList.add('resizable-col');
+      if(th.querySelector('.table-col-resize-handle')) return;
+      const handle=document.createElement('span');
+      handle.className='table-col-resize-handle';
+      handle.title='Drag to change column width';
+      handle.setAttribute('aria-label','Resize column');
+      handle.addEventListener('mousedown',function(e){
+        if(e.button!==0) return;
+        e.preventDefault(); e.stopPropagation();
+        const startX=e.clientX;
+        const startWidth=col.getBoundingClientRect().width;
+        document.body.classList.add('column-resizing');
+        handle.classList.add('dragging');
+        function move(ev){
+          const next=Math.max(MIN_COL_WIDTH,Math.round(startWidth+ev.clientX-startX));
+          col.style.width=next+'px';
+          table.style.width='max-content';
+          table.style.minWidth='100%';
+        }
+        function up(){
+          document.body.classList.remove('column-resizing'); handle.classList.remove('dragging');
+          document.removeEventListener('mousemove',move); document.removeEventListener('mouseup',up);
+          try{localStorage.setItem(key,JSON.stringify(Array.from(colgroup.children).map(c=>Math.round(c.getBoundingClientRect().width))))}catch(e){}
+        }
+        document.addEventListener('mousemove',move); document.addEventListener('mouseup',up);
+      });
+      th.appendChild(handle);
+    });
+  }
+  function scan(root){
+    if(root && root.matches && root.matches('table')) setupTable(root);
+    if(root && root.querySelectorAll) root.querySelectorAll('table').forEach(setupTable);
+  }
+  function start(){
+    scan(document);
+    const observer=new MutationObserver(records=>records.forEach(r=>r.addedNodes.forEach(n=>{if(n.nodeType===1) scan(n)})));
+    observer.observe(document.body,{childList:true,subtree:true});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
+})();
+</script>
 </body>
 </html>
