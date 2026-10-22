@@ -1737,6 +1737,34 @@ main {
   #members .table-wrap th, #members .table-wrap td { padding: 8px 7px; }
 }
 
+/* Member list: use full available screen width and compact standard rows */
+#members .card:nth-of-type(2) {
+  width: 100% !important;
+  max-width: none !important;
+  box-sizing: border-box;
+}
+#members .card:nth-of-type(2) .table-wrap {
+  width: 100%;
+  max-width: 100%;
+}
+#members .table-wrap thead th {
+  padding: 8px 9px !important;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+#members .table-wrap tbody td {
+  padding: 6px 9px !important;
+  line-height: 1.25 !important;
+  vertical-align: middle;
+}
+#members .table-wrap tbody tr { height: 36px; }
+@media (max-width: 699px) {
+  #members .card:nth-of-type(2) { width: 100% !important; max-width: none !important; }
+  #members .table-wrap table { min-width: 500px !important; }
+  #members .table-wrap thead th { padding: 7px 7px !important; }
+  #members .table-wrap tbody td { padding: 6px 7px !important; }
+}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
