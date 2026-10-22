@@ -1303,79 +1303,169 @@ main {
 /* Settings form should remain compact */
 #loginSettingsForm { width: 100%; max-width: 520px; }
 #loginSettingsForm input { width: 100%; box-sizing: border-box; }
+
+
+/* ===== Dashboard Professional Layout v1 (Dashboard only) ===== */
+#dashboard { max-width: 1500px; margin: 0 auto; }
+#dashboard > h1 {
+  margin: 0 0 20px;
+  padding: 0 0 13px;
+  color: #123f46;
+  font-size: clamp(25px, 2.2vw, 32px);
+  font-weight: 850;
+  letter-spacing: -.5px;
+  border-bottom: 1px solid #d8e5e9;
+}
+#dashboard .dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  align-items: stretch;
+}
+#dashboard .stat-card {
+  min-width: 0;
+  min-height: 104px;
+  padding: 16px 17px;
+  border: 1px solid rgba(255,255,255,.38);
+  border-radius: 15px;
+  box-shadow: 0 5px 14px rgba(22, 46, 65, .10);
+  justify-content: space-between;
+  gap: 9px;
+  overflow: hidden;
+  position: relative;
+}
+#dashboard .stat-card::after {
+  content: "";
+  position: absolute;
+  width: 76px;
+  height: 76px;
+  right: -24px;
+  bottom: -30px;
+  border: 13px solid rgba(255,255,255,.13);
+  border-radius: 50%;
+  pointer-events: none;
+}
+#dashboard .stat-card .label {
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.35;
+  letter-spacing: .1px;
+  white-space: normal;
+}
+#dashboard .stat-card .value {
+  font-size: clamp(20px, 1.55vw, 27px);
+  line-height: 1.15;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+#dashboard .profit-stat-card { gap: 4px; }
+#dashboard .profit-stat-card .profit-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 3px 9px;
+  margin-top: 2px;
+  font-size: 10px;
+  line-height: 1.2;
+  white-space: normal;
+}
+#dashboard > h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 26px 0 13px;
+  padding: 0 0 0 12px;
+  border-left: 4px solid #0f766e;
+  color: #164e63;
+  font-size: 20px;
+  font-weight: 800;
+}
+#dashboard > .card:has(#dTodayCollection) {
+  max-width: 560px;
+  margin: 0;
+  padding: 10px 18px;
+  border: 1px solid #d5e5e8;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #fff 0%, #f5fafb 100%);
+  box-shadow: 0 3px 11px rgba(20, 55, 70, .055);
+}
+#dashboard > .card:has(#dTodayCollection) .summary-line {
+  padding: 12px 2px;
+  align-items: center;
+  font-size: 14px;
+}
+#dashboard > .card:has(#dTodayCollection) .summary-line strong {
+  color: #0f766e;
+  font-size: 16px;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+#dashboard .quick-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+#dashboard .quick-btn {
+  min-width: 0;
+  min-height: 92px;
+  padding: 13px 10px;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, .09);
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+#dashboard .quick-btn:hover {
+  color: #fff;
+  filter: brightness(1.06);
+  transform: translateY(-2px);
+  box-shadow: 0 7px 15px rgba(15, 23, 42, .15);
+}
+#dashboard .quick-icon { font-size: 25px; line-height: 1; }
+
+@media (min-width: 621px) and (max-width: 1000px) {
+  #dashboard .dashboard-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; }
+  #dashboard .quick-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  #dashboard .stat-card { min-height: 96px; padding: 13px; }
+}
+@media (max-width: 620px) {
+  #dashboard > h1 { margin-bottom: 15px; padding-bottom: 10px; }
+  #dashboard .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+  #dashboard .stat-card { min-height: 83px; padding: 11px 10px; border-radius: 12px; gap: 7px; }
+  #dashboard .stat-card .label { font-size: 11.5px; }
+  #dashboard .stat-card .value { font-size: clamp(17px, 4.6vw, 21px); }
+  #dashboard .profit-stat-card .profit-breakdown { font-size: 9px; }
+  #dashboard > h2 { margin: 22px 0 11px; font-size: 18px; }
+  #dashboard > .card:has(#dTodayCollection) { max-width: none; padding: 7px 13px; }
+  #dashboard > .card:has(#dTodayCollection) .summary-line { padding: 10px 1px; font-size: 13px; }
+  #dashboard > .card:has(#dTodayCollection) .summary-line strong { font-size: 14px; }
+  #dashboard .quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+  #dashboard .quick-btn { min-height: 82px; padding: 10px 7px; border-radius: 12px; font-size: 12.5px; gap: 7px; }
+  #dashboard .quick-icon { font-size: 23px; }
+}
+@media (max-width: 360px) {
+  #dashboard .dashboard-grid, #dashboard .quick-grid { gap: 7px; }
+  #dashboard .stat-card { padding: 9px 8px; }
+  #dashboard .stat-card .label { font-size: 11px; }
+  #dashboard .stat-card .value { font-size: 17px; }
+  #dashboard .quick-btn { font-size: 11.5px; min-height: 76px; }
+}
+/* ===== End Dashboard Professional Layout v1 ===== */
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-
-<style id="final-layout-refinement">
-/* Final consistent layout refinement across all app pages */
-:root { --layout-gap: 16px; }
-.app { width: 100%; max-width: 1600px; margin-inline: auto; }
-main { width: 100%; }
-.page { min-width: 0; }
-.page > h1 { margin-top: 4px; margin-bottom: 18px; }
-.card { min-width: 0; padding: 17px; margin-bottom: 15px; border-radius: 14px; }
-.card h2 { margin-top: 0; margin-bottom: 13px; }
-.card .form-grid { align-items: end; }
-.field { min-width: 0; }
-.field input, .field select, .field textarea { min-width: 0; max-width: 100%; }
-.dashboard-grid { align-items: stretch; }
-.stat-card { min-width: 0; overflow: hidden; }
-.quick-grid { align-items: stretch; }
-.quick-btn { min-width: 0; overflow-wrap: anywhere; }
-.table-wrap { max-width: 100%; overflow-x: auto; }
-.table-wrap table { margin: 0; }
-.table-wrap th { position: sticky; top: 0; z-index: 1; }
-.actions { align-items: center; }
-.actions button { max-width: 100%; }
-.search-row > *, .cashbook-search-row > * { min-width: 0; }
-input, select, textarea { max-width: 100%; }
-/* Desktop: wider, balanced forms and cards */
-@media (min-width: 1100px) {
-  main { padding: 24px 32px 40px; }
-  .dashboard-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-  .quick-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
-  .form-grid { grid-template-columns: repeat(3, minmax(190px, 1fr)); column-gap: 18px; row-gap: 15px; }
-  .form-grid > .field { max-width: none; }
-  .form-grid > .field.full { grid-column: 1 / -1; max-width: 100%; }
-  .card { padding: 20px; }
-}
-@media (min-width: 700px) and (max-width: 1099px) {
-  main { padding: 20px; }
-  .dashboard-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-  .quick-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-  .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-  .form-grid > .field, .form-grid > .field.full { max-width: 100%; }
-}
-@media (max-width: 699px) {
-  main { padding: 12px 10px 26px; }
-  .card { padding: 13px; margin-bottom: 12px; }
-  .page > h1 { font-size: 23px; margin-bottom: 14px; }
-  .card h2 { font-size: 19px; }
-  .form-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
-  .form-grid > .field, .form-grid > .field.full { grid-column: 1 / -1; width: 100%; max-width: 100%; }
-  .form-grid input, .form-grid select, .form-grid textarea { width: 100%; }
-  .dashboard-grid, .quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
-  .stat-card { min-height: 76px; padding: 10px; }
-  .stat-card .label { font-size: 12px; }
-  .stat-card .value { font-size: 18px; }
-  .quick-btn { min-height: 76px; padding: 9px 6px; font-size: 13px; }
-  .quick-icon { font-size: 22px; }
-  .actions { gap: 8px; }
-  .actions button { flex: 0 1 auto; }
-  .table-wrap th, .table-wrap td { padding: 9px 8px; font-size: 13px; }
-}
-/* Login username: saved account is prefilled, so mobile users need not tap it twice */
-.username-dropdown { display: none; }
-.username-option { min-height: 44px; }
-.login-card { max-width: 430px; }
-@media (max-width: 480px) {
-  .login-screen { padding: 14px; }
-  .login-card { padding: 20px; border-radius: 15px; }
-  .login-card input { min-height: 46px; }
-  #loginButton { min-height: 48px; }
-}
-</style>
-
 </head>
 
 <body>
@@ -8939,14 +9029,6 @@ function removeUsernameSuggestion() {
 
     if (!input || !dropdown) return;
 
-    try {
-      const savedAuth = JSON.parse(localStorage.getItem(AUTH_KEY) || "null");
-      const hiddenUsername = localStorage.getItem(HIDDEN_KEY) || "";
-      if (savedAuth && savedAuth.username && hiddenUsername !== savedAuth.username && !input.value.trim()) {
-        input.value = savedAuth.username;
-      }
-    } catch (error) {}
-
     function renderUsername() {
       dropdown.replaceChildren();
 
@@ -8958,16 +9040,15 @@ function removeUsernameSuggestion() {
         hiddenUsername = localStorage.getItem(HIDDEN_KEY) || "";
       } catch (error) {}
 
-      if (!auth || !auth.username || hiddenUsername === auth.username) {
-        dropdown.style.display = "none";
-        return;
-      }
-
-      // Keep dropdown closed when saved username is already filled in.
-      if (input.value.trim() === auth.username) {
-        dropdown.style.display = "none";
-        return;
-      }
+     
+if (
+  !auth ||
+  !auth.username ||
+  localStorage.getItem(HIDDEN_KEY) === auth.username
+) {
+  dropdown.style.display = "none";
+  return;
+}
 
       const row = document.createElement("div");
       row.className = "username-option";
@@ -9003,12 +9084,16 @@ function removeUsernameSuggestion() {
     }
 
     input.addEventListener("focus", renderUsername);
+input.addEventListener("click", renderUsername);
+
 input.addEventListener("input", function () {
   if (input.value.trim() !== "") {
     localStorage.removeItem(HIDDEN_KEY);
   }
   renderUsername();
 });
+    input.addEventListener("click", renderUsername);
+
     document.addEventListener("click", function (event) {
       if (
         !input.contains(event.target) &&
