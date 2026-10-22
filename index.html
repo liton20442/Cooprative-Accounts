@@ -1851,6 +1851,16 @@ main {
 .table-col-resize-handle:hover,.table-col-resize-handle.dragging{background:rgba(15,118,110,.35)}
 th.resizable-col{position:relative!important}
 body.column-resizing,body.column-resizing *{cursor:col-resize!important;user-select:none!important}
+
+
+/* Drag-to-resize controls and cards */
+.ca-resize-target{position:relative!important;box-sizing:border-box!important;}
+.ca-resize-grip{position:absolute;right:1px;bottom:1px;width:12px;height:12px;z-index:20;cursor:nwse-resize;touch-action:none;opacity:.65;border-radius:2px;background:linear-gradient(135deg,transparent 0 35%,#0f766e 36% 46%,transparent 47% 57%,#0f766e 58% 68%,transparent 69%);}
+.ca-resize-grip:hover,.ca-resize-grip.dragging{opacity:1;background-color:rgba(15,118,110,.12);}
+.ca-resize-target.ca-resize-control{padding-right:14px!important;padding-bottom:12px!important;}
+.ca-resize-target.ca-resize-card{min-width:180px;min-height:90px;}
+body.ca-element-resizing,body.ca-element-resizing *{user-select:none!important;}
+body.ca-element-resizing{cursor:nwse-resize!important;}
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -9560,5 +9570,76 @@ input.addEventListener("input", function () {
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
 })();
 </script>
+
+<script>
+/* Resize inputs, buttons and cards by dragging the small lower-right grip. */
+(function(){
+  const selector='input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),select,textarea,button,.page > .card,.page form';
+  const minW=56,minH=28;
+  function keyFor(el){
+    if(el.id) return 'caElementSizeV1:'+el.tagName.toLowerCase()+':'+el.id;
+    const page=el.closest('.page');
+    const pageId=page&&page.id?page.id:'global';
+    const peers=Array.from(document.querySelectorAll(selector)).filter(x=>x.tagName===el.tagName && (x.closest('.page')?.id||'global')===pageId);
+    return 'caElementSizeV1:'+pageId+':'+el.tagName.toLowerCase()+':'+peers.indexOf(el);
+  }
+  function add(el){
+    if(!el || el.dataset.caResizeReady==='1') return;
+    if(el.classList.contains('ca-resize-grip')) return;
+    if(el.matches('input[type="checkbox"],input[type="radio"],input[type="hidden"]')) return;
+    el.dataset.caResizeReady='1';
+    const card=el.matches('.page > .card, .page form');
+    el.classList.add('ca-resize-target',card?'ca-resize-card':'ca-resize-control');
+    const key=keyFor(el);
+    try{
+      const saved=JSON.parse(localStorage.getItem(key)||'null');
+      if(saved && saved.w) el.style.width=saved.w+'px';
+      if(saved && saved.h) el.style.height=saved.h+'px';
+    }catch(e){}
+    const grip=document.createElement('span');
+    grip.className='ca-resize-grip';
+    grip.title='Drag to resize';
+    grip.setAttribute('aria-label','Drag to resize');
+    const externalGrip=el.matches('input,select,textarea');
+    if(externalGrip){
+      grip.style.position='fixed';
+      function placeGrip(){const r=el.getBoundingClientRect();grip.style.left=Math.max(0,r.right-13)+'px';grip.style.top=Math.max(0,r.bottom-13)+'px';}
+      (el.parentElement||document.body).appendChild(grip);placeGrip();
+      window.addEventListener('scroll',placeGrip,true);window.addEventListener('resize',placeGrip);
+    }else{el.appendChild(grip);}
+    grip.addEventListener('mousedown',function(e){
+      if(e.button!==0) return;
+      e.preventDefault();e.stopPropagation();
+      const startX=e.clientX,startY=e.clientY;
+      const rect=el.getBoundingClientRect();
+      const startW=rect.width,startH=rect.height;
+      document.body.classList.add('ca-element-resizing');grip.classList.add('dragging');
+      function move(ev){
+        const w=Math.max(card?180:minW,Math.round(startW+ev.clientX-startX));
+        const h=Math.max(card?90:minH,Math.round(startH+ev.clientY-startY));
+        el.style.width=w+'px';el.style.height=h+'px';
+        if(externalGrip){const r=el.getBoundingClientRect();grip.style.left=Math.max(0,r.right-13)+'px';grip.style.top=Math.max(0,r.bottom-13)+'px';}
+      }
+      function up(){
+        document.body.classList.remove('ca-element-resizing');grip.classList.remove('dragging');
+        document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);
+        try{localStorage.setItem(key,JSON.stringify({w:Math.round(el.getBoundingClientRect().width),h:Math.round(el.getBoundingClientRect().height)}))}catch(e){}
+      }
+      document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
+    });
+  }
+  function scan(root){
+    if(root && root.matches && root.matches(selector)) add(root);
+    if(root && root.querySelectorAll) root.querySelectorAll(selector).forEach(add);
+  }
+  function start(){
+    scan(document);
+    const observer=new MutationObserver(records=>records.forEach(r=>r.addedNodes.forEach(n=>{if(n.nodeType===1)scan(n)})));
+    observer.observe(document.body,{childList:true,subtree:true});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script>
+
 </body>
 </html>
