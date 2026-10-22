@@ -641,11 +641,7 @@ body.authenticated #loginScreen {
     align-items: start !important;
   }
 
-  #collection .form-grid > .field.full:has(#collectionMember),
-  #collection .form-grid > .field.full:has(#collectionCollector) {
-    grid-column: auto !important;
-  }
-
+  
   #collection .form-grid > .field:has(#collectionMember),
   #collection .form-grid > .field:has(#collectionCollector),
   #collection .form-grid > .field:has(#collectionDate) {
@@ -983,26 +979,26 @@ body.authenticated #loginScreen {
 <section id="collection" class="page">
 <h1>Collection</h1>
 
-
 <div class="card">
 <div class="form-grid">
 
-<div class="field full">
-<label>Member</label>
-<select id="collectionMember"></select>
+<div class="field collection-top-field">
+  <label>Member</label>
+  <select id="collectionMember"></select>
 </div>
 
-<div class="field full">
-<label>Collector</label>
-<select id="collectionCollector">
-<option value="">Select Collector</option>
-</select>
+<div class="field collection-top-field">
+  <label>Collector</label>
+  <select id="collectionCollector">
+    <option value="">Select Collector</option>
+  </select>
 </div>
 
-<div class="field">
-<label>Date</label>
-<input type="date" id="collectionDate" autocomplete="off">
+<div class="field collection-top-field">
+  <label>Date</label>
+  <input type="date" id="collectionDate" autocomplete="off">
 </div>
+
 
 <div class="field"><label>Share</label><input type="text" id="colShare" value=""></div>
 <div class="field"><label>Savings</label><input type="text" id="colSavings" value=""></div>
