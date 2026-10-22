@@ -505,21 +505,27 @@ body.authenticated #loginScreen {
 
 @media (min-width: 700px) {
   #members .form-grid {
-    grid-template-columns: 200px 280px 280px !important;
+    grid-template-columns: 150px 220px 190px max-content !important;
     max-width: 100%;
     gap: 10px;
+    align-items: end;
   }
 
-  #members .form-grid > .field:nth-child(1) {
-    order: 1;
+  #members .form-grid > .field:nth-child(1) { order: 1; }
+  #members .form-grid > .field:nth-child(2) { order: 2; }
+  #members .form-grid > .field:nth-child(3) { order: 3; }
+  #members .form-grid > .member-entry-actions {
+    order: 4;
+    display: flex;
+    align-items: end;
+    gap: 8px;
+    margin: 0;
+    padding: 0 0 1px;
+    white-space: nowrap;
   }
-
-  #members .form-grid > .field:nth-child(2) {
-    order: 2;
-  }
-
-  #members .form-grid > .field:nth-child(3) {
-    order: 3;
+  #members .member-entry-actions .btn-green,
+  #members .member-entry-actions .btn-secondary {
+    margin: 0;
   }
 }
 /* Mobile field order */
