@@ -648,27 +648,29 @@ body.authenticated #loginScreen {
     max-width: 170px;
   }
 }
- /* Laptop - Collection top row spacing fix */
+/* Laptop - Collection top row layout */
 @media screen and (min-width: 700px) {
   #collection .form-grid {
-    column-gap: 35px !important;
+    grid-template-columns: 170px 170px 170px !important;
+    column-gap: 24px !important;
+    row-gap: 10px !important;
+    justify-content: start !important;
   }
 
-  #collection .form-grid > .field:has(#collectionMember),
-  #collection .form-grid > .field:has(#collectionCollector),
-  #collection .form-grid > .field:has(#collectionDate) {
+  #collection .form-grid > .field.full:has(#collectionMember),
+  #collection .form-grid > .field.full:has(#collectionCollector) {
+    grid-column: auto !important;
     width: 170px !important;
     max-width: 170px !important;
     min-width: 0 !important;
-    justify-self: start !important;
-    box-sizing: border-box !important;
   }
 
   #collection #collectionMember,
   #collection #collectionCollector,
   #collection #collectionDate {
-    width: 170px !important;
-    max-width: 170px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
     box-sizing: border-box !important;
   }
 }
