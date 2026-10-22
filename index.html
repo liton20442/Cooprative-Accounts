@@ -1898,6 +1898,63 @@ body.ca-element-resizing{cursor:nwse-resize!important;}
   #members .member-entry-actions { margin-top: 2px !important; }
 }
 
+
+
+/* Final fix: keep Member entry controls inside the card without shrinking Name/Mobile */
+@media screen and (min-width: 700px) {
+  #members .card:first-of-type {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 860px !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+  }
+  #members .card:first-of-type .form-grid {
+    display: grid !important;
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+    grid-template-columns: 145px minmax(220px, 1fr) minmax(200px, 240px) max-content !important;
+    column-gap: 12px !important;
+    row-gap: 6px !important;
+    align-items: end !important;
+  }
+  #members .card:first-of-type .form-grid > .field {
+    min-width: 0 !important;
+    width: auto !important;
+  }
+  #members .card:first-of-type .form-grid > .field input {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  #members .card:first-of-type .member-entry-actions {
+    width: max-content !important;
+    min-width: max-content !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: end !important;
+    justify-self: start !important;
+    gap: 7px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+  }
+  #members .card:first-of-type .member-entry-actions button {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 62px !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+  }
+}
+@media screen and (max-width: 699px) {
+  #members .card:first-of-type { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
+  #members .card:first-of-type .form-grid { width: 100%; max-width: 100%; }
+}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
