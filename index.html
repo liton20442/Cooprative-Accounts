@@ -702,6 +702,346 @@ body.authenticated #loginScreen {
   }
 }
 
+   
+/* ==========================================
+   PROFESSIONAL COOPERATIVE ACCOUNTS THEME
+   Design only - preserve app functionality
+   ========================================== */
+
+:root {
+  --primary: #0f766e;
+  --primary-dark: #115e59;
+  --secondary: #2563eb;
+  --success: #15803d;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --purple: #7c3aed;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #172033;
+  --muted: #64748b;
+  --border: #dbe3ea;
+  --radius: 14px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #eef3f8 !important;
+  color: #172033;
+  line-height: 1.5;
+}
+
+header {
+  background: linear-gradient(120deg, #115e59 0%, #0f766e 55%, #0e7490 100%) !important;
+  box-shadow: 0 4px 18px rgba(15, 80, 90, 0.20) !important;
+}
+
+.app-title {
+  letter-spacing: -0.4px;
+  font-weight: 800;
+}
+
+main {
+  padding-bottom: 36px;
+}
+
+.page h1 {
+  color: #134e4a;
+  font-weight: 800;
+  letter-spacing: -0.45px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #cce8e4;
+}
+
+h2 {
+  color: #155e75;
+  font-weight: 750;
+}
+
+h3 {
+  color: #334155;
+  font-weight: 750;
+}
+
+/* Cards */
+.card {
+  background: #ffffff;
+  border: 1px solid #dbe5ed;
+  border-radius: 15px;
+  padding: 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 12px rgba(30, 64, 90, 0.055);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card h2:first-child {
+  margin-top: 2px;
+}
+
+.card p {
+  color: #526174;
+  line-height: 1.65;
+}
+
+/* Form labels and fields */
+.field {
+  gap: 7px;
+}
+
+label {
+  color: #334155;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+input,
+select,
+textarea {
+  border: 1.5px solid #cbd8e3;
+  border-radius: 9px;
+  background: #fbfdff;
+  color: #172033;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: #94b8c4;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #0f766e !important;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12) !important;
+  outline: none;
+}
+
+/* Buttons */
+button {
+  border-radius: 9px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: filter 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.10);
+}
+
+button:active {
+  filter: brightness(0.97);
+}
+
+.btn {
+  background: linear-gradient(135deg, #0f766e, #0e7490);
+  color: #ffffff;
+}
+
+.btn-green {
+  background: linear-gradient(135deg, #15803d, #16a34a);
+  color: #ffffff;
+}
+
+.btn-blue {
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: #ffffff;
+}
+
+.btn-orange {
+  background: linear-gradient(135deg, #b45309, #d97706);
+  color: #ffffff;
+}
+
+.btn-purple {
+  background: linear-gradient(135deg, #6d28d9, #7c3aed);
+  color: #ffffff;
+}
+
+.btn-red {
+  background: linear-gradient(135deg, #b91c1c, #dc2626);
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background: #e8eef4;
+  color: #334155;
+  border: 1px solid #d4dee8;
+}
+
+.btn-small {
+  border-radius: 7px;
+  font-weight: 700;
+}
+
+/* Action button groups */
+.actions {
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* Data tables */
+.table-wrap {
+  border: 1px solid #dbe5ed;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+thead th {
+  background: #e2f3f1;
+  color: #115e59;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 12px 10px;
+  border-bottom: 1px solid #c6e5e1;
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 11px 10px;
+  border-bottom: 1px solid #edf1f5;
+  color: #334155;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+tbody tr:hover {
+  background: #edf8f7;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Search bars */
+.search-row {
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.search-row input {
+  background: #ffffff;
+}
+
+/* Summary and total boxes */
+.summary-box {
+  background: linear-gradient(135deg, #f0fdfa, #f0f9ff);
+  border: 1px solid #cce8e4;
+  border-radius: 11px;
+  padding: 12px 14px;
+}
+
+.summary-line {
+  border-bottom-color: #d6e7e8;
+  color: #334155;
+}
+
+.summary-line strong {
+  color: #115e59;
+  font-weight: 800;
+}
+
+/* Dashboard statistics retain their existing layout */
+.stat-card {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 13px;
+  box-shadow: 0 4px 11px rgba(15, 23, 42, 0.10);
+}
+
+.stat-card .label {
+  letter-spacing: 0.1px;
+}
+
+.stat-card .value {
+  font-weight: 850;
+}
+
+/* Quick access buttons */
+.quick-btn {
+  border: 1px solid #d8e5ed;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #155e59;
+  box-shadow: 0 2px 7px rgba(15, 23, 42, 0.045);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.quick-btn:hover {
+  background: #ecfdf5;
+  border-color: #99d5c9;
+}
+
+/* Informational messages */
+.notice {
+  background: #ecfeff;
+  color: #164e63;
+  border-left-color: #0891b2;
+  border-radius: 9px;
+}
+
+/* Footer */
+footer {
+  color: #64748b;
+  border-top: 1px solid #dbe5ed;
+  margin-top: 20px;
+}
+
+/* Mobile layout: preserve responsive forms and tables */
+@media (max-width: 620px) {
+  main {
+    padding: 12px 10px 28px;
+  }
+
+  .card {
+    padding: 13px;
+    border-radius: 12px;
+    margin-bottom: 13px;
+  }
+
+  .page h1 {
+    font-size: 23px;
+    margin-bottom: 14px;
+  }
+
+  h2 {
+    font-size: 19px;
+  }
+
+  .actions {
+    gap: 8px;
+  }
+
+  .actions button {
+    max-width: 100%;
+  }
+
+  thead th {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+
+  tbody td {
+    padding: 9px 8px;
+    font-size: 13px;
+  }
+}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
