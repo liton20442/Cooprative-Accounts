@@ -1056,60 +1056,131 @@ footer {
 }
 
 
-/* ===== Final page layout consistency fixes ===== */
+/* ===== Final consistent layout for ALL pages ===== */
 .app {
+  width: 100%;
   max-width: 1400px;
+  margin: 0 auto;
 }
 
-/* Keep desktop forms aligned and prevent fields stretching across the page. */
-@media (min-width: 900px) {
+/* Desktop: fixed, readable form columns instead of stretching across the page */
+@media screen and (min-width: 900px) {
   .form-grid {
+    display: grid;
     grid-template-columns: repeat(3, minmax(0, 260px));
     justify-content: start;
     align-items: start;
-    gap: 16px;
+    column-gap: 18px;
+    row-gap: 16px;
+  }
+
+  .form-grid > .field {
+    width: 100%;
+    min-width: 0;
+    max-width: 260px;
+    grid-column: auto;
+  }
+
+  .form-grid > .field.full {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: 820px;
+  }
+
+  .form-grid input,
+  .form-grid select,
+  .form-grid textarea {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
 
-@media (min-width: 621px) and (max-width: 899px) {
+/* Small laptop/tablet: two standard-width columns */
+@media screen and (min-width: 621px) and (max-width: 899px) {
   .form-grid {
     grid-template-columns: repeat(2, minmax(0, 260px));
     justify-content: start;
     align-items: start;
-    gap: 14px;
+    column-gap: 16px;
+    row-gap: 14px;
+  }
+
+  .form-grid > .field {
+    width: 100%;
+    min-width: 0;
+    max-width: 260px;
+    grid-column: auto;
+  }
+
+  .form-grid > .field.full {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: 536px;
+  }
+
+  .form-grid input,
+  .form-grid select,
+  .form-grid textarea {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
 
-.form-grid > .field {
+/* Phone: one column, no horizontal overflow */
+@media screen and (max-width: 620px) {
+  .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .form-grid > .field,
+  .form-grid > .field.full {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .form-grid input,
+  .form-grid select,
+  .form-grid textarea {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+}
+
+/* Keep the Member and Collection forms' deliberately customized layouts */
+@media screen and (min-width: 700px) {
+  #members .form-grid {
+    grid-template-columns: 200px 280px 280px !important;
+    max-width: 100%;
+    justify-content: start;
+  }
+  #members .form-grid > .field,
+  #members .form-grid > .field.full {
+    max-width: none;
+  }
+}
+
+/* All tables stay inside their cards and scroll horizontally when needed */
+.page,
+.page > .card,
+.table-wrap {
   min-width: 0;
   max-width: 100%;
 }
-
-.form-grid input,
-.form-grid select,
-.form-grid textarea {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Standalone selectors and settings forms should also have a comfortable width. */
-.page > .card > .field {
-  width: 100%;
-  max-width: 420px;
-}
-
-#loginSettingsForm {
-  max-width: 520px;
-}
-
-#loginSettingsForm input {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Restore the intended colorful quick-action buttons. */
+/* Restore the colorful dashboard quick-action buttons */
 .quick-btn.q1 { background: #0f766e; color: #fff; border-color: #0f766e; }
 .quick-btn.q2 { background: #16a34a; color: #fff; border-color: #16a34a; }
 .quick-btn.q3 { background: #2563eb; color: #fff; border-color: #2563eb; }
@@ -1119,20 +1190,7 @@ footer {
 .quick-btn.q7 { background: #475569; color: #fff; border-color: #475569; }
 .quick-btn.q8 { background: #9333ea; color: #fff; border-color: #9333ea; }
 .quick-btn.q9 { background: #dc2626; color: #fff; border-color: #dc2626; }
-
-.quick-btn:hover {
-  color: #fff;
-  filter: brightness(1.06);
-}
-
-/* Keep form cards and history/table cards visually consistent. */
-.page > .card {
-  min-width: 0;
-}
-.table-wrap {
-  max-width: 100%;
-  overflow-x: auto;
-}
+.quick-btn:hover { color: #fff; filter: brightness(1.06); }
 
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
