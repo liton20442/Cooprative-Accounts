@@ -1404,37 +1404,78 @@ main {
 #dashboard .quick-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: 13px;
 }
 #dashboard .quick-btn {
+  --qa-accent: #0f766e;
   min-width: 0;
-  min-height: 92px;
-  padding: 13px 10px;
-  border: 1px solid rgba(255,255,255,.28);
-  border-radius: 14px;
+  min-height: 94px;
+  padding: 13px 12px;
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 15px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  justify-content: flex-start;
+  gap: 12px;
   color: #fff;
   font-size: 14px;
   font-weight: 800;
-  line-height: 1.25;
-  text-align: center;
+  line-height: 1.3;
+  text-align: left;
   white-space: normal;
   overflow-wrap: anywhere;
-  box-shadow: 0 4px 10px rgba(15, 23, 42, .09);
-  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+  box-shadow: 0 5px 13px rgba(15, 23, 42, .11), inset 0 1px 0 rgba(255,255,255,.13);
+  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+  position: relative;
+  overflow: hidden;
+}
+#dashboard .quick-btn::after {
+  content: "";
+  position: absolute;
+  width: 74px;
+  height: 74px;
+  right: -31px;
+  bottom: -39px;
+  border: 11px solid rgba(255,255,255,.10);
+  border-radius: 50%;
+  pointer-events: none;
 }
 #dashboard .quick-btn:hover {
   color: #fff;
   filter: brightness(1.06);
   transform: translateY(-2px);
-  box-shadow: 0 7px 15px rgba(15, 23, 42, .15);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, .16);
 }
-#dashboard .quick-icon { font-size: 25px; line-height: 1; }
-
+#dashboard .quick-btn:focus-visible {
+  outline: 3px solid #99f6e4;
+  outline-offset: 2px;
+}
+#dashboard .quick-icon-wrap {
+  flex: 0 0 43px;
+  width: 43px;
+  height: 43px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.24);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,.12);
+  position: relative;
+  z-index: 1;
+}
+#dashboard .quick-icon {
+  font-size: 23px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.12));
+}
+#dashboard .quick-label {
+  min-width: 0;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
 @media (min-width: 621px) and (max-width: 1000px) {
   #dashboard .dashboard-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; }
   #dashboard .quick-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
@@ -1452,15 +1493,18 @@ main {
   #dashboard > .card:has(#dTodayCollection) .summary-line { padding: 10px 1px; font-size: 13px; }
   #dashboard > .card:has(#dTodayCollection) .summary-line strong { font-size: 14px; }
   #dashboard .quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
-  #dashboard .quick-btn { min-height: 82px; padding: 10px 7px; border-radius: 12px; font-size: 12.5px; gap: 7px; }
-  #dashboard .quick-icon { font-size: 23px; }
+  #dashboard .quick-btn { min-height: 76px; padding: 10px 8px; border-radius: 12px; font-size: 12px; gap: 8px; }
+  #dashboard .quick-icon-wrap { flex-basis: 35px; width: 35px; height: 35px; border-radius: 10px; }
+  #dashboard .quick-icon { font-size: 19px; }
 }
 @media (max-width: 360px) {
   #dashboard .dashboard-grid, #dashboard .quick-grid { gap: 7px; }
   #dashboard .stat-card { padding: 9px 8px; }
   #dashboard .stat-card .label { font-size: 11px; }
   #dashboard .stat-card .value { font-size: 17px; }
-  #dashboard .quick-btn { font-size: 11.5px; min-height: 76px; }
+  #dashboard .quick-btn { font-size: 11px; min-height: 72px; padding: 8px 6px; gap: 6px; }
+  #dashboard .quick-icon-wrap { flex-basis: 30px; width: 30px; height: 30px; border-radius: 9px; }
+  #dashboard .quick-icon { font-size: 17px; }
 }
 /* ===== End Dashboard Professional Layout v1 ===== */
 
@@ -1576,23 +1620,23 @@ main {
 
 <h2>Quick Actions</h2>
 <div class="quick-grid">
-<button class="quick-btn q1" onclick="showPage('members')"><span class="quick-icon">👥</span>Members</button>
-<button class="quick-btn q7" onclick="showPage('balanceHistory')"><span class="quick-icon">📅</span>Member Balance History</button>
-<button class="quick-btn q3" onclick="showPage('profitDistribution')"><span class="quick-icon">📈</span>Profit Distribution</button>
-<button class="quick-btn q2" onclick="showPage('collection')"><span class="quick-icon">💰</span>Collection</button>
-<button class="quick-btn q3" onclick="showPage('loan')"><span class="quick-icon">🏦</span>Loan</button>
-<button class="quick-btn q4" onclick="showPage('accounts')"><span class="quick-icon">📒</span>Accounts</button>
-<button class="quick-btn q5" onclick="showPage('ledger')"><span class="quick-icon">📑</span>General Ledger</button>
-<button class="quick-btn q6" onclick="showPage('cashbook')"><span class="quick-icon">💵</span>Cash Book</button>
+<button class="quick-btn q1" onclick="showPage('members')"><span class="quick-icon-wrap"><span class="quick-icon">👥</span></span><span class="quick-label">Members</span></button>
+<button class="quick-btn q7" onclick="showPage('balanceHistory')"><span class="quick-icon-wrap"><span class="quick-icon">📅</span></span><span class="quick-label">Member Balance History</span></button>
+<button class="quick-btn q3" onclick="showPage('profitDistribution')"><span class="quick-icon-wrap"><span class="quick-icon">📈</span></span><span class="quick-label">Profit Distribution</span></button>
+<button class="quick-btn q2" onclick="showPage('collection')"><span class="quick-icon-wrap"><span class="quick-icon">💰</span></span><span class="quick-label">Collection</span></button>
+<button class="quick-btn q3" onclick="showPage('loan')"><span class="quick-icon-wrap"><span class="quick-icon">🏦</span></span><span class="quick-label">Loan</span></button>
+<button class="quick-btn q4" onclick="showPage('accounts')"><span class="quick-icon-wrap"><span class="quick-icon">📒</span></span><span class="quick-label">Accounts</span></button>
+<button class="quick-btn q5" onclick="showPage('ledger')"><span class="quick-icon-wrap"><span class="quick-icon">📑</span></span><span class="quick-label">General Ledger</span></button>
+<button class="quick-btn q6" onclick="showPage('cashbook')"><span class="quick-icon-wrap"><span class="quick-icon">💵</span></span><span class="quick-label">Cash Book</span></button>
 
-<button class="quick-btn q9" onclick="showPage('expense')"><span class="quick-icon">💸</span>Expense</button>
-<button class="quick-btn q8" onclick="showPage('backup')"><span class="quick-icon">💾</span>Backup</button>
-<button class="quick-btn q8" onclick="showPage('collectors')"><span class="quick-icon">🧑‍💼</span>Collectors</button>
-<button class="quick-btn q6" onclick="showPage('contra')"><span class="quick-icon">🔄</span>Bank Transfer</button>
-<button class="quick-btn q5" onclick="showPage('shareTransfer')"><span class="quick-icon">🔁</span>Share Transfer</button>
-<button class="quick-btn q9" onclick="showPage('withdrawal')"><span class="quick-icon">💳</span>Savings Withdrawal</button>
-<button class="quick-btn q7" onclick="showPage('reports')"><span class="quick-icon">📊</span>Reports</button>
-<button class="quick-btn q4" onclick="showPage('loginSettings')"><span class="quick-icon">🔐</span>Login Settings</button>
+<button class="quick-btn q9" onclick="showPage('expense')"><span class="quick-icon-wrap"><span class="quick-icon">💸</span></span><span class="quick-label">Expense</span></button>
+<button class="quick-btn q8" onclick="showPage('backup')"><span class="quick-icon-wrap"><span class="quick-icon">💾</span></span><span class="quick-label">Backup</span></button>
+<button class="quick-btn q8" onclick="showPage('collectors')"><span class="quick-icon-wrap"><span class="quick-icon">🧑‍💼</span></span><span class="quick-label">Collectors</span></button>
+<button class="quick-btn q6" onclick="showPage('contra')"><span class="quick-icon-wrap"><span class="quick-icon">🔄</span></span><span class="quick-label">Bank Transfer</span></button>
+<button class="quick-btn q5" onclick="showPage('shareTransfer')"><span class="quick-icon-wrap"><span class="quick-icon">🔁</span></span><span class="quick-label">Share Transfer</span></button>
+<button class="quick-btn q9" onclick="showPage('withdrawal')"><span class="quick-icon-wrap"><span class="quick-icon">💳</span></span><span class="quick-label">Savings Withdrawal</span></button>
+<button class="quick-btn q7" onclick="showPage('reports')"><span class="quick-icon-wrap"><span class="quick-icon">📊</span></span><span class="quick-label">Reports</span></button>
+<button class="quick-btn q4" onclick="showPage('loginSettings')"><span class="quick-icon-wrap"><span class="quick-icon">🔐</span></span><span class="quick-label">Login Settings</span></button>
 </div>
 </section>
 
