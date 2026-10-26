@@ -9325,6 +9325,32 @@ function updateMode() {
 
     updateMode();
 
+    // After Safari Password AutoFill (often confirmed with Face ID),
+    // automatically submit once both credentials have been filled.
+    let autoLoginTimer = null;
+    let autoLoginInProgress = false;
+    function tryAutoLoginAfterAutofill() {
+      if (autoLoginTimer) clearTimeout(autoLoginTimer);
+      autoLoginTimer = setTimeout(function () {
+        const currentAuth = getAuth();
+        if (autoLoginInProgress || !currentAuth) return;
+        if (usernameInput.value.trim() && passwordInput.value) {
+          autoLoginInProgress = true;
+          if (typeof form.requestSubmit === "function") {
+            form.requestSubmit();
+          } else {
+            form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+          }
+          // Allow another attempt if validation fails or the form remains visible.
+          setTimeout(function () { autoLoginInProgress = false; }, 1200);
+        }
+      }, 350);
+    }
+    ["input", "change", "blur"].forEach(function (eventName) {
+      usernameInput.addEventListener(eventName, tryAutoLoginAfterAutofill);
+      passwordInput.addEventListener(eventName, tryAutoLoginAfterAutofill);
+    });
+
     /* A page refresh requires login again. */
     document.body.classList.remove("authenticated");
   }
