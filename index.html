@@ -9530,15 +9530,23 @@ function removeUsernameSuggestion() {
         hiddenUsername = localStorage.getItem(HIDDEN_KEY) || "";
       } catch (error) {}
 
-     
-if (
-  !auth ||
-  !auth.username ||
-  localStorage.getItem(HIDDEN_KEY) === auth.username
-) {
-  dropdown.style.display = "none";
-  return;
-}
+      // Keep the saved username ready in the field so mobile users do not
+      // need to open the suggestion and tap it before every login.
+      if (auth && auth.username && !input.value && hiddenUsername !== auth.username) {
+        input.value = auth.username;
+      }
+
+      // The saved username is already selected by default; show the dropdown
+      // only when the user clears the field and wants to choose it manually.
+      if (
+        !auth ||
+        !auth.username ||
+        hiddenUsername === auth.username ||
+        input.value.trim() === auth.username
+      ) {
+        dropdown.style.display = "none";
+        return;
+      }
 
       const row = document.createElement("div");
       row.className = "username-option";
@@ -9574,15 +9582,14 @@ if (
     }
 
     input.addEventListener("focus", renderUsername);
-input.addEventListener("click", renderUsername);
-
-input.addEventListener("input", function () {
-  if (input.value.trim() !== "") {
-    localStorage.removeItem(HIDDEN_KEY);
-  }
-  renderUsername();
-});
     input.addEventListener("click", renderUsername);
+
+    input.addEventListener("input", function () {
+      if (input.value.trim() !== "") {
+        localStorage.removeItem(HIDDEN_KEY);
+      }
+      renderUsername();
+    });
 
     document.addEventListener("click", function (event) {
       if (
