@@ -1968,7 +1968,7 @@ body.ca-element-resizing{cursor:nwse-resize!important;}
     <p id="loginSubtitle">Please login to continue</p>
 
     
-<form id="loginForm">
+<form id="loginForm" autocomplete="on">
   
 
 <label for="loginUsername">Username</label>
@@ -1977,8 +1977,9 @@ body.ca-element-resizing{cursor:nwse-resize!important;}
   <input
     type="text"
     id="loginUsername"
+    name="username"
     placeholder="Choose your username"
-    autocomplete="off"
+    autocomplete="username"
     autocapitalize="none"
     spellcheck="false"
     required
@@ -1994,6 +1995,7 @@ body.ca-element-resizing{cursor:nwse-resize!important;}
   <input
     type="password"
     id="loginPassword"
+    name="password"
     placeholder="Enter password"
     autocomplete="current-password"
     required
@@ -9228,7 +9230,8 @@ function updateMode() {
     ? "Create Login"
     : "Login";
 
-  usernameInput.setAttribute("autocomplete", "off");
+  // Allow Safari/iOS Password AutoFill to pair the saved username and password.
+  usernameInput.autocomplete = "username";
   passwordInput.autocomplete = firstSetup
     ? "new-password"
     : "current-password";
