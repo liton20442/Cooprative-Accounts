@@ -2068,6 +2068,50 @@ header .home-btn {
 .transaction-bar-label{font-size:10px;line-height:1.25;text-align:center;color:#627684;min-height:25px;overflow-wrap:anywhere;}
 @media(max-width:560px){.transaction-column-chart{grid-template-columns:repeat(4,minmax(0,1fr));row-gap:12px;min-height:280px;}.transaction-bar-track{height:100px;}.transaction-bar-value{font-size:9px;}.transaction-bar-label{font-size:10px;}.daily-summary-date input{max-width:130px;}}
 
+
+/* Quick Actions panel: elegant tinted surface and high-contrast, readable actions */
+#dashboard .dashboard-side-panel{
+  background:linear-gradient(155deg,#e8f5f3 0%,#eef4ff 52%,#f4f0ff 100%);
+  border:1px solid #c9dfdf;
+  box-shadow:0 8px 22px rgba(28,74,91,.10);
+  border-radius:18px;
+  padding:15px 13px;
+}
+#dashboard .dashboard-side-panel h2{
+  padding:0 0 11px; margin:0 0 7px !important;
+  border-bottom:1px solid rgba(71,112,130,.20);
+  color:#164e63 !important;
+}
+#dashboard .dashboard-side-panel h2 .panel-heading-icon{
+  background:linear-gradient(135deg,#0f766e,#2563eb); color:#fff;
+  box-shadow:0 3px 8px rgba(15,118,110,.20);
+}
+#dashboard .dashboard-side-panel .quick-grid{gap:5px !important;}
+#dashboard .dashboard-side-panel .quick-btn{
+  min-height:44px; padding:7px 9px; gap:10px;
+  color:#243f52 !important; background:rgba(255,255,255,.72) !important;
+  border:1px solid rgba(193,214,225,.72) !important;
+  border-radius:11px !important; box-shadow:0 2px 5px rgba(28,58,76,.035) !important;
+  font-weight:650; transition:background .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease;
+}
+#dashboard .dashboard-side-panel .quick-btn:hover{
+  background:#fff !important; border-color:#7cc9bd !important; color:#0f766e !important;
+  transform:translateX(2px); box-shadow:0 4px 10px rgba(28,90,96,.09) !important;
+}
+#dashboard .dashboard-side-panel .quick-icon-wrap{
+  flex-basis:29px; width:29px; height:29px; flex-shrink:0;
+  border-radius:9px; background:#d8f0ec; border:1px solid rgba(15,118,110,.10);
+}
+#dashboard .dashboard-side-panel .quick-icon-wrap svg{width:18px;height:18px;stroke:#0f766e;stroke-width:1.8;}
+#dashboard .dashboard-side-panel .quick-btn:nth-child(4n+2) .quick-icon-wrap{background:#e0eaff;}
+#dashboard .dashboard-side-panel .quick-btn:nth-child(4n+2) .quick-icon-wrap svg{stroke:#315fc2;}
+#dashboard .dashboard-side-panel .quick-btn:nth-child(4n+3) .quick-icon-wrap{background:#f0e6ff;}
+#dashboard .dashboard-side-panel .quick-btn:nth-child(4n+3) .quick-icon-wrap svg{stroke:#7c3aed;}
+#dashboard .dashboard-side-panel .quick-btn:nth-child(4n) .quick-icon-wrap{background:#fff0df;}
+#dashboard .dashboard-side-panel .quick-btn:nth-child(4n) .quick-icon-wrap svg{stroke:#b45309;}
+@media(max-width:900px){#dashboard .dashboard-side-panel{padding:14px;background:linear-gradient(145deg,#e8f5f3,#eef4ff 60%,#f4f0ff);}}
+@media(max-width:560px){#dashboard .dashboard-side-panel .quick-btn{min-height:46px;padding:7px 8px;gap:8px;font-size:11.5px;}#dashboard .dashboard-side-panel .quick-icon-wrap{flex-basis:27px;width:27px;height:27px;}}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -2961,6 +3005,9 @@ Record office and operational expenses here. Saved expenses are automatically in
 <div class="card">
 <h2>Backup</h2>
 <p>Create a complete backup file containing members, collections, loans, schedules, expenses and accounting data.</p>
+<label for="backupFileName" style="display:block;margin:10px 0 6px;font-weight:600;color:var(--text-color,#334155)">Backup File Name</label>
+<input type="text" id="backupFileName" value="Cooperative-Backup" maxlength="100" placeholder="Enter backup file name" style="width:100%;max-width:420px;box-sizing:border-box;margin-bottom:12px">
+<p style="font-size:12px;color:#64748b;margin-top:-5px">You can change this name before downloading. The .json extension will be added automatically.</p>
 <button class="btn-green" onclick="backupData()">Download Backup</button>
 </div>
 
@@ -8750,77 +8797,40 @@ URL.revokeObjectURL(url);
    ========================= */
 
 function backupData(){
+  try {
+    const payload = {
+      app: "Cooperative Accounts",
+      version: 3,
+      exportedAt: new Date().toISOString(),
+      data: data
+    };
+    const json = JSON.stringify(payload, null, 2);
+    if (!json || json === "undefined") throw new Error("Backup data could not be prepared.");
 
-const payload={
-app:"Cooperative Accounts",
-version:3,
-exportedAt:new Date().toISOString(),
-data
-};
+    const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+    const nameInput = document.getElementById("backupFileName");
+    let baseName = (nameInput && nameInput.value.trim()) || ("Cooperative-Backup-" + today());
+    baseName = baseName.replace(/[\\/:*?"<>|]/g, "-").replace(/\.json$/i, "").trim();
+    if (!baseName) baseName = "Cooperative-Backup-" + today();
+    const fileName = baseName + ".json";
 
-const json=
-JSON.stringify(
-payload,
-null,
-2
-);
-
-const blob=
-new Blob(
-[json],
-{type:"application/json"}
-);
-
-const file=
-new File(
-[blob],
-"Cooperative-Backup-"+today()+".json",
-{type:"application/json"}
-);
-
-if(
-navigator.share &&
-navigator.canShare &&
-navigator.canShare({files:[file]})
-){
-
-navigator.share({
-
-files:[file],
-
-title:"Cooperative Backup"
-
-}).catch(()=>{});
-
-}else{
-
-const url=
-URL.createObjectURL(blob);
-
-const a=
-document.createElement("a");
-
-a.href=url;
-
-a.download=
-"Cooperative-Backup-"+today()+".json";
-
-a.style.display="none";
-
-document.body.appendChild(a);
-
-a.click();
-
-setTimeout(()=>{
-
-a.remove();
-
-URL.revokeObjectURL(url);
-
-},1000);
-
-}
-
+    // Use a direct download link; avoid navigator.share, which may open a share sheet
+    // and leave users thinking that the backup download failed.
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    a.setAttribute("type", "application/json");
+    a.style.position = "fixed";
+    a.style.left = "-9999px";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 10000);
+  } catch (err) {
+    console.error("Backup download failed:", err);
+    alert("Backup download failed. Please try again, or use your browser's download/share option.");
+  }
 }
 
 /* =========================
@@ -9702,3 +9712,46 @@ function removeUsernameSuggestion() {
 
 </body>
 </html>
+
+<style>
+/* Final override: make Quick Actions panel visibly colored (including .card defaults) */
+#dashboard aside.dashboard-side-panel.card{
+  background:linear-gradient(145deg,#d8f3ef 0%,#e4edff 48%,#f1e5ff 100%) !important;
+  border:1px solid #b7d9df !important;
+  box-shadow:0 8px 24px rgba(36,78,105,.14) !important;
+  border-radius:18px !important;
+  padding:15px 13px !important;
+}
+#dashboard aside.dashboard-side-panel.card h2{
+  color:#123f52 !important;
+  border-bottom:1px solid rgba(50,92,117,.24) !important;
+  padding-bottom:11px !important;
+}
+#dashboard aside.dashboard-side-panel.card .quick-btn{
+  background:linear-gradient(135deg,rgba(255,255,255,.86),rgba(239,248,255,.88)) !important;
+  border:1px solid rgba(128,170,190,.58) !important;
+  color:#244358 !important;
+  box-shadow:0 2px 6px rgba(32,72,94,.08) !important;
+}
+#dashboard aside.dashboard-side-panel.card .quick-btn:hover{
+  background:#fff !important;
+  border-color:#54b9ad !important;
+  box-shadow:0 5px 12px rgba(26,100,108,.15) !important;
+}
+#dashboard aside.dashboard-side-panel.card .quick-icon-wrap{
+  background:linear-gradient(145deg,#b9eee5,#d6e8ff) !important;
+  border:1px solid rgba(56,130,151,.24) !important;
+  border-radius:9px !important;
+}
+/* Slimmer bars in the Collection & Transactions column graph */
+.transaction-bar{
+  width:12px !important;
+  max-width:12px !important;
+  border-radius:4px 4px 0 0 !important;
+  box-shadow:0 2px 5px rgba(15,118,110,.12) !important;
+}
+@media(max-width:560px){
+  .transaction-bar{width:9px !important;max-width:9px !important;}
+  #dashboard aside.dashboard-side-panel.card{padding:13px 11px !important;}
+}
+</style>
