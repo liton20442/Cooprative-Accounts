@@ -3031,6 +3031,25 @@ Record office and operational expenses here. Saved expenses are automatically in
 <p>Always keep a recent backup before clearing or replacing important accounting data.</p>
 <button class="btn-red" onclick="clearAllData()">Clear All Data</button>
 </div>
+
+<div class="card" id="driveSyncCard">
+<h2>Google Drive Sync</h2>
+<p>Offline entry is supported. When internet returns, the app can sync changes with your Google Drive master data. Keep a separate backup as well.</p>
+<label for="driveSyncUrl">Apps Script Web App URL</label>
+<input id="driveSyncUrl" type="url" placeholder="Paste your deployed Web App URL" autocomplete="off">
+<label for="driveSyncToken">Sync access token</label>
+<input id="driveSyncToken" type="password" placeholder="Enter the same token set in Apps Script" autocomplete="new-password">
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+<button class="btn-blue" onclick="saveDriveSyncSettings()">Save Sync Settings</button>
+<button class="btn-blue" onclick="syncDriveNow()">Sync Now</button>
+</div>
+<hr style="margin:14px 0">
+<label for="driveMasterBackup">First-time setup: select the confirmed laptop master backup</label>
+<input id="driveMasterBackup" type="file" accept=".json,application/json">
+<button class="btn-orange" style="margin-top:8px" onclick="initializeDriveMasterFromBackup()">Initialize Google Drive Master</button>
+<p id="driveSyncStatus" role="status" style="margin-top:10px">Sync is not configured yet.</p>
+<p><strong>Important:</strong> Initialize the master only once. Do not press it again after both devices start syncing.</p>
+</div>
 </section>
 
 <footer>Cooperative Accounts • Mobile Collection & Accounts</footer>
@@ -3098,7 +3117,168 @@ return blankData();
 
 function saveData(){
 localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+if(typeof queueDriveAutoSync === "function") queueDriveAutoSync();
 }
+
+/* =========================
+   GOOGLE DRIVE SYNC
+   Three-way merge with conflict protection
+   ========================= */
+const DRIVE_SYNC_CONFIG_KEY = "cooperativeAccountsDriveSyncConfigV1";
+const DRIVE_SYNC_BASELINE_KEY = "cooperativeAccountsDriveSyncBaselineV1";
+let driveSyncInProgress = false;
+let driveSyncTimer = null;
+
+function getDriveSyncConfig(){
+  try { return JSON.parse(localStorage.getItem(DRIVE_SYNC_CONFIG_KEY) || "{}"); }
+  catch(e){ return {}; }
+}
+function setDriveSyncStatus(message, isError=false){
+  const el=document.getElementById("driveSyncStatus");
+  if(el){ el.textContent=message; el.style.color=isError ? "#b91c1c" : "inherit"; }
+}
+function saveDriveSyncSettings(){
+  const url=(document.getElementById("driveSyncUrl")?.value || "").trim();
+  const token=(document.getElementById("driveSyncToken")?.value || "").trim();
+  if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec(?:\?.*)?$/.test(url)){
+    alert("Please enter the deployed Google Apps Script Web App URL ending in /exec."); return;
+  }
+  if(token.length<20){ alert("Use the same long access token in Apps Script and here (at least 20 characters)."); return; }
+  localStorage.setItem(DRIVE_SYNC_CONFIG_KEY,JSON.stringify({url,token}));
+  setDriveSyncStatus("Sync settings saved on this device.");
+}
+function loadDriveSyncSettingsIntoForm(){
+  const c=getDriveSyncConfig();
+  const u=document.getElementById("driveSyncUrl"), t=document.getElementById("driveSyncToken");
+  if(u)u.value=c.url||""; if(t)t.value=c.token||"";
+  if(c.url && c.token) setDriveSyncStatus("Sync settings are saved. Use Sync Now to check the connection.");
+}
+function jsonCopy(value){ return JSON.parse(JSON.stringify(value)); }
+function sameJson(a,b){ return JSON.stringify(a)===JSON.stringify(b); }
+function readDriveJsonp(url){
+  return new Promise((resolve,reject)=>{
+    const cb="__coopSyncCb_"+Date.now()+Math.random().toString(36).slice(2);
+    const script=document.createElement("script"); let done=false;
+    const cleanup=()=>{ if(script.parentNode)script.parentNode.removeChild(script); try{delete window[cb];}catch(e){window[cb]=undefined;} };
+    const timer=setTimeout(()=>{if(done)return;done=true;cleanup();reject(new Error("Google Drive connection timed out. Check URL, internet and deployment access."));},20000);
+    window[cb]=(result)=>{if(done)return;done=true;clearTimeout(timer);cleanup();resolve(result);};
+    script.onerror=()=>{if(done)return;done=true;clearTimeout(timer);cleanup();reject(new Error("Could not reach Google Apps Script. Check the Web App URL and deployment."));};
+    script.src=url+(url.includes("?")?"&":"?")+"callback="+encodeURIComponent(cb)+"&_="+Date.now();
+    document.head.appendChild(script);
+  });
+}
+async function drivePost(payload){
+  const c=getDriveSyncConfig();
+  if(!c.url||!c.token)throw new Error("Save the Apps Script URL and access token first.");
+  // text/plain avoids a browser CORS preflight; verify the result with a fresh JSONP read.
+  await fetch(c.url,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=UTF-8"},body:JSON.stringify({...payload,token:c.token})});
+}
+async function driveGet(){
+  const c=getDriveSyncConfig();
+  if(!c.url||!c.token)throw new Error("Save the Apps Script URL and access token first.");
+  const result=await readDriveJsonp(c.url+(c.url.includes("?")?"&":"?")+"action=get&token="+encodeURIComponent(c.token));
+  if(!result||!result.ok)throw new Error(result?.error || "Google Drive sync request failed.");
+  return result;
+}
+function validBackupData(candidate){
+  if(!candidate || typeof candidate!=="object" || !Array.isArray(candidate.members) || !Array.isArray(candidate.collections))return false;
+  return true;
+}
+async function initializeDriveMasterFromBackup(){
+  const c=getDriveSyncConfig();
+  if(!c.url||!c.token){alert("Save the Apps Script URL and access token first.");return;}
+  const file=document.getElementById("driveMasterBackup")?.files?.[0];
+  if(!file){alert("Select the confirmed Cooperative-Backup.json file first.");return;}
+  if(!confirm("This will initialize an empty Google Drive master from the selected laptop backup and replace this device's current app data with that backup. Continue? Do this only once."))return;
+  setDriveSyncStatus("Reading backup and checking Google Drive...");
+  try{
+    const parsed=JSON.parse(await file.text());
+    if(parsed.app!=="Cooperative Accounts" || !validBackupData(parsed.data))throw new Error("This does not look like a valid Cooperative Accounts backup.");
+    const remote=await driveGet();
+    if(remote.initialized){throw new Error("A Google Drive master already exists. Initialization stopped to protect it. Use Sync Now instead.");}
+    const initialData={...blankData(),...parsed.data};
+    await drivePost({action:"initialize",expectedRevision:0,data:initialData});
+    const verified=await driveGet();
+    if(!verified.initialized || !sameJson(verified.data,initialData))throw new Error("Master initialization could not be verified. Do not retry repeatedly; check Drive and try Sync Now.");
+    data=initialData; saveData(); refreshAll();
+    localStorage.setItem(DRIVE_SYNC_BASELINE_KEY,JSON.stringify({revision:verified.revision,data:verified.data}));
+    setDriveSyncStatus("Google Drive master initialized and verified. Next, use this device's Sync Now, then connect the phone.");
+    alert("Google Drive master initialized successfully. Keep the backup file safely stored.");
+  }catch(e){setDriveSyncStatus(e.message||"Initialization failed.",true);alert(e.message||"Google Drive master initialization failed.");}
+}
+function mergeSyncData(base,local,remote){
+  const merged={}; const conflicts=[];
+  const keys=new Set([...Object.keys(base||{}),...Object.keys(local||{}),...Object.keys(remote||{})]);
+  for(const key of keys){
+    const b=base?.[key], l=local?.[key], r=remote?.[key];
+    if(Array.isArray(l)&&Array.isArray(r)&&Array.isArray(b)&&[...l,...r,...b].every(x=>x && typeof x==="object" && !Array.isArray(x) && x.id!==undefined)){
+      const bm=new Map(b.map(x=>[String(x.id),x])), lm=new Map(l.map(x=>[String(x.id),x])), rm=new Map(r.map(x=>[String(x.id),x]));
+      const out=[]; const ids=new Set([...bm.keys(),...lm.keys(),...rm.keys()]);
+      for(const id of ids){
+        const bv=bm.get(id), lv=lm.get(id), rv=rm.get(id);
+        const lc=!sameJson(lv,bv), rc=!sameJson(rv,bv);
+        if(lc&&rc&&!sameJson(lv,rv)){conflicts.push(key+" record "+id);continue;}
+        const chosen=lc?lv:rv; if(chosen!==undefined)out.push(chosen);
+      }
+      merged[key]=out;
+    }else{
+      const lc=!sameJson(l,b), rc=!sameJson(r,b);
+      if(lc&&rc&&!sameJson(l,r)){conflicts.push(key);merged[key]=l;}
+      else merged[key]=lc?l:r;
+    }
+  }
+  return {data:merged,conflicts};
+}
+async function syncDriveNow(){
+  if(driveSyncInProgress)return;
+  driveSyncInProgress=true; setDriveSyncStatus("Syncing safely with Google Drive...");
+  try{
+    const remote=await driveGet();
+    if(!remote.initialized)throw new Error("No master data is initialized yet. On the laptop, use Initialize Google Drive Master with the confirmed backup.");
+    const rawBase=localStorage.getItem(DRIVE_SYNC_BASELINE_KEY);
+    if(!rawBase){
+      // First connection to this device: pull the master; never push unknown local data.
+      if(!confirm("This device has no previous sync baseline. Replace its current local data with the Google Drive master? Make a backup first if this device has unique data."))throw new Error("First sync cancelled. Local data was not changed.");
+      data={...blankData(),...remote.data}; saveData(); refreshAll();
+      localStorage.setItem(DRIVE_SYNC_BASELINE_KEY,JSON.stringify({revision:remote.revision,data:remote.data}));
+      setDriveSyncStatus("First sync complete: this device now matches the Google Drive master."); return;
+    }
+    const baseline=JSON.parse(rawBase);
+    const merged=mergeSyncData(baseline.data,data,remote.data);
+    if(merged.conflicts.length){
+      const short=merged.conflicts.slice(0,8).join(", ");
+      throw new Error("Sync paused to prevent overwriting conflicting changes: "+short+(merged.conflicts.length>8?" and more":"")+". Keep backups from both devices and resolve the listed fields/records before syncing again.");
+    }
+    if(!sameJson(merged.data,remote.data)){
+      await drivePost({action:"save",expectedRevision:remote.revision,data:merged.data});
+    }
+    const latest=await driveGet();
+    if(!latest.initialized)throw new Error("Master data could not be verified after sync.");
+    // If another device saved during our push, merge again on the next manual/automatic attempt.
+    if(!sameJson(latest.data,merged.data)){
+      const second=mergeSyncData(remote.data,merged.data,latest.data);
+      if(second.conflicts.length)throw new Error("Another device changed the master during sync. No local overwrite was applied; press Sync Now again after checking backups.");
+      if(!sameJson(second.data,latest.data)){await drivePost({action:"save",expectedRevision:latest.revision,data:second.data});}
+      const finalState=await driveGet();
+      if(!sameJson(finalState.data,second.data))throw new Error("The master changed again during sync. Please press Sync Now again.");
+      data={...blankData(),...finalState.data}; saveData(); refreshAll();
+      localStorage.setItem(DRIVE_SYNC_BASELINE_KEY,JSON.stringify({revision:finalState.revision,data:finalState.data}));
+    }else{
+      data={...blankData(),...latest.data}; saveData(); refreshAll();
+      localStorage.setItem(DRIVE_SYNC_BASELINE_KEY,JSON.stringify({revision:latest.revision,data:latest.data}));
+    }
+    setDriveSyncStatus("Sync complete. Latest data is saved locally and in Google Drive.");
+  }catch(e){setDriveSyncStatus(e.message||"Sync failed.",true);console.warn("Drive sync stopped:",e);}
+  finally{driveSyncInProgress=false;}
+}
+function queueDriveAutoSync(){
+  const c=getDriveSyncConfig();
+  if(!c.url||!c.token||!localStorage.getItem(DRIVE_SYNC_BASELINE_KEY)||!navigator.onLine)return;
+  if(driveSyncTimer)clearTimeout(driveSyncTimer);
+  driveSyncTimer=setTimeout(()=>{syncDriveNow();},3000);
+}
+window.addEventListener("online",()=>{if(localStorage.getItem(DRIVE_SYNC_BASELINE_KEY))syncDriveNow();});
+
 
 function uid(prefix){
 return prefix+Date.now()+Math.random().toString(36).slice(2,7);
@@ -9290,6 +9470,8 @@ refreshAll();
 
 <script>
 // Offline support: install the service worker when hosted over HTTPS (for example GitHub Pages).
+document.addEventListener('DOMContentLoaded', loadDriveSyncSettingsIntoForm);
+
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('./sw.js').catch(function (err) {
