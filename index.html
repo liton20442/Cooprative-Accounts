@@ -270,6 +270,17 @@ body.dashboard-active #logoutButton {
 
 
   
+/* Dashboard daily summary date picker */
+#dashboard .daily-summary-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+#dashboard .daily-summary-heading h2{margin:0}
+#dashboard .daily-summary-date{display:flex;align-items:center;gap:8px;font-size:12px;color:#52616b;font-weight:500}
+#dashboard .daily-summary-date input{width:148px;max-width:100%;min-width:0;padding:7px 9px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;color:#1f2937;font:inherit;box-sizing:border-box}
+#dashboard .today-summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#dashboard .today-summary-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 13px;border-radius:11px;background:#f8fafc;border:1px solid #e8eef4;min-width:0}
+#dashboard .today-summary-item span{font-size:13px;color:#52616b}
+#dashboard .today-summary-item strong{font-size:16px;color:#0f766e;white-space:nowrap}
+@media(max-width:560px){#dashboard .daily-summary-heading{align-items:flex-start}#dashboard .daily-summary-date{width:100%;justify-content:space-between}#dashboard .daily-summary-date input{width:160px}#dashboard .today-summary-item{padding:10px 9px;flex-wrap:wrap}}
+
 /* Compact Today's Summary */
 #dashboard .card:has(#dTodayCollection) {
   max-width: 480px;
@@ -1949,6 +1960,96 @@ body.ca-element-resizing{cursor:nwse-resize!important;}
   #members .card:first-of-type .form-grid { width: 100%; max-width: 100%; }
 }
 
+
+/* ===== Dashboard 3-column professional workspace ===== */
+.app{max-width:100%;}
+main{max-width:1680px;margin:0 auto;padding:18px 22px 36px;}
+#dashboard{max-width:none;margin:0 auto;}
+#dashboard>h1{font-size:27px;letter-spacing:-.4px;margin:2px 0 18px;padding:0 0 13px;border-bottom:1px solid #dce5eb;color:#173344;}
+.dashboard-workspace{display:grid;grid-template-columns:minmax(215px, .78fr) minmax(310px,1.08fr) minmax(390px,1.48fr);gap:17px;align-items:start;}
+.dashboard-side-panel,.today-summary-panel,.dashboard-chart-panel{margin:0;background:linear-gradient(160deg,#fff,#f9fcfd);border:1px solid #e0e8ee;box-shadow:0 7px 24px rgba(26,54,74,.06);border-radius:17px;}
+.dashboard-side-panel{padding:14px 13px;}
+#dashboard .dashboard-side-panel h2,#dashboard .today-summary-panel h2,#dashboard .dashboard-chart-panel h2{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-size:17px;color:#183b4b;font-weight:750;}
+.panel-heading-icon{width:29px;height:29px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;background:#e3f4f1;color:#0f766e;font-size:19px;}
+#dashboard .dashboard-side-panel .quick-grid{grid-template-columns:1fr;gap:0;}
+#dashboard .dashboard-side-panel .quick-btn{min-height:48px;padding:8px 4px;gap:9px;font-size:12.5px;border-bottom:1px solid #e9eff3;}
+#dashboard .dashboard-side-panel .quick-icon-wrap{flex-basis:25px;width:25px;height:25px;}
+#dashboard .dashboard-side-panel .quick-icon-wrap svg{width:20px;height:20px;}
+.dashboard-center-column{display:flex;flex-direction:column;gap:16px;min-width:0;}
+.today-summary-panel{padding:15px 16px;}
+.today-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.today-summary-item{display:flex;flex-direction:column;gap:10px;padding:13px 12px;border-radius:12px;background:#eff8f6;border:1px solid #d7eee8;min-width:0;}
+.today-summary-item:nth-child(2){background:#fff5f1;border-color:#f9e2d9;}
+.today-summary-item span{font-size:12px;color:#526676;line-height:1.3;}
+.today-summary-item strong{font-size:clamp(18px,1.6vw,25px);color:#0f766e;line-height:1.2;overflow-wrap:anywhere;font-variant-numeric:tabular-nums;}
+.today-summary-item:nth-child(2) strong{color:#c24132;}
+.dashboard-chart-panel{padding:16px;}
+.chart-subtitle{font-size:12px;color:#778895;margin:-5px 0 15px;}
+.chart-content{display:flex;align-items:center;gap:18px;min-width:0;}
+.dashboard-pie-chart{width:clamp(125px,13vw,178px);height:clamp(125px,13vw,178px);flex:0 0 auto;border-radius:50%;background:conic-gradient(#0f9f8f 0deg 90deg,#e76f51 90deg 180deg,#4785d8 180deg 270deg,#7cbd7a 270deg 360deg);display:grid;place-items:center;box-shadow:0 5px 16px rgba(20,70,80,.12);}
+.pie-hole{width:57%;height:57%;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:inset 0 0 0 1px #edf2f5;}
+.pie-hole span{font-size:10px;color:#7b8c98;}.pie-hole strong{font-size:12px;color:#234554;}
+.dashboard-chart-legend{display:flex;flex-direction:column;gap:13px;min-width:0;flex:1;}
+.dashboard-chart-legend>div{display:grid;grid-template-columns:9px minmax(0,1fr);gap:7px 8px;align-items:center;font-size:11.5px;color:#60717e;}
+.dashboard-chart-legend strong{grid-column:2;font-size:13px;color:#203a49;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;}
+.legend-dot{width:9px;height:9px;border-radius:50%;display:inline-block;grid-row:span 2;}
+.dot-collection{background:#0f9f8f}.dot-expense{background:#e76f51}.dot-share{background:#4785d8}.dot-savings{background:#7cbd7a}
+.dashboard-right-column{min-width:0;}
+.dashboard-right-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 12px;}
+.dashboard-right-heading h2{font-size:17px;margin:0;color:#183b4b;}
+.dashboard-right-heading span{font-size:10px;color:#0f766e;background:#e2f5f0;padding:5px 8px;border-radius:20px;white-space:nowrap;}
+#dashboard .dashboard-right-column .dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+#dashboard .dashboard-right-column .stat-card{min-width:0;min-height:91px;border-radius:13px;padding:13px 12px;box-shadow:0 4px 12px rgba(15,23,42,.08);}
+#dashboard .dashboard-right-column .stat-card .label{font-size:11px;font-weight:600;line-height:1.3;}
+#dashboard .dashboard-right-column .stat-card .value{font-size:clamp(17px,1.5vw,23px);font-weight:750;overflow-wrap:anywhere;}
+#dashboard .dashboard-right-column .profit-stat-card .profit-breakdown{font-size:9px;gap:6px;flex-wrap:wrap;white-space:normal;}
+@media(max-width:1150px){.dashboard-workspace{grid-template-columns:minmax(190px,.72fr) minmax(280px,1fr) minmax(310px,1.25fr);gap:12px;}main{padding:15px;}#dashboard .dashboard-right-column .stat-card{padding:11px 9px;}}
+@media(max-width:900px){.dashboard-workspace{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}.dashboard-center-column{grid-column:1/-1;grid-row:1;}.dashboard-right-column{grid-column:1/-1;grid-row:2;}.dashboard-side-panel{grid-column:1/-1;grid-row:3;}#dashboard .dashboard-side-panel .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px;}#dashboard .dashboard-right-column .dashboard-grid{grid-template-columns:repeat(3,minmax(0,1fr));}.chart-content{justify-content:flex-start;}}
+@media(max-width:560px){main{padding:12px 10px 28px;}#dashboard>h1{font-size:23px;margin-bottom:13px;}.dashboard-workspace{display:flex;flex-direction:column;gap:13px;}.dashboard-center-column,.dashboard-right-column,.dashboard-side-panel{width:100%;}.dashboard-center-column{order:0;}.dashboard-right-column{order:1;}.dashboard-side-panel{order:2;}.today-summary-panel,.dashboard-chart-panel{padding:13px;}.today-summary-grid{gap:8px;}.today-summary-item{padding:11px 9px;gap:8px;}.today-summary-item span{font-size:11px;}.today-summary-item strong{font-size:18px;}.chart-content{gap:13px;}.dashboard-pie-chart{width:118px;height:118px;}.dashboard-chart-legend{gap:10px;}.dashboard-chart-legend>div{font-size:10.5px;}.dashboard-chart-legend strong{font-size:12px;}#dashboard .dashboard-right-column .dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}#dashboard .dashboard-right-column .stat-card{min-height:78px;padding:10px 9px;}#dashboard .dashboard-right-column .stat-card .label{font-size:10.5px;}#dashboard .dashboard-right-column .stat-card .value{font-size:18px;}#dashboard .dashboard-side-panel .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:10px;}#dashboard .dashboard-side-panel .quick-btn{min-height:48px;font-size:11.5px;}}
+
+
+
+/* Compact, polished app header: reduce oversized title background area */
+header {
+  padding: 9px 18px 10px !important;
+  background: linear-gradient(110deg, #115e59 0%, #0f766e 58%, #0e7490 100%) !important;
+  box-shadow: 0 2px 10px rgba(15, 80, 90, .16) !important;
+}
+.header-row { min-height: 42px; gap: 12px; }
+.app-title {
+  font-size: clamp(18px, 1.55vw, 22px) !important;
+  line-height: 1.12 !important;
+  font-weight: 750 !important;
+  letter-spacing: -.35px !important;
+}
+.app-subtitle {
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  opacity: .86 !important;
+  margin-top: 2px !important;
+  letter-spacing: .15px;
+}
+header .home-btn {
+  min-height: 32px !important;
+  padding: 6px 11px !important;
+  border-radius: 9px !important;
+  font-size: 12px !important;
+  font-weight: 650 !important;
+  white-space: nowrap;
+}
+@media (min-width: 900px) {
+  header { padding: 9px 30px 10px !important; }
+  .app-title { font-size: 22px !important; }
+  .app-subtitle { font-size: 11px !important; }
+}
+@media (max-width: 480px) {
+  header { padding: 8px 11px 9px !important; }
+  .header-row { gap: 7px; }
+  .app-title { font-size: 17px !important; }
+  .app-subtitle { font-size: 10px !important; }
+  header .home-btn { min-height: 30px !important; padding: 5px 8px !important; font-size: 11px !important; }
+}
+
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -1980,30 +2081,10 @@ body.ca-element-resizing{cursor:nwse-resize!important;}
 
 <section id="dashboard" class="page active">
 <h1>Dashboard</h1>
-
-<div class="dashboard-grid">
-<div class="stat-card c1"><div class="label">Total Members</div><div class="value" id="dMembers">0</div></div>
-<div class="stat-card c8"><div class="label">Cash in Hand</div><div class="value" id="dCash">0</div></div>
-<div class="stat-card c6"><div class="label">Bank Balance</div><div class="value" id="dBank">0</div></div>
-<div class="stat-card c2"><div class="label">Total Collection</div><div class="value" id="dTotalCollection">0</div></div>
-<div class="stat-card c7"><div class="label">Total Expenses</div><div class="value" id="dTotalExpenses">0</div></div>
-<div class="stat-card c3 profit-stat-card"><div class="label">Total Profit</div><div class="value" id="dTotalProfit">0</div><div class="profit-breakdown"><span>Share: <b id="dShareProfit">0</b></span><span>Savings: <b id="dSavingsProfit">0</b></span></div></div>
-<div class="stat-card c2"><div class="label">Total Share</div><div class="value" id="dShare">0</div></div>
-<div class="stat-card c3"><div class="label">Total Savings</div><div class="value" id="dSavings">0</div></div>
-<div class="stat-card c4"><div class="label">Loan Disbursed</div><div class="value" id="dLoan">0</div></div>
-<div class="stat-card c5"><div class="label">Loan Installment Collected</div><div class="value" id="dInstallment">0</div></div>
-<div class="stat-card c7" onclick="showPage('reports')"><div class="label">Loan Outstanding</div><div class="value" id="dOutstanding">0</div></div>
-<div class="stat-card c6"><div class="label">Service Charge Collected</div><div class="value" id="dService">0</div></div>
-</div>
-
-<h2>Today's Summary</h2>
-<div class="card">
-<div class="summary-line"><span>Today's Collection</span><strong id="dTodayCollection">0</strong></div>
-<div class="summary-line"><span>Today's Expense</span><strong id="dTodayExpense">0</strong></div>
-</div>
-
-<h2>Quick Actions</h2>
-<div class="quick-grid">
+<div class="dashboard-workspace">
+  <aside class="dashboard-side-panel card">
+    <h2><span class="panel-heading-icon">☷</span> Quick Actions</h2>
+    <div class="quick-grid">
 <button class="quick-btn q1" onclick="showPage('members')"><span class="quick-icon-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="quick-label">Members</span></button>
 <button class="quick-btn q7" onclick="showPage('balanceHistory')"><span class="quick-icon-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h3M8 17h6"/></svg></span><span class="quick-label">Member Balance History</span></button>
 <button class="quick-btn q3" onclick="showPage('profitDistribution')"><span class="quick-icon-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18M7 14l4-4 4 3 6-7"/><path d="M16 6h5v5"/></svg></span><span class="quick-label">Profit Distribution</span></button>
@@ -2021,6 +2102,50 @@ body.ca-element-resizing{cursor:nwse-resize!important;}
 <button class="quick-btn q9" onclick="showPage('withdrawal')"><span class="quick-icon-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M12 8v8M9 13l3 3 3-3"/></svg></span><span class="quick-label">Savings Withdrawal</span></button>
 <button class="quick-btn q7" onclick="showPage('reports')"><span class="quick-icon-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><span class="quick-label">Reports</span></button>
 <button class="quick-btn q4" onclick="showPage('loginSettings')"><span class="quick-icon-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3M12 14v3"/></svg></span><span class="quick-label">Login Settings</span></button>
+</div>
+  </aside>
+  <div class="dashboard-center-column">
+    <section class="today-summary-panel card">
+      <div class="daily-summary-heading">
+        <h2><span class="panel-heading-icon">◷</span> Daily Summary</h2>
+        <label class="daily-summary-date" for="dashboardSummaryDate"><span>📅 Date</span><input type="date" id="dashboardSummaryDate" autocomplete="off" aria-label="Select date for collection and expenses" onchange="updateDashboardDailySummary(this.value)"></label>
+      </div>
+      <div class="today-summary-grid">
+        <div class="today-summary-item"><span id="dSummaryCollectionLabel">Collection</span><strong id="dTodayCollection">0</strong></div>
+        <div class="today-summary-item"><span id="dSummaryExpenseLabel">Expenses</span><strong id="dTodayExpense">0</strong></div>
+      </div>
+    </section>
+    <section class="dashboard-chart-panel card">
+      <h2><span class="panel-heading-icon">◔</span> Financial Overview</h2>
+      <p class="chart-subtitle">Collection, expenses, share and savings</p>
+      <div class="chart-content">
+        <div class="dashboard-pie-chart" id="dashboardPieChart" role="img" aria-label="Financial overview pie chart"><div class="pie-hole"><span>Financial</span><strong>Overview</strong></div></div>
+        <div class="dashboard-chart-legend" id="dashboardChartLegend">
+          <div><i class="legend-dot dot-collection"></i><span>Total Collection</span><strong id="chartCollection">0</strong></div>
+          <div><i class="legend-dot dot-expense"></i><span>Total Expenses</span><strong id="chartExpenses">0</strong></div>
+          <div><i class="legend-dot dot-share"></i><span>Total Share</span><strong id="chartShare">0</strong></div>
+          <div><i class="legend-dot dot-savings"></i><span>Total Savings</span><strong id="chartSavings">0</strong></div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="dashboard-right-column">
+    <div class="dashboard-right-heading"><h2>Business at a Glance</h2><span>Live totals</span></div>
+    <div class="dashboard-grid">
+<div class="stat-card c1"><div class="label">Total Members</div><div class="value" id="dMembers">0</div></div>
+<div class="stat-card c8"><div class="label">Cash in Hand</div><div class="value" id="dCash">0</div></div>
+<div class="stat-card c6"><div class="label">Bank Balance</div><div class="value" id="dBank">0</div></div>
+<div class="stat-card c2"><div class="label">Total Collection</div><div class="value" id="dTotalCollection">0</div></div>
+<div class="stat-card c7"><div class="label">Total Expenses</div><div class="value" id="dTotalExpenses">0</div></div>
+<div class="stat-card c3 profit-stat-card"><div class="label">Total Profit</div><div class="value" id="dTotalProfit">0</div><div class="profit-breakdown"><span>Share: <b id="dShareProfit">0</b></span><span>Savings: <b id="dSavingsProfit">0</b></span></div></div>
+<div class="stat-card c2"><div class="label">Total Share</div><div class="value" id="dShare">0</div></div>
+<div class="stat-card c3"><div class="label">Total Savings</div><div class="value" id="dSavings">0</div></div>
+<div class="stat-card c4"><div class="label">Loan Disbursed</div><div class="value" id="dLoan">0</div></div>
+<div class="stat-card c5"><div class="label">Loan Installment Collected</div><div class="value" id="dInstallment">0</div></div>
+<div class="stat-card c7" onclick="showPage('reports')"><div class="label">Loan Outstanding</div><div class="value" id="dOutstanding">0</div></div>
+<div class="stat-card c6"><div class="label">Service Charge Collected</div><div class="value" id="dService">0</div></div>
+</div>
+  </section>
 </div>
 </section>
 
@@ -7754,6 +7879,41 @@ function deleteProfitDistribution(id){
    DASHBOARD
    ========================= */
 
+function updateDashboardPieChart(collection, expenses, share, savings){
+  const values=[Math.max(0,Number(collection)||0),Math.max(0,Number(expenses)||0),Math.max(0,Number(share)||0),Math.max(0,Number(savings)||0)];
+  const ids=["chartCollection","chartExpenses","chartShare","chartSavings"];
+  ids.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=money(values[i]);});
+  const pie=document.getElementById("dashboardPieChart");
+  if(!pie)return;
+  const colors=["#0f9f8f","#e76f51","#4785d8","#7cbd7a"];
+  const total=values.reduce((a,b)=>a+b,0);
+  if(total<=0){pie.style.background="#e7eef2";return;}
+  let cursor=0;
+  const stops=values.map((v,i)=>{const start=cursor;cursor+=v/total*360;return `${colors[i]} ${start.toFixed(2)}deg ${cursor.toFixed(2)}deg`;});
+  pie.style.background=`conic-gradient(${stops.join(",")})`;
+}
+
+function updateDashboardDailySummary(selectedDate){
+  const dateInput=document.getElementById("dashboardSummaryDate");
+  const selected=(selectedDate || (dateInput && dateInput.value) || today());
+  if(dateInput && !dateInput.value) dateInput.value=selected;
+  const collection=data.collections
+    .filter(c=>c.date===selected)
+    .reduce((sum,c)=>sum+Number(c.total||0),0);
+  const expenses=data.expenses
+    .filter(e=>e.date===selected)
+    .reduce((sum,e)=>sum+Number(e.amount||0),0);
+  const labelDate=selected ? displayDate(selected) : "Selected Date";
+  const collectionLabel=document.getElementById("dSummaryCollectionLabel");
+  const expenseLabel=document.getElementById("dSummaryExpenseLabel");
+  const collectionValue=document.getElementById("dTodayCollection");
+  const expenseValue=document.getElementById("dTodayExpense");
+  if(collectionLabel) collectionLabel.textContent=labelDate+" Collection";
+  if(expenseLabel) expenseLabel.textContent=labelDate+" Expenses";
+  if(collectionValue) collectionValue.textContent=money(collection);
+  if(expenseValue) expenseValue.textContent=money(expenses);
+}
+
 function renderDashboard(){
 
 const share=
@@ -7809,23 +7969,6 @@ data.loans.reduce(
 0
 );
 
-const t=today();
-
-const todayCollection=
-data.collections
-.filter(c=>c.date===t)
-.reduce(
-(s,c)=>s+Number(c.total||0),
-0
-);
-
-const todayExpense=
-data.expenses
-.filter(e=>e.date===t)
-.reduce(
-(s,e)=>s+Number(e.amount||0),
-0
-);
 
 const totalCollection=
 data.collections.reduce(
@@ -7877,14 +8020,14 @@ if(shareProfitCard)shareProfitCard.textContent=money(shareProfitTotal);
 const savingsProfitCard=document.getElementById("dSavingsProfit");
 if(savingsProfitCard)savingsProfitCard.textContent=money(savingsProfitTotal);
 
-document.getElementById("dTodayCollection")
-.textContent=money(todayCollection);
-
-document.getElementById("dTodayExpense")
-.textContent=money(todayExpense);
+const summaryDateInput=document.getElementById("dashboardSummaryDate");
+if(summaryDateInput && !summaryDateInput.value) summaryDateInput.value=today();
+updateDashboardDailySummary(summaryDateInput ? summaryDateInput.value : today());
 
 document.getElementById("dBank")
 .textContent=money(data.bankBalance);
+
+updateDashboardPieChart(totalCollection,totalExpenses,share,savings);
 
 }
 
