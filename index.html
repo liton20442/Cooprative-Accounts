@@ -1966,7 +1966,7 @@ body.ca-element-resizing{cursor:nwse-resize!important;}
 main{max-width:1680px;margin:0 auto;padding:18px 22px 36px;}
 #dashboard{max-width:none;margin:0 auto;}
 #dashboard>h1{font-size:27px;letter-spacing:-.4px;margin:2px 0 18px;padding:0 0 13px;border-bottom:1px solid #dce5eb;color:#173344;}
-.dashboard-workspace{display:grid;grid-template-columns:minmax(215px, .78fr) minmax(310px,1.08fr) minmax(390px,1.48fr);gap:17px;align-items:start;}
+.dashboard-workspace{display:grid;grid-template-columns:minmax(205px,.78fr) minmax(330px,1.18fr) minmax(285px,1.05fr);gap:15px;align-items:start;}
 .dashboard-side-panel,.today-summary-panel,.dashboard-chart-panel{margin:0;background:linear-gradient(160deg,#fff,#f9fcfd);border:1px solid #e0e8ee;box-shadow:0 7px 24px rgba(26,54,74,.06);border-radius:17px;}
 .dashboard-side-panel{padding:14px 13px;}
 #dashboard .dashboard-side-panel h2,#dashboard .today-summary-panel h2,#dashboard .dashboard-chart-panel h2{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-size:17px;color:#183b4b;font-weight:750;}
@@ -2003,7 +2003,7 @@ main{max-width:1680px;margin:0 auto;padding:18px 22px 36px;}
 #dashboard .dashboard-right-column .stat-card .label{font-size:11px;font-weight:600;line-height:1.3;}
 #dashboard .dashboard-right-column .stat-card .value{font-size:clamp(17px,1.5vw,23px);font-weight:750;overflow-wrap:anywhere;}
 #dashboard .dashboard-right-column .profit-stat-card .profit-breakdown{font-size:9px;gap:6px;flex-wrap:wrap;white-space:normal;}
-@media(max-width:1150px){.dashboard-workspace{grid-template-columns:minmax(190px,.72fr) minmax(280px,1fr) minmax(310px,1.25fr);gap:12px;}main{padding:15px;}#dashboard .dashboard-right-column .stat-card{padding:11px 9px;}}
+@media(max-width:1150px){.dashboard-workspace{grid-template-columns:minmax(190px,.72fr) minmax(280px,1fr) minmax(280px,1fr);gap:12px;}main{padding:15px;}#dashboard .dashboard-right-column .stat-card{padding:11px 9px;}}
 @media(max-width:900px){.dashboard-workspace{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}.dashboard-center-column{grid-column:1/-1;grid-row:1;}.dashboard-right-column{grid-column:1/-1;grid-row:2;}.dashboard-side-panel{grid-column:1/-1;grid-row:3;}#dashboard .dashboard-side-panel .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px;}#dashboard .dashboard-right-column .dashboard-grid{grid-template-columns:repeat(3,minmax(0,1fr));}.chart-content{justify-content:flex-start;}}
 @media(max-width:560px){main{padding:12px 10px 28px;}#dashboard>h1{font-size:23px;margin-bottom:13px;}.dashboard-workspace{display:flex;flex-direction:column;gap:13px;}.dashboard-center-column,.dashboard-right-column,.dashboard-side-panel{width:100%;}.dashboard-center-column{order:0;}.dashboard-right-column{order:1;}.dashboard-side-panel{order:2;}.today-summary-panel,.dashboard-chart-panel{padding:13px;}.today-summary-grid{gap:8px;}.today-summary-item{padding:11px 9px;gap:8px;}.today-summary-item span{font-size:11px;}.today-summary-item strong{font-size:18px;}.chart-content{gap:13px;}.dashboard-pie-chart{width:118px;height:118px;}.dashboard-chart-legend{gap:10px;}.dashboard-chart-legend>div{font-size:10.5px;}.dashboard-chart-legend strong{font-size:12px;}#dashboard .dashboard-right-column .dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}#dashboard .dashboard-right-column .stat-card{min-height:78px;padding:10px 9px;}#dashboard .dashboard-right-column .stat-card .label{font-size:10.5px;}#dashboard .dashboard-right-column .stat-card .value{font-size:18px;}#dashboard .dashboard-side-panel .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:10px;}#dashboard .dashboard-side-panel .quick-btn{min-height:48px;font-size:11.5px;}}
 
@@ -2049,6 +2049,24 @@ header .home-btn {
   .app-subtitle { font-size: 10px !important; }
   header .home-btn { min-height: 30px !important; padding: 5px 8px !important; font-size: 11px !important; }
 }
+
+
+/* Compact dashboard refinements and transaction column chart */
+.daily-summary-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.daily-summary-date{display:flex;align-items:center;gap:7px;font-size:11px;color:#637784;white-space:nowrap;}
+.daily-summary-date input{max-width:145px;padding:6px 8px;border:1px solid #d4e3e8;border-radius:8px;background:#fff;color:#234554;font-size:12px;}
+.dashboard-chart-legend>div{grid-template-columns:10px minmax(0,1fr);gap:0 8px;align-items:center;}
+.dashboard-chart-legend .legend-dot{grid-row:auto;width:10px;height:10px;}
+.dashboard-transactions-panel{min-width:0;}
+.transaction-column-chart{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));align-items:end;gap:8px;min-height:190px;padding:10px 2px 0;border-bottom:1px solid #dce7ec;}
+.transaction-bar-item{height:100%;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:7px;}
+.transaction-bar-value{font-size:10px;color:#3f5867;font-weight:650;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;}
+.transaction-bar-track{height:118px;width:100%;display:flex;align-items:flex-end;justify-content:center;}
+.transaction-bar{width:min(72%,30px);min-height:3px;border-radius:6px 6px 0 0;background:linear-gradient(180deg,#42b6a6,#0f766e);box-shadow:0 3px 7px rgba(15,118,110,.14);transition:height .25s ease;}
+.transaction-bar-item:nth-child(2n) .transaction-bar{background:linear-gradient(180deg,#f3a18b,#e76f51);}
+.transaction-bar-item:nth-child(3n) .transaction-bar{background:linear-gradient(180deg,#8cb8ef,#4785d8);}
+.transaction-bar-label{font-size:10px;line-height:1.25;text-align:center;color:#627684;min-height:25px;overflow-wrap:anywhere;}
+@media(max-width:560px){.transaction-column-chart{grid-template-columns:repeat(4,minmax(0,1fr));row-gap:12px;min-height:280px;}.transaction-bar-track{height:100px;}.transaction-bar-value{font-size:9px;}.transaction-bar-label{font-size:10px;}.daily-summary-date input{max-width:130px;}}
 
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
@@ -2121,12 +2139,17 @@ header .home-btn {
       <div class="chart-content">
         <div class="dashboard-pie-chart" id="dashboardPieChart" role="img" aria-label="Financial overview pie chart"><div class="pie-hole"><span>Financial</span><strong>Overview</strong></div></div>
         <div class="dashboard-chart-legend" id="dashboardChartLegend">
-          <div><i class="legend-dot dot-collection"></i><span>Total Collection</span><strong id="chartCollection">0</strong></div>
-          <div><i class="legend-dot dot-expense"></i><span>Total Expenses</span><strong id="chartExpenses">0</strong></div>
-          <div><i class="legend-dot dot-share"></i><span>Total Share</span><strong id="chartShare">0</strong></div>
-          <div><i class="legend-dot dot-savings"></i><span>Total Savings</span><strong id="chartSavings">0</strong></div>
+          <div><i class="legend-dot dot-collection"></i><span>Total Collection</span></div>
+          <div><i class="legend-dot dot-expense"></i><span>Total Expenses</span></div>
+          <div><i class="legend-dot dot-share"></i><span>Total Share</span></div>
+          <div><i class="legend-dot dot-savings"></i><span>Total Savings</span></div>
         </div>
       </div>
+    </section>
+    <section class="dashboard-chart-panel dashboard-transactions-panel card">
+      <h2><span class="panel-heading-icon">▥</span> Collection & Transactions</h2>
+      <p class="chart-subtitle">All-time totals by transaction type</p>
+      <div id="dashboardTransactionChart" class="transaction-column-chart" role="img" aria-label="Column chart of collection and transaction totals"></div>
     </section>
   </div>
   <section class="dashboard-right-column">
@@ -7893,6 +7916,18 @@ function updateDashboardPieChart(collection, expenses, share, savings){
   pie.style.background=`conic-gradient(${stops.join(",")})`;
 }
 
+function updateDashboardTransactionChart(items){
+  const host=document.getElementById("dashboardTransactionChart");
+  if(!host)return;
+  const safe=(items||[]).map(x=>({...x,value:Math.max(0,Number(x.value)||0)}));
+  const max=Math.max(1,...safe.map(x=>x.value));
+  host.innerHTML=safe.map(item=>{
+    const height=item.value>0?Math.max(5,(item.value/max)*100):2;
+    const amount=money(item.value);
+    return `<div class="transaction-bar-item" title="${item.label}: ${amount}"><div class="transaction-bar-value">${amount}</div><div class="transaction-bar-track"><div class="transaction-bar" style="height:${height}%"></div></div><div class="transaction-bar-label">${item.label}</div></div>`;
+  }).join("");
+}
+
 function updateDashboardDailySummary(selectedDate){
   const dateInput=document.getElementById("dashboardSummaryDate");
   const selected=(selectedDate || (dateInput && dateInput.value) || today());
@@ -7908,8 +7943,8 @@ function updateDashboardDailySummary(selectedDate){
   const expenseLabel=document.getElementById("dSummaryExpenseLabel");
   const collectionValue=document.getElementById("dTodayCollection");
   const expenseValue=document.getElementById("dTodayExpense");
-  if(collectionLabel) collectionLabel.textContent=labelDate+" Collection";
-  if(expenseLabel) expenseLabel.textContent=labelDate+" Expenses";
+  if(collectionLabel) collectionLabel.textContent="Collection";
+  if(expenseLabel) expenseLabel.textContent="Expenses";
   if(collectionValue) collectionValue.textContent=money(collection);
   if(expenseValue) expenseValue.textContent=money(expenses);
 }
@@ -8028,6 +8063,16 @@ document.getElementById("dBank")
 .textContent=money(data.bankBalance);
 
 updateDashboardPieChart(totalCollection,totalExpenses,share,savings);
+updateDashboardTransactionChart([
+  {label:"Collection",value:totalCollection},
+  {label:"Expenses",value:totalExpenses},
+  {label:"Share",value:share},
+  {label:"Savings",value:savings},
+  {label:"Loan Disbursed",value:loan},
+  {label:"Installments",value:installment},
+  {label:"Service Charge",value:service},
+  {label:"Withdrawals",value:savingsWithdrawn}
+]);
 
 }
 
