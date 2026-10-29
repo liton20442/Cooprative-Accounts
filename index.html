@@ -362,13 +362,7 @@ body.dashboard-active #logoutButton {
   font-size: 14px;
 }
 
-body:not(.authenticated) .app {
-  display: none !important;
-}
 
-body.authenticated #loginScreen {
-  display: none !important;
-}
 
 @media (max-width: 480px) {
   .login-card {
@@ -1960,65 +1954,6 @@ body.ca-element-resizing{cursor:nwse-resize!important;}
 </head>
 
 <body>
-   
-<!-- LOGIN SCREEN -->
-<div id="loginScreen" class="login-screen">
-  <div class="login-card">
-    <h1>Cooperative Accounts</h1>
-    <p id="loginSubtitle">Please login to continue</p>
-
-    
-<form id="loginForm" autocomplete="on">
-  
-
-<label for="loginUsername">Username</label>
-
-<div class="username-wrapper">
-  <input
-    type="text"
-    id="loginUsername"
-    name="username"
-    placeholder="Choose your username"
-    autocomplete="username"
-    autocapitalize="none"
-    spellcheck="false"
-    required
-  >
-  <div id="usernameDropdown" class="username-dropdown"></div>
-</div>
-
-
-
-  
-<label for="loginPassword">Password</label>
-<div class="password-wrapper">
-  <input
-    type="password"
-    id="loginPassword"
-    name="password"
-    placeholder="Enter password"
-    autocomplete="current-password"
-    required
-  >
-  <button
-    type="button"
-    class="password-toggle"
-    onclick="toggleLoginPassword()"
-  >Show</button>
-</div>
-
-
-  <p id="loginMessage" role="alert"></p>
-
-  <button type="submit" id="loginButton">
-    Login
-  </button>
-</form>
-
-  </div>
-</div>
-<!-- END LOGIN SCREEN -->
-
 <div class="app">
 
 <header>
@@ -9170,215 +9105,17 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
 </script>
 
 <script>
-/* Cooperative Accounts Login System */
-(function () {
-  const AUTH_KEY = "cooperativeAccountsAuthV1";
-
-  async function hashPassword(password) {
-    if (!window.crypto || !window.crypto.subtle) {
-      throw new Error(
-        "Secure login requires opening the app through HTTPS."
-      );
-    }
-
-    const data = new TextEncoder().encode(password);
-    const hash = await crypto.subtle.digest("SHA-256", data);
-
-    return Array.from(new Uint8Array(hash))
-      .map(function (byte) {
-        return byte.toString(16).padStart(2, "0");
-      })
-      .join("");
-  }
-
-  function getAuth() {
-    try {
-      return JSON.parse(localStorage.getItem(AUTH_KEY) || "null");
-    } catch (error) {
-      return null;
-    }
-  }
-
-  function setupLogin() {
-    const screen = document.getElementById("loginScreen");
-    const form = document.getElementById("loginForm");
-    const usernameInput = document.getElementById("loginUsername");
-    const passwordInput = document.getElementById("loginPassword");
-    const subtitle = document.getElementById("loginSubtitle");
-    const button = document.getElementById("loginButton");
-    const message = document.getElementById("loginMessage");
-
-    if (!screen || !form || !usernameInput || !passwordInput) {
-      console.error("Login screen elements were not found.");
-      return;
-    }
-
-    function showMessage(text) {
-      message.textContent = text;
-    }
-
-   
-function updateMode() {
-  const auth = getAuth();
-  const firstSetup = !auth;
-
-  subtitle.textContent = firstSetup
-    ? "Create your first login"
-    : "Please login to continue";
-
-  button.textContent = firstSetup
-    ? "Create Login"
-    : "Login";
-
-  // Allow Safari/iOS Password AutoFill to pair the saved username and password.
-  usernameInput.autocomplete = "username";
-  passwordInput.autocomplete = firstSetup
-    ? "new-password"
-    : "current-password";
-
-  passwordInput.minLength = firstSetup ? 6 : 1;
-
-  const usernameList =
-    document.getElementById("loginUsernameOptions");
-
-  if (usernameList) {
-    usernameList.replaceChildren();
-
-    if (auth && auth.username) {
-      const option = document.createElement("option");
-      option.value = auth.username;
-      usernameList.appendChild(option);
-    }
-  }
-}
-
-    form.addEventListener("submit", async function (event) {
-      event.preventDefault();
-      showMessage("");
-
-      const username = usernameInput.value.trim();
-      const password = passwordInput.value;
-      const auth = getAuth();
-
-      if (!username || !password) {
-        showMessage("Enter your username and password.");
-        return;
-      }
-
-      if (!auth && password.length < 6) {
-        showMessage("Password must be at least 6 characters.");
-        return;
-      }
-
-      button.disabled = true;
-
-      try {
-        const passwordHash = await hashPassword(password);
-
-        if (!auth) {
-          localStorage.setItem(
-            AUTH_KEY,
-            JSON.stringify({
-              username: username,
-              passwordHash: passwordHash
-            })
-          );
-
-          document.body.classList.add("authenticated");
-          usernameInput.value = "";
-          passwordInput.value = "";
-          showMessage("");
-
-          if (typeof showPage === "function") {
-            showPage("dashboard");
-          }
-
-          return;
-        }
-
-        if (
-          username.toLowerCase() === auth.username.toLowerCase() &&
-          passwordHash === auth.passwordHash
-        ) {
-          document.body.classList.add("authenticated");
-          usernameInput.value = "";
-          passwordInput.value = "";
-          showMessage("");
-
-          if (typeof showPage === "function") {
-            showPage("dashboard");
-          }
-        } else {
-          showMessage("Incorrect username or password.");
-          passwordInput.value = "";
-          passwordInput.focus();
-        }
-      } catch (error) {
-        showMessage(
-          error.message ||
-          "Login could not be completed. Please try again."
-        );
-      } finally {
-        button.disabled = false;
-      }
-    });
-
-    updateMode();
-
-    // After Safari Password AutoFill (often confirmed with Face ID),
-    // automatically submit once both credentials have been filled.
-    let autoLoginTimer = null;
-    let autoLoginInProgress = false;
-    function tryAutoLoginAfterAutofill() {
-      if (autoLoginTimer) clearTimeout(autoLoginTimer);
-      autoLoginTimer = setTimeout(function () {
-        const currentAuth = getAuth();
-        if (autoLoginInProgress || !currentAuth) return;
-        if (usernameInput.value.trim() && passwordInput.value) {
-          autoLoginInProgress = true;
-          if (typeof form.requestSubmit === "function") {
-            form.requestSubmit();
-          } else {
-            form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
-          }
-          // Allow another attempt if validation fails or the form remains visible.
-          setTimeout(function () { autoLoginInProgress = false; }, 1200);
-        }
-      }, 350);
-    }
-    ["input", "change", "blur"].forEach(function (eventName) {
-      usernameInput.addEventListener(eventName, tryAutoLoginAfterAutofill);
-      passwordInput.addEventListener(eventName, tryAutoLoginAfterAutofill);
-    });
-
-    /* A page refresh requires login again. */
-    document.body.classList.remove("authenticated");
-  }
-
- 
-document.addEventListener("DOMContentLoaded", setupLogin);
-})();
+// Login page removed: open the app directly on the Dashboard.
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.classList.add("authenticated");
+  if (typeof showPage === "function") showPage("dashboard");
+});
 </script>
 
 <script>
 function logoutApp() {
-  if (!confirm("Are you sure you want to logout?")) {
-    return;
-  }
-
-  document.body.classList.remove("authenticated");
-
-  const password = document.getElementById("loginPassword");
-  const username = document.getElementById("loginUsername");
-  const message = document.getElementById("loginMessage");
-
-  if (password) password.value = "";
-  if (username) username.value = "";
-  if (message) message.textContent = "";
-
-  if (typeof showPage === "function") {
-    showPage("dashboard");
-  }
+  // Login screen has been removed; keep the app open on Dashboard.
+  if (typeof showPage === "function") showPage("dashboard");
 }
 </script>
 
